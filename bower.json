@@ -1,0 +1,25 @@
+{
+  "name": "dashboard",
+  "version": "0.0.1",
+  "description": "ByWater dashboard",
+  "authors": [
+    "Ivan Kapelyukhin"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-dragdrop": "~1.0.11",
+    "angularjs": "~1.3.14",
+    "bootstrap-material-design": "~0.2.2",
+    "bootstrap-css": "~3.2.0",
+    "angular-route": "~1.3.14",
+    "angular-material": "~0.8.1"
+  }
+}

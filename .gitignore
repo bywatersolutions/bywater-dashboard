@@ -1,0 +1,4 @@
+/public/vendor
+/sessions/*
+!/sessions/.gitkeep
+/tmp

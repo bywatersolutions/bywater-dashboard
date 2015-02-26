@@ -1,0 +1,40 @@
+.db-table {
+    display: table;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 100vh;
+    padding: 5px;
+    border-collapse: separate;
+    border-spacing: 10px;
+}
+
+.db-column {
+    display: table-cell;
+    min-width: 316px;
+    border: 0px solid;
+    height: 100%;
+}
+
+.db-card {
+    cursor: pointer;
+    width: 300px;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.db-card-content {
+    padding: 0px;
+    padding-bottom: 10px;
+}
+
+.db-card-content div {
+    display: table-row;
+}
+
+.db-card-content span {
+    font-size: 80%;
+    display: table-cell;
+    text-align: left;
+    word-wrap: break-word;
+    word-break: break-all;
+}

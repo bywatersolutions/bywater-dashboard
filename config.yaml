@@ -1,0 +1,12 @@
+root:
+  password: password
+  rt:
+    login: root
+    password: password
+    host: "http://localhost:8080"
+test:
+  password: test
+  rt:
+    login: "T&M Development"
+    password: "changeme"
+    host: "https://rt-test.bywatersolutions.com"
