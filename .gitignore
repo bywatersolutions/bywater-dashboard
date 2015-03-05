@@ -2,3 +2,4 @@
 /sessions/*
 !/sessions/.gitkeep
 /tmp
+config.yaml

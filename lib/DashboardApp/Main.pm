@@ -68,7 +68,8 @@ sub login {
     return $c->render(json => { error => "Wrong login or password." });
   }
   
-  $c->session->{user_id} = $json->{login};
+  $c->session({ user_id => $json->{login} });
+  
   $c->render(json => { status => "ok" });
 }
 
