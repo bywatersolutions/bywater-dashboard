@@ -1,4 +1,4 @@
-var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ngDragDrop', 'ngMaterial']);
+var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ui.sortable', 'ngMaterial']);
 
 dashboardApp.config(['$routeProvider',
   function($routeProvider) {
@@ -18,15 +18,21 @@ dashboardApp.config(['$routeProvider',
 );
 
 dashboardApp.controller( 'mainCtrl', [ '$scope', '$http', '$timeout', '$location', function($scope, $http, $timeout, $location) {
-    $http.get('/main/dashboard').success(function(data) {
-      if ( data.error ) {
-        $location.path( "/login" );
-      } else {
-        console.log( data );
-        $scope.columns = data.columns;
-        $scope.tickets = data.tickets;
-      }
-    });
+  $http.get('/main/dashboard').success(function(data) {
+    if ( data.error ) {
+      $location.path( "/login" );
+    } else {
+      $scope.columns = data.columns;
+      $scope.tickets = data.tickets;
+    }
+  });
+  
+  $scope.sortListeners = {
+      accept: function (sourceItemHandleScope, destSortableScope) { return true }, //override to determine drag is allowed or not. default is true.
+      itemMoved: function (event) {},
+      orderChanged: function(event) {},
+  };
+
 } ]
 );
 

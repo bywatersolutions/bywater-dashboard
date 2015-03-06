@@ -1,42 +1,32 @@
 <div class="db-table">
-    <!--div class="db-column btn-material-grey-300" ng-repeat="(key, value) in columns" jqyoui-droppable data-jqyoui-options ng-model="value.content" data-drop="true">
-        <div class="db-card" ng-repeat="(key, ticket) in value.content" data-drag="true" data-jqyoui-options="{revert: 'invalid'}" jqyoui-draggable="{index: {{$index}}}" ng-model="value.content">
-            <div class="btn-material-blue-200"><div class="ripple-wrapper"></div></div>
-            <div class="btn-material-grey-200">
-                {{ticket}}
-                <md-button class="md-raised">Button</md-button>
-            </div>
-        </div>
-    </div-->
-
-    <md-card class="db-column" ng-repeat="(column_id, column) in columns" jqyoui-droppable data-jqyoui-options ng-model="column.tickets" data-drop="true">
-        <md-toolbar>
+    <md-card class="db-column" ng-repeat="(column_id, column) in columns">
+        <md-toolbar class="ui-state-disabled">
             <div class="md-toolbar-tools">
               <span class="md-flex">{{column.name}}</span>
             </div>
         </md-toolbar>
         
-        
-        <md-card class="db-card" ng-repeat="ticket_id in column.tickets" ng-init="ticket = tickets[ticket_id]" data-drag="true" data-jqyoui-options="{revert: 'invalid'}" jqyoui-draggable="{index: {{$index}}}" ng-model="column.tickets">
-            <md-toolbar class="md-warn">
-                <div class="md-toolbar-tools">
-                  <span class="md-flex">{{ticket.Subject}}</span>
-                </div>
-            </md-toolbar>
-            
-            <md-card-content class="db-card-content" style="background: white;">
-                <div><span>Status:</span><span>{{ticket.Status}}</span></div>
-                <div><span>Queue:</span><span>{{ticket.Queue}}</span></div>
-                <div><span>Requestors:</span><span>{{ticket.Requestors}}</span></div>
-                <div><span>Creator:</span><span>{{ticket.Creator}}</span></div>
-                <div><span>Resolved:</span><span>{{ticket.Resolved}}</span></div>
-                <div><span>Priority:</span><span>{{ticket.Priority}}</span></div>
-                <div><span>Due:</span><span>{{ticket.Due}}</span></div>
-                <div><span>Created:</span><span>{{ticket.Created}}</span></div>
-                <div><span>LastUpdated:</span><span>{{ticket.LastUpdated}}</span></div>
-                <div><span>Link:</span><span><a class="md-raised md-primary md-button md-default-theme" href="{{ticket.link}}" target="_blank">Go to RT</a></span></div>            
-            </md-card-content>
-        </md-card>
+        <div class="db-column-content" ng-model="column.tickets" data-as-sortable="sortListeners">
+            <md-card class="db-card" ng-repeat="ticket_id in column.tickets" ng-init="ticket = tickets[ticket_id]" ng-model="column.tickets" data-as-sortable-item>
+                <md-toolbar class="md-warn noselect" data-as-sortable-item-handle>
+                    <div class="md-toolbar-tools">
+                      <span class="md-flex">{{ticket.Subject}}</span>
+                    </div>
+                </md-toolbar>
+                
+                <md-card-content class="db-card-content">
+                    <div><span>Status:</span><span>{{ticket.Status}}</span></div>
+                    <div><span>Queue:</span><span>{{ticket.Queue}}</span></div>
+                    <div><span>Requestors:</span><span>{{ticket.Requestors}}</span></div>
+                    <div><span>Creator:</span><span>{{ticket.Creator}}</span></div>
+                    <div><span>Resolved:</span><span>{{ticket.Resolved}}</span></div>
+                    <div><span>Priority:</span><span>{{ticket.Priority}}</span></div>
+                    <div><span>Due:</span><span>{{ticket.Due}}</span></div>
+                    <div><span>Created:</span><span>{{ticket.Created}}</span></div>
+                    <div><span>LastUpdated:</span><span>{{ticket.LastUpdated}}</span></div>
+                    <div><span>Link:</span><span><a class="md-raised md-primary md-button md-default-theme" href="{{ticket.link}}" target="_blank">Go to RT</a></span></div>            
+                </md-card-content>
+            </md-card>
+        </div>
     </md-card>
-    
 </div>
