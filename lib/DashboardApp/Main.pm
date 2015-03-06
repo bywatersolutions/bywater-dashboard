@@ -29,6 +29,19 @@ sub dashboard {
   
   ###
   
+  my %seen_tickets;
+  my $stored_columns = $c->session->{columns} || {};
+  foreach my $column_id ( keys %$stored_columns ) {
+    next unless ( $columns->{ $column_id } );
+    foreach my $ticket_id ( @{ $stored_columns->{ $column_id } } ) {
+      next if ( $seen_tickets{ $ticket_id } );
+      push( @{ $columns->{ $column_id }->{tickets} }, $ticket_id );
+      $seen_tickets{ $ticket_id } = 1;
+    }
+  }
+  
+  ###
+  
   # Fetching tickets from RT
   
   foreach my $column_id ( keys %$columns ) {
@@ -43,7 +56,12 @@ sub dashboard {
       return $_;    
     };
     
-    $column->{tickets} = [ keys %$tickets ];
+    $column->{tickets} = [];
+    foreach my $ticket_id ( keys %$tickets ) {
+      next if ( $seen_tickets{ $ticket_id } );
+      push( @{ $column->{tickets} }, $ticket_id );
+      $seen_tickets{ $ticket_id } = 1;
+    }
     
     %tickets = ( %tickets, %$tickets );
     
@@ -69,6 +87,35 @@ sub login {
   }
   
   $c->session({ user_id => $json->{login} });
+  
+  $c->render(json => { status => "ok" });
+}
+
+sub save_columns {
+  my $c = shift;
+  
+  unless ( $c->session->{user_id} ) {
+    return $c->render(json => { error => "You are not logged in!" });
+  }
+  
+  my $json = $c->req->json;
+  
+  if ( ref( $json ) ne 'HASH' ) {
+    return $c->render(json => { error => "Hash ref expected." });
+  }
+  
+  my $stored_columns = $c->session->{columns} || {};
+  
+  foreach my $column_id ( keys %$json ) {
+    my $column = $json->{ $column_id };
+    if ( ref( $column ) ne "ARRAY" ) {
+      return $c->render(json => { error => "Array ref expected." });
+    }
+    
+    $stored_columns->{ $column_id } = $column;
+  }
+  
+  $c->session->{columns} = $stored_columns;
   
   $c->render(json => { status => "ok" });
 }

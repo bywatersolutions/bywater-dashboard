@@ -28,10 +28,34 @@ dashboardApp.controller( 'mainCtrl', [ '$scope', '$http', '$timeout', '$location
   });
   
   $scope.sortListeners = {
-      accept: function (sourceItemHandleScope, destSortableScope) { return true }, //override to determine drag is allowed or not. default is true.
-      itemMoved: function (event) {},
-      orderChanged: function(event) {},
+      accept: function (sourceItemHandleScope, destSortableScope) {
+        return !destSortableScope.$parent.column.search_query; // disallow dropping items into TicketSQL columns
+      },
+      itemMoved: function (event) { $scope.save( event.source, event.dest ); },
+      orderChanged: function(event) { console.log( event ); },
   };
+  
+  $scope.save = function ( src, dst ) {
+    var src_scope = src.sortableScope.$parent;
+    var dst_scope = dst.sortableScope.$parent;
+    
+    var columns = {};
+    
+    if ( !src_scope.column.search_query ) {
+      columns[ src_scope.column_id ] = src_scope.column.tickets;
+    }
+    
+    if ( !dst_scope.column.search_query ) {
+      columns[ dst_scope.column_id ] = dst_scope.column.tickets;
+    }
+    
+    $http.post( '/main/save_columns', columns ).success( function(data) {
+      console.log( data );
+    } ).error( function (data, status) {
+      alert("An unexpected error occurred!");
+    } );
+  }
+  
 
 } ]
 );

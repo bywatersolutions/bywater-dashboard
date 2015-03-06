@@ -11,7 +11,7 @@ sub get_tickets {
     $rt->login( username => $credentials->{login}, password => $credentials->{password} );
     
     my @ids = $rt->search( type => 'ticket', query => $search_query );
-    printf("Got %d ids!\n", scalar(@ids));
+
     my $result = {};
     foreach my $id ( @ids ) {
         $result->{$id} = $rt->show(type => 'ticket', id => $id);

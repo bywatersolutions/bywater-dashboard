@@ -11,7 +11,6 @@ sub startup {
   $self->secrets(['eeQu6ighiegh6zaizoh6eithuiphoo']);
   
   $self->plugin('tt_renderer');
-  #$self->plugin( WWWSession => { storage => [File => {path => './sessions'}], autosave => 1 } );
   
   my $sessions = Mojolicious::Sessions::Storable->new(
       session_store => Plack::Session::Store::File->new( dir => './sessions' )
@@ -23,6 +22,7 @@ sub startup {
   $r->get("/")->to("main#index");
   $r->get("/main/dashboard")->to("main#dashboard");
   $r->post("/main/login")->to("main#login");
+  $r->post("/main/save_columns")->to("main#save_columns");
 }
 
 1;
