@@ -1,4 +1,4 @@
-var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ui.sortable', 'ngMaterial']);
+var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ui.sortable', 'ngMaterial', 'ngDialog']);
 
 dashboardApp.config(['$routeProvider',
   function($routeProvider) {
@@ -17,7 +17,7 @@ dashboardApp.config(['$routeProvider',
   }]
 );
 
-dashboardApp.controller( 'mainCtrl', [ '$scope', '$http', '$timeout', '$location', function($scope, $http, $timeout, $location) {
+dashboardApp.controller( 'mainCtrl', [ '$scope', '$http', '$timeout', '$location', 'ngDialog', function($scope, $http, $timeout, $location, ngDialog) {
   $http.get('/main/dashboard').success(function(data) {
     if ( data.error ) {
       $location.path( "/login" );
@@ -54,6 +54,12 @@ dashboardApp.controller( 'mainCtrl', [ '$scope', '$http', '$timeout', '$location
     } ).error( function (data, status) {
       alert("An unexpected error occurred!");
     } );
+  }
+  
+  $scope.show_popup = function ( ticket ) {
+    child_scope = $scope.$new(true);
+    child_scope.ticket = ticket;
+    ngDialog.open({ template: 'card-popup', scope: child_scope });
   }
   
 

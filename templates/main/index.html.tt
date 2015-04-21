@@ -21,6 +21,11 @@
 <script src="/vendor/angular-material/angular-material.min.js"></script>
 
 <script src="/vendor/ng-sortable/dist/ng-sortable.min.js"></script>
+<script src="/vendor/ngDialog/js/ngDialog.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/vendor/ngDialog/css/ngDialog.min.css">
+<link rel="stylesheet" type="text/css" href="/vendor/ngDialog/css/ngDialog-theme-default.min.css">
+<link rel="stylesheet" type="text/css" href="/vendor/ngDialog/css/ngDialog-theme-plain.min.css">
+
 
 <script src="/custom/js/dashboard-app.js"></script>
 <link rel="stylesheet" type="text/css" href="/custom/css/dashboard.css">
