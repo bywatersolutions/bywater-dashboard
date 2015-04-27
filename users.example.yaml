@@ -1,0 +1,18 @@
+lead1:
+    role: lead
+    first_name: Lead
+    last_name: Leaderson
+    password: 123456
+
+employee1:
+    role: employee
+    first_name: Employee
+    last_name: Employeerson
+    password: 123456
+
+employee2:
+    role: employee
+    first_name: Tester
+    last_name: Testerson
+    password: 123456
+

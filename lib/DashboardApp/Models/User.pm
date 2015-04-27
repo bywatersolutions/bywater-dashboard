@@ -5,7 +5,7 @@ use warnings;
 use YAML qw/LoadFile/;
 use Data::Dumper;
 
-my $users = LoadFile("config.yaml");
+my $users = LoadFile("users.yaml");
 
 sub check {
     my ( $login, $password ) = @_;

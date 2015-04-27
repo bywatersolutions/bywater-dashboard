@@ -18,7 +18,6 @@ sub dashboard {
   
   ###
   
-  my $credentials = DashboardApp::Models::User::get_rt_creds( $c->session->{user_id} );
   my %tickets;
   my $columns = {
     1 => { name => "New tickets", search_query => "Status = 'new'", tickets => [] },
@@ -50,7 +49,7 @@ sub dashboard {
     
     my $tickets;
     my $error = try {
-      $tickets = DashboardApp::Models::Ticket::get_tickets( $credentials, $column->{search_query} );
+      $tickets = DashboardApp::Models::Ticket::search_tickets( $column->{search_query} );
       return;
     } catch {
       return $_;    

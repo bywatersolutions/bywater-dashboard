@@ -3,3 +3,5 @@
 !/sessions/.gitkeep
 /tmp
 config.yaml
+users.yaml
+*.komodoproject
