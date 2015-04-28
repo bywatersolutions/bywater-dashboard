@@ -16,7 +16,8 @@ dashboardApp.config(['$routeProvider',
         controller: 'loginCtrl'
       }).
       otherwise({
-        redirectTo: '/employee'
+        template: 'Please wait.',
+        controller: 'redirectCtrl'
       });
   }]
 );
@@ -129,4 +130,15 @@ dashboardApp.controller( 'loginCtrl', [ '$scope', '$http', '$timeout', '$locatio
             $location.path( "/main" );
         });
     };
+} ] );
+
+dashboardApp.controller( 'redirectCtrl', [ '$scope', '$http', '$location', function($scope, $http, $location) {
+  $http.get('/main/get_role').success(function(data) {
+    console.log(data);
+    if ( data.role == "employee" ) {
+      $location.path("/employee");
+    } else {
+      $location.path("/lead");
+    }
+  });
 } ] );

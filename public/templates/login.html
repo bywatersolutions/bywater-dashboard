@@ -1,7 +1,9 @@
 <div>
     <form>
-        Login: <input ng-model="credentials.login"/><br/>
-        Password: <input ng-model="credentials.password" type="password"/><br/>
-        <input type="submit" ng-click="submit()"/>
+        <table>
+        <tr><td>Login:</td><td><input ng-model="credentials.login"/></td></tr>
+        <tr><td>Password:</td><td><input ng-model="credentials.password" type="password"/></td></tr>
+        <tr><td colspan="2"><input type="submit" ng-click="submit()"/></td></tr>
+        </table>
     </form>
 </div>

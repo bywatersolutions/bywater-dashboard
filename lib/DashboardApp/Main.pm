@@ -171,12 +171,12 @@ sub login {
   my $c = shift;
   
   my $json = $c->req->json;
-  
-  unless ( DashboardApp::Models::User::check( $json->{login}, $json->{password} ) ) {
+  my $role;
+  unless ( $role = DashboardApp::Models::User::check( $json->{login}, $json->{password} ) ) {
     return $c->render(json => { error => "Wrong login or password." });
   }
   
-  $c->session({ user_id => $json->{login} });
+  $c->session({ user_id => $json->{login}, role => $role });
   
   $c->render(json => { status => "ok" });
 }
@@ -235,6 +235,11 @@ sub lead_save_columns {
   dump_tickets( $tickets );
   
   $c->render(json => { status => "ok" });
+}
+
+sub get_role {
+  my $c = shift;
+  $c->render(json => { role => $c->session->{role} || "employee" });
 }
 
 1;
