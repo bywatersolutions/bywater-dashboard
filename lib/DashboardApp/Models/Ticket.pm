@@ -8,11 +8,10 @@ use DashboardApp::Models::Config;
 my $config = DashboardApp::Models::Config::get_config();
 my $credentials = $config->{rt} || die "RT credentials not found.";
 my $rt = RT::Client::REST->new( server => $credentials->{host}, timeout => 3 );
+$rt->login( username => $credentials->{login}, password => $credentials->{password} );
 
 sub search_tickets {
     my ( $search_query ) = @_;
-    
-    $rt->login( username => $credentials->{login}, password => $credentials->{password} );
     
     my @ids = $rt->search( type => 'ticket', query => $search_query );
     

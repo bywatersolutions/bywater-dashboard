@@ -19,4 +19,8 @@ sub get_rt_creds {
     return $users->{ $login }->{rt};
 }
 
+sub get_all_users {
+    return $users;
+}
+
 1;

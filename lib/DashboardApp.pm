@@ -20,9 +20,11 @@ sub startup {
   
   my $r = $self->routes;
   $r->get("/")->to("main#index");
-  $r->get("/main/dashboard")->to("main#dashboard");
+  $r->get("/main/employee_tickets")->to("main#employee_tickets");
+  $r->get("/main/lead_tickets")->to("main#lead_tickets");
   $r->post("/main/login")->to("main#login");
-  $r->post("/main/save_columns")->to("main#save_columns");
+  $r->post("/main/employee_save_columns")->to("main#employee_save_columns");
+  $r->post("/main/lead_save_columns")->to("main#lead_save_columns");
 }
 
 1;

@@ -1,0 +1,11 @@
+employee1:
+   col_1:
+     name: Important stuff
+     order: 1
+   col_2:
+     name: Trash
+     order: 2
+employee2: 
+   col_3:
+     name: TODO
+     order: 1
