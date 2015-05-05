@@ -30,5 +30,11 @@ sub get_tickets {
     return $result;
 }
 
+sub update_ticket {
+    my ( $ticket_id, $params ) = @_;
+    
+    $rt->edit ( type => 'ticket', id => $ticket_id, set => $params );
+}
+
 1;
 

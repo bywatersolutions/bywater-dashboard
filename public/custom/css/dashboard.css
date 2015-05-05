@@ -6,6 +6,7 @@
     padding: 5px;
     border-collapse: separate;
     border-spacing: 10px;
+    width: 100%;
 }
 
 .db-column {
@@ -58,7 +59,7 @@
 .db-lv-first-col {
     float: left;
     display: block;
-    overflow: hidden;
+    /*overflow: hidden;*/
     height: 100%;
 }
 

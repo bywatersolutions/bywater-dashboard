@@ -22,7 +22,7 @@
         </md-toolbar>
         
         <div class="db-column-content">
-            <md-card class="db-card" ng-repeat="ticket_id in column.tickets" ng-init="ticket = tickets[ticket_id]" ng-model="column.tickets" ng-click="show_popup(ticket)">
+            <md-card class="db-card" ng-repeat="ticket_id in column.tickets" ng-init="ticket = tickets[ticket_id]" ng-model="column.tickets" ng-click="show_popup(ticket)" data-drag="true" jqyoui-draggable="{onStart: 'onDragStart', index: $index}" data-jqyoui-options="{ revert: 'invalid' }">
                 <md-toolbar class="md-warn noselect">
                     <div class="md-toolbar-tools">
                       <span class="md-flex">{{ticket.Subject}}</span>
@@ -33,7 +33,7 @@
     </md-card>
 
     <div class="db-lv-user-avatars">
-        <md-card class="db-lv-avatar-card" ng-repeat="(user_id,user) in users" ng-model="user.password">
+        <md-card class="db-lv-avatar-card" ng-repeat="(user_id,user) in users" data-drop="true" jqyoui-droppable="{onDrop: 'onDrop'}" ng-model="temp">
             <div class="db-lv-avatar-img" ng-attr-style="background-image: url(http://lorempixel.com/200/200/cats/{{user_id}});/">
             </div>
             <md-toolbar class="md-warn noselect">

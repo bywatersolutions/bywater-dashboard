@@ -1,4 +1,4 @@
-var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ui.sortable', 'ngMaterial', 'ngDialog']);
+var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ui.sortable', 'ngMaterial', 'ngDialog', 'ngDragDrop']);
 
 dashboardApp.config(['$routeProvider',
   function($routeProvider) {
@@ -83,7 +83,7 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$timeout', '$location
       $scope.columns = data.columns;
       $scope.tickets = data.tickets;
       $scope.users   = data.users;
-      $scope.temp = {};
+      $scope.temp = [];
     }
   });
   
@@ -92,9 +92,20 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$timeout', '$location
         //return !destSortableScope.$parent.column.search_query; // disallow dropping items into TicketSQL columns
       },
       itemMoved: function (event) { /*$scope.save( event.source, event.dest );*/ },
-      orderChanged: function(event) { console.log( event ); },
-      placeholder: function () { console.log("123123123"); return ''; }
+      orderChanged: function(event) { console.log( event ); }
   };
+  
+  $scope.onDragStart = function () {
+    this.isDragged = true;
+  }
+  
+  $scope.onDrop = function ( event, ui ) {
+    $http.post( '/main/update_ticket', { ticket_id: this.dndDragItem, user_id: this.user_id } ).success( function(data) {
+      console.log( data );
+    } ).error( function (data, status) {
+      alert("An unexpected error occurred!");
+    } );
+  }
   
   $scope.save = function ( src, dst ) {
     var src_scope = src.sortableScope.$parent;
@@ -118,6 +129,11 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$timeout', '$location
   }
   
   $scope.show_popup = function ( ticket ) {
+    if ( this.isDragged ) {
+      this.isDragged = false;
+      return;
+    }
+
     child_scope = $scope.$new(true);
     child_scope.ticket = ticket;
     ngDialog.open({ template: 'card-popup', scope: child_scope });

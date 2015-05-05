@@ -235,4 +235,26 @@ sub get_role {
   $c->render(json => { role => $c->session->{role} || "employee" });
 }
 
+sub update_ticket {
+  my $c = shift;
+  
+  my $json = $c->req->json;
+  
+  my $ticket_id = $json->{ticket_id} || die "No ticket ID found!";
+  my $params = {};
+  
+  if ( my $user_id = $json->{user_id} ) {
+    my $users = DashboardApp::Models::User::get_all_users();
+    if ( $users->{$user_id} and $users->{$user_id}->{rt_user_id} ) {
+      $params->{owner} = $users->{$user_id}->{rt_user_id};
+    } else {
+      die "Unknown RT user!";
+    }
+  }
+  
+  DashboardApp::Models::Ticket::update_ticket( $ticket_id, $params );
+  
+  $c->render(json => { status => "ok" });
+}
+
 1;

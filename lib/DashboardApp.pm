@@ -26,6 +26,8 @@ sub startup {
   $r->post("/main/employee_save_columns")->to("main#employee_save_columns");
   $r->post("/main/lead_save_columns")->to("main#lead_save_columns");
   $r->get("/main/get_role")->to("main#get_role");
+  
+  $r->post("/main/update_ticket")->to("main#update_ticket");
 }
 
 1;
