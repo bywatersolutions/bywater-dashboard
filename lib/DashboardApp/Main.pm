@@ -43,19 +43,11 @@ sub lead_tickets {
   my %tickets;
   my %seen_tickets;
   my $columns = {
-    'ticket_sql' => { name => "New tickets", type => "predefined", search_query => "Status = 'new'", tickets => [], "order" => 0 },
+    'ticket_sql' => { name => "New tickets", type => "predefined", search_query => "Owner = 'Nobody' AND (  Status = 'new' OR Status = 'open' )", tickets => [], "order" => 0 },
     #2 => { name => "My tickets", search_query => "Owner = '__CurrentUser__' AND ( Status = 'new' OR Status = 'open')", tickets => [] },
   };
   
   my $users = DashboardApp::Models::User::get_all_users();
-  
-  my $counter = 0;
-  foreach my $user_id ( keys %$users ) {
-    my $user = $users->{ $user_id };
-    next if ( $user->{role} eq "lead" );
-    
-    $columns->{ $user_id } = { "name" => $user->{first_name} . " " . $user->{last_name}, tickets => [], order => ++$counter };
-  }
   
   #####
   
@@ -99,7 +91,8 @@ sub lead_tickets {
   $c->render(json => {
     status => "ok",
     tickets => \%tickets,
-    columns => $columns
+    columns => $columns,
+    users => $users
   });
   
 }

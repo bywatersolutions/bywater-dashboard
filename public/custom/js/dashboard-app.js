@@ -4,11 +4,11 @@ dashboardApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
       when('/employee', {
-        templateUrl: 'templates/employee.html',
+        templateUrl: 'templates/employee-view.html',
         controller: 'employeeCtrl'
       }).
       when('/lead', {
-        templateUrl: 'templates/employee.html',
+        templateUrl: 'templates/lead-view.html',
         controller: 'leadCtrl'
       }).
       when('/login', {
@@ -82,15 +82,18 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$timeout', '$location
       
       $scope.columns = data.columns;
       $scope.tickets = data.tickets;
+      $scope.users   = data.users;
+      $scope.temp = {};
     }
   });
   
   $scope.sortListeners = {
       accept: function (sourceItemHandleScope, destSortableScope) {
-        return !destSortableScope.$parent.column.search_query; // disallow dropping items into TicketSQL columns
+        //return !destSortableScope.$parent.column.search_query; // disallow dropping items into TicketSQL columns
       },
-      itemMoved: function (event) { $scope.save( event.source, event.dest ); },
+      itemMoved: function (event) { /*$scope.save( event.source, event.dest );*/ },
       orderChanged: function(event) { console.log( event ); },
+      placeholder: function () { console.log("123123123"); return ''; }
   };
   
   $scope.save = function ( src, dst ) {

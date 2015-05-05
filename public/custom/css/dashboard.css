@@ -55,6 +55,36 @@
     user-select: none;
 }
 
+.db-lv-first-col {
+    float: left;
+    display: block;
+    overflow: hidden;
+    height: 100%;
+}
+
+.db-lv-avatars {
+    margin-left: 320px;
+    overflow: hidden;
+    display: block;
+}
+
+.db-lv-avatar-card {
+    width: 200px;
+    float: left;
+    display: block;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.db-lv-avatar-img {
+    background-repeat: no-repeat;
+    background-position: 50%;
+    border-radius: 50%;
+    width: 190px;
+    height: 190px;
+    margin: 5px;
+}
+
 /* ***** */
 
 .as-sortable-item {

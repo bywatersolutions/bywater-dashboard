@@ -1,0 +1,46 @@
+<script type="text/ng-template" id="card-popup">
+<div class="db-card-content">
+    <div><span>Status:</span><span>{{ticket.Status}}</span></div>
+    <div><span>Queue:</span><span>{{ticket.Queue}}</span></div>
+    <div><span>Requestors:</span><span>{{ticket.Requestors}}</span></div>
+    <div><span>Creator:</span><span>{{ticket.Creator}}</span></div>
+    <div><span>Resolved:</span><span>{{ticket.Resolved}}</span></div>
+    <div><span>Priority:</span><span>{{ticket.Priority}}</span></div>
+    <div><span>Due:</span><span>{{ticket.Due}}</span></div>
+    <div><span>Created:</span><span>{{ticket.Created}}</span></div>
+    <div><span>LastUpdated:</span><span>{{ticket.LastUpdated}}</span></div>
+    <div><span>Link:</span><span><a class="md-raised md-primary md-button md-default-theme" href="{{ticket.link}}" target="_blank">Go to RT</a></span></div>
+</div>
+</script>
+
+<div class="db-table" ng-model="column.tickets">
+    <md-card class="db-lv-first-col" ng-repeat="column_id in col_ids" ng-init="column = columns[column_id]">
+        <md-toolbar class="ui-state-disabled">
+            <div class="md-toolbar-tools">
+              <span class="md-flex">{{column.name}}</span>
+            </div>
+        </md-toolbar>
+        
+        <div class="db-column-content">
+            <md-card class="db-card" ng-repeat="ticket_id in column.tickets" ng-init="ticket = tickets[ticket_id]" ng-model="column.tickets" ng-click="show_popup(ticket)">
+                <md-toolbar class="md-warn noselect">
+                    <div class="md-toolbar-tools">
+                      <span class="md-flex">{{ticket.Subject}}</span>
+                    </div>
+                </md-toolbar>
+            </md-card>
+        </div>
+    </md-card>
+
+    <div class="db-lv-user-avatars">
+        <md-card class="db-lv-avatar-card" ng-repeat="(user_id,user) in users" ng-model="user.password">
+            <div class="db-lv-avatar-img" ng-attr-style="background-image: url(http://lorempixel.com/200/200/cats/{{user_id}});/">
+            </div>
+            <md-toolbar class="md-warn noselect">
+                <div class="md-toolbar-tools">
+                  <span class="md-flex">{{user.first_name}} {{user.last_name}}</span>
+                </div>
+            </md-toolbar>
+        </md-card>
+    </div>
+</div>
