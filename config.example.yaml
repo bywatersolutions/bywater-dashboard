@@ -2,3 +2,24 @@ rt:
   login: "T&M Development"
   password: "changeme"
   host: "https://rt-test.bywatersolutions.com"
+
+default_columns:
+  col_0:
+    name: Todays TODO
+    type: custom
+ 
+  col_1:
+    name: My Stale Tickets
+    type: rt
+    search_query: Status != 'resolved' AND Queue != 'Bugs' AND Queue != 'Development' AND LastUpdated < '- 15 days' AND Queue != 'Systems' AND Status != 'answered' AND Status != 'onhold' AND Owner = '__CurrentUser__' AND Queue != 'Training' AND Queue != 'Migrations'
+
+  col_2:
+    name: Partner Updates Past 48hrs
+    type: rt
+    ticket_sql: Owner = '__CurrentUser__' AND LastUpdatedBy != '__CurrentUser__' AND LastUpdated > '2 day ago' AND Status != 'resolved' AND Status != 'answered' AND (  Queue != 'Development' AND Queue != 'Migrations' AND Queue != 'Bugs' )
+
+  col_3:
+    name: Closed Tickets Updated
+    type: rt
+    ticket_sql: Owner = '__CurrentUser__' AND LastUpdatedBy != '__CurrentUser__' AND LastUpdated > '1 day ago' AND (  Queue != 'Development' AND Queue != 'Migrations' AND Queue != 'Bugs' ) AND Status != 'new' AND Status != 'open' AND Status != 'onhold' AND Status != 'needsinfo'
+

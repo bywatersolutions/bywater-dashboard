@@ -14,6 +14,8 @@ sub search_tickets {
     
     my @ids = $rt->search( type => 'ticket', query => $search_query );
     
+    @ids = splice( @ids, 0, 20 ); # TODO has to be some limit
+    
     return get_tickets( \@ids );
 }
 

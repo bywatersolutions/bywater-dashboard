@@ -3,16 +3,26 @@ package DashboardApp::Model::Column;
 use Mojo::Base -strict;
 use YAML qw/LoadFile DumpFile/;
 
+use DashboardApp::Model::Config;
+
 # FIXME temporary file-based storage
 sub load_columns {
   my ( $user_id ) = @_;
   
-  return {} unless ( -f "columns.yaml" );
+  my $columns;
   
-  my $data = LoadFile("columns.yaml") ;
-  my $columns = $data->{$user_id};
+  # FIXME temporarily disabled
+  #if ( -f "columns.yaml" ) {
+  #  my $data = LoadFile("columns.yaml") ;
+  #  $columns = $data->{$user_id};
+  #}
   
-  $columns->{incoming} = { name => "Incoming", "order" => 0 };
+  unless ( $columns ) {
+    my $config = DashboardApp::Model::Config::get_config();
+    use Storable qw/dclone/; # FIXME a bit of a hack
+    $columns = dclone( $config->{default_columns} ) || {};
+  }
+  
   return $columns;
 }
 

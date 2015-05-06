@@ -2,6 +2,8 @@ package DashboardApp::Controller::Employee;
 use Mojo::Base 'Mojolicious::Controller';
 
 use DashboardApp::Model::Column;
+use DashboardApp::Model::User;
+use DashboardApp::Model::Ticket;
 
 sub show_dashboard {
   my $c = shift;
@@ -13,6 +15,7 @@ sub show_dashboard {
   ###
   
   my %tickets;
+  my %seen_tickets;
   my $columns = DashboardApp::Model::Column::load_columns( $c->session->{user_id} );
   
   ###
@@ -20,36 +23,35 @@ sub show_dashboard {
   my $tickets = DashboardApp::Model::Column::load_tickets();
   
   foreach my $ticket_id ( keys %$tickets ) {
+    next if ( $seen_tickets{ $ticket_id } );
     my $ticket_data = $tickets->{ $ticket_id };
-    next unless ( $ticket_data->{user_id} eq $c->session->{user_id} );
     
     if ( $ticket_data->{column_id} && $columns->{ $ticket_data->{column_id} } ) {
       push( @{ $columns->{ $ticket_data->{column_id} }->{tickets} }, $ticket_id );
-    } else {
-      push( @{ $columns->{incoming}->{tickets} }, $ticket_id );
+      $seen_tickets{ $ticket_id } = 1;
     }
-    
   }
   
   # Fetching tickets from RT
   foreach my $column_id ( keys %$columns ) {
     my $column = $columns->{$column_id};
     
-    my $tickets;
-    #my $error = try {
-      $tickets = DashboardApp::Model::Ticket::get_tickets( $column->{tickets} );
-      #return;
-    #} catch {
-    #  return $_;    
-    #};
+    next unless ( $column->{type} eq "rt" and $column->{search_query} );
+    
+    my $query = $column->{search_query};
+    
+    my $users = DashboardApp::Model::User::get_all_users();
+    
+    my $user_id = $users->{ $c->session->{user_id} }->{rt_user_id} or die "rt_user_id is not specified for user $c->session->{user_id}";
+    $query =~ s/__CurrentUser__/$user_id/g;
+    my $tickets = DashboardApp::Model::Ticket::search_tickets( $query );
     
     my $error = "";
     
     $column->{tickets} = [];
     foreach my $ticket_id ( keys %$tickets ) {
-      #next if ( $seen_tickets{ $ticket_id } );
+      next if ( $seen_tickets{ $ticket_id } );
       push( @{ $column->{tickets} }, $ticket_id );
-      #$seen_tickets{ $ticket_id } = 1;
     }
     
     %tickets = ( %tickets, %$tickets );
@@ -57,6 +59,10 @@ sub show_dashboard {
     return $c->render( json => { error => $error } ) if ( $error );
   }
   
+  foreach my $column ( values %$columns ) {
+    $column->{tickets} = [ grep { $tickets{ $_ } } @{ $column->{tickets} } ];
+  }
+
   ###
   
   $c->render(json => {

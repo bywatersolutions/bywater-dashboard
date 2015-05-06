@@ -21,15 +21,15 @@ sub show_dashboard {
   
   #####
   
-  my $tickets = DashboardApp::Model::Column::load_tickets();
-  foreach my $ticket_id ( keys %$tickets ) {
-    my $ticket_data = $tickets->{$ticket_id};
-    
-    next unless ( $columns->{ $ticket_data->{user_id} } );
-    
-    $seen_tickets{ $ticket_id } = 1;
-    push( @{ $columns->{ $ticket_data->{user_id} }->{tickets} }, $ticket_id );
-  }
+  #my $tickets = DashboardApp::Model::Column::load_tickets();
+  #foreach my $ticket_id ( keys %$tickets ) {
+  #  my $ticket_data = $tickets->{$ticket_id};
+  #  
+  #  next unless ( $columns->{ $ticket_data->{user_id} } );
+  #  
+  #  $seen_tickets{ $ticket_id } = 1;
+  #  push( @{ $columns->{ $ticket_data->{user_id} }->{tickets} }, $ticket_id );
+  #}
   
   #####
   

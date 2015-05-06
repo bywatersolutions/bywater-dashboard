@@ -3,16 +3,29 @@ lead1:
     first_name: Lead
     last_name: Leaderson
     password: 123456
+    rt_user_id: 1180
+    avatar: http://lorempixel.com/200/200/cats/lead1
 
 employee1:
     role: employee
     first_name: Employee
     last_name: Employeerson
     password: 123456
+    rt_user_id: 1188
+    avatar: http://lorempixel.com/200/200/cats/employee1
 
 employee2:
     role: employee
     first_name: Tester
     last_name: Testerson
     password: 123456
+    rt_user_id: 1202
+    avatar: http://lorempixel.com/200/200/cats/employee2
 
+employee3:
+    role: employee
+    first_name: User
+    last_name: Userson
+    password: 123456
+    rt_user_id: 314006
+    avatar: http://lorempixel.com/200/200/cats/employee3
