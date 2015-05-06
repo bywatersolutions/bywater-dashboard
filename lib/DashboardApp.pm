@@ -20,14 +20,16 @@ sub startup {
   
   my $r = $self->routes;
   $r->get("/")->to("main#index");
-  $r->get("/main/employee_tickets")->to("main#employee_tickets");
-  $r->get("/main/lead_tickets")->to("main#lead_tickets");
-  $r->post("/main/login")->to("main#login");
-  $r->post("/main/employee_save_columns")->to("main#employee_save_columns");
-  $r->post("/main/lead_save_columns")->to("main#lead_save_columns");
   $r->get("/main/get_role")->to("main#get_role");
-  
+  $r->post("/main/login")->to("main#login");
   $r->post("/main/update_ticket")->to("main#update_ticket");
+  
+  $r->get("/main/employee_tickets")->to("employee#show_dashboard");
+  $r->post("/main/employee_save_columns")->to("employee#save_columns");
+  
+  $r->get("/main/lead_tickets")->to("lead#show_dashboard");
+  $r->post("/main/lead_save_columns")->to("lead#save_columns");
 }
+  
 
 1;

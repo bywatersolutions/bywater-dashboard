@@ -1,7 +1,6 @@
-package DashboardApp::Models::User;
+package DashboardApp::Model::User;
 
-use strict;
-use warnings;
+use Mojo::Base -strict;
 use YAML qw/LoadFile/;
 use Data::Dumper;
 

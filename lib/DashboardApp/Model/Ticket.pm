@@ -1,11 +1,10 @@
-package DashboardApp::Models::Ticket;
+package DashboardApp::Model::Ticket;
 
-use strict;
-use warnings;
+use Mojo::Base -strict;
 use RT::Client::REST;
-use DashboardApp::Models::Config;
+use DashboardApp::Model::Config;
 
-my $config = DashboardApp::Models::Config::get_config();
+my $config = DashboardApp::Model::Config::get_config();
 my $credentials = $config->{rt} || die "RT credentials not found.";
 my $rt = RT::Client::REST->new( server => $credentials->{host}, timeout => 3 );
 $rt->login( username => $credentials->{login}, password => $credentials->{password} );
