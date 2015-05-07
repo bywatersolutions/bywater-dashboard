@@ -19,8 +19,7 @@ sub login {
   }
   
   $c->session({ user_id => $json->{login}, role => $role });
-  
-  $c->render(json => { status => "ok" });
+  $c->render(json => { role => $role });
 }
 
 sub get_role {

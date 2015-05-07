@@ -8,10 +8,6 @@ use DashboardApp::Model::Ticket;
 sub show_dashboard {
   my $c = shift;
   
-  unless ( $c->session->{user_id} ) {
-    return $c->render(json => { error => "You are not logged in!" });
-  }
-  
   ###
   
   my %tickets;
@@ -74,10 +70,6 @@ sub show_dashboard {
 
 sub save_columns {
   my $c = shift;
-  
-  unless ( $c->session->{user_id} ) {
-    return $c->render(json => { error => "You are not logged in!" });
-  }
   
   my $json = $c->req->json;
   

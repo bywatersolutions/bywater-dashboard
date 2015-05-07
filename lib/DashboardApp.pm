@@ -20,15 +20,38 @@ sub startup {
   
   my $r = $self->routes;
   $r->get("/")->to("main#index");
-  $r->get("/main/get_role")->to("main#get_role");
-  $r->post("/main/login")->to("main#login");
-  $r->post("/main/update_ticket")->to("main#update_ticket");
+  $r->post("/json/login")->to("main#login");
   
-  $r->get("/main/employee_tickets")->to("employee#show_dashboard");
-  $r->post("/main/employee_save_columns")->to("employee#save_columns");
+  my $auth = $r->under( sub {
+    my ( $c ) = @_;
+    
+    unless ( $c->session->{user_id} ) {
+      $c->render( json => { error => "Not authorized." }, status => 401 );
+      return 0;
+    }
+    
+    return 1;
+  } );
   
-  $r->get("/main/lead_tickets")->to("lead#show_dashboard");
-  $r->post("/main/lead_save_columns")->to("lead#save_columns");
+  $auth->get("/json/employee/tickets")->to("employee#show_dashboard");
+  $auth->post("/json/employee/save_columns")->to("employee#save_columns");
+  
+  $auth->get("/json/get_role")->to("main#get_role");
+  $auth->post("/json/update_ticket")->to("main#update_ticket");
+  
+  my $lead = $auth->under( sub {
+    my ( $c ) = @_;
+    
+    unless ( $c->session->{role} eq "lead" ) {
+      $c->render( json => { error => "Operation not permitted." }, status => 403 );
+      return 0;
+    }
+    
+    return 1;
+  } );
+  
+  $lead->get("/json/lead/tickets")->to("lead#show_dashboard");
+  $lead->post("/json/lead/save_columns")->to("lead#save_columns");
 }
   
 

@@ -1,5 +1,36 @@
 var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ui.sortable', 'ngMaterial', 'ngDialog', 'ngDragDrop']);
 
+dashboardApp.factory( 'httpInterceptor', [ '$q', '$location', function( $q, $location ) {  
+    return {
+      response: function ( response ) {
+        console.log( response );
+        
+        if ( response.data.error ) {
+          alert( response.data.error );
+          return $q.reject( response );
+        }
+        
+        return response;
+      },
+      responseError: function( response ) {
+        if ( response.status == 401 ) {
+          $location.path( "/login" );
+        } else if ( response.data.error ) {
+          alert( response.data.error );
+        } else {
+          alert( "Unknown error ocurred." );
+          console.log( response );
+        }
+        
+        return $q.reject( response );
+      }
+    };
+} ] );
+
+dashboardApp.config(['$httpProvider', function($httpProvider) {  
+    $httpProvider.interceptors.push('httpInterceptor');
+}]);
+
 dashboardApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
@@ -23,7 +54,7 @@ dashboardApp.config(['$routeProvider',
 );
 
 dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$timeout', '$location', 'ngDialog', function($scope, $http, $timeout, $location, ngDialog) {
-  $http.get('/main/employee_tickets').success(function(data) {
+  $http.get('/json/employee/tickets').success(function(data) {
     if ( data.error ) {
       $location.path( "/login" );
     } else {
@@ -57,7 +88,7 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$timeout', '$loca
       columns[ dst_scope.column_id ] = dst_scope.column.tickets;
     }
     
-    $http.post( '/main/employee_save_columns', columns ).success( function(data) {
+    $http.post( '/json/employee/save_columns', columns ).success( function(data) {
       console.log( data );
     } ).error( function (data, status) {
       alert("An unexpected error occurred!");
@@ -73,18 +104,14 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$timeout', '$loca
 );
 
 dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$timeout', '$location', 'ngDialog', function($scope, $http, $timeout, $location, ngDialog) {
-  $http.get('/main/lead_tickets').success(function(data) {
-    if ( data.error ) {
-      $location.path( "/login" );
-    } else {
-      $scope.col_ids = Object.keys( data.columns );
-      $scope.col_ids.sort(function(a,b){ return data.columns[a].order - data.columns[b].order });
-      
-      $scope.columns = data.columns;
-      $scope.tickets = data.tickets;
-      $scope.users   = data.users;
-      $scope.temp = [];
-    }
+  $http.get('/json/lead/tickets').success(function(data) {
+    $scope.col_ids = Object.keys( data.columns );
+    $scope.col_ids.sort(function(a,b){ return data.columns[a].order - data.columns[b].order });
+    
+    $scope.columns = data.columns;
+    $scope.tickets = data.tickets;
+    $scope.users   = data.users;
+    $scope.temp = [];
   });
   
   $scope.sortListeners = {
@@ -100,7 +127,7 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$timeout', '$location
   }
   
   $scope.onDrop = function ( event, ui ) {
-    $http.post( '/main/update_ticket', { ticket_id: this.dndDragItem, user_id: this.user_id } ).success( function(data) {
+    $http.post( '/json/update_ticket', { ticket_id: this.dndDragItem, user_id: this.user_id } ).success( function(data) {
       console.log( data );
     } ).error( function (data, status) {
       alert("An unexpected error occurred!");
@@ -121,10 +148,8 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$timeout', '$location
       columns[ dst_scope.column_id ] = dst_scope.column.tickets;
     }
     
-    $http.post( '/main/lead_save_columns', columns ).success( function(data) {
+    $http.post( '/json/lead/save_columns', columns ).success( function(data) {
       console.log( data );
-    } ).error( function (data, status) {
-      alert("An unexpected error occurred!");
     } );
   }
   
@@ -145,15 +170,18 @@ dashboardApp.controller( 'loginCtrl', [ '$scope', '$http', '$timeout', '$locatio
     $scope.credentials = {};
     
     $scope.submit = function () {
-        $http.post('/main/login', $scope.credentials).success(function(data) {
-            $location.path( "/main" );
-        });
+      $http.post('/json/login', $scope.credentials).success(function(data) {
+        if ( data.role == "lead" ) {
+          $location.path( "/lead" );
+        } else {
+          $location.path( "/employee" );
+        }
+      });
     };
 } ] );
 
 dashboardApp.controller( 'redirectCtrl', [ '$scope', '$http', '$location', function($scope, $http, $location) {
-  $http.get('/main/get_role').success(function(data) {
-    console.log(data);
+  $http.get('/json/get_role').success(function(data) {
     if ( data.role == "employee" ) {
       $location.path("/employee");
     } else {
