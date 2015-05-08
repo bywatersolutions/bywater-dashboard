@@ -3,8 +3,6 @@ var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ui.sortable', 'ng
 dashboardApp.factory( 'httpInterceptor', [ '$q', '$location', function( $q, $location ) {  
     return {
       response: function ( response ) {
-        console.log( response );
-        
         if ( response.data.error ) {
           alert( response.data.error );
           return $q.reject( response );
@@ -53,18 +51,50 @@ dashboardApp.config(['$routeProvider',
   }]
 );
 
-dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$timeout', '$location', 'ngDialog', function($scope, $http, $timeout, $location, ngDialog) {
-  $http.get('/json/employee/tickets').success(function(data) {
-    if ( data.error ) {
-      $location.path( "/login" );
-    } else {
-      $scope.col_ids = Object.keys( data.columns );
-      $scope.col_ids.sort(function(a,b){ return data.columns[a].order - data.columns[b].order });
+dashboardApp.factory( 'ticketUpdater', [ '$q', '$http', function ( $q, $http ) {
+  return function ( columns, tickets ) {
+    var new_ticket_ids = [];
+    
+    for ( var column_id in columns ) {
+      var ticket_ids = columns[ column_id ].tickets;
+      if ( !ticket_ids ) continue;
       
-      $scope.columns = data.columns;
-      $scope.tickets = data.tickets;
+      for ( var i = 0; i < ticket_ids.length; i++ ) {
+        var ticket_id = ticket_ids[i];
+        if ( !tickets[ ticket_id ] ) new_ticket_ids.push( ticket_id );
+      }
     }
+    
+    var deferred = $q.defer();
+    
+    $http.post( '/json/ticket_details', { 'ids': new_ticket_ids } )
+    .success( function( data ) {
+      for ( ticket_id in data ) {
+        data[ticket_id]['__updated'] = new Date();
+      }
+      deferred.resolve( data );
+    } ).error( function ( data ) {
+      deferred.reject( data )
+    } );
+    
+    return deferred.promise;
+  }
+} ] );
+
+dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$timeout', '$location', 'ngDialog', 'ticketUpdater', function($scope, $http, $timeout, $location, ngDialog, ticketUpdater) {
+  $http.get('/json/employee/tickets').success(function(data) {
+    $scope.col_ids = Object.keys( data.columns );
+    $scope.col_ids.sort(function(a,b){ return data.columns[a].order - data.columns[b].order });
+    $scope.columns = data.columns;
+
+    ticketUpdater( $scope.columns, $scope.tickets ).then( function( data ) {
+      for ( ticket_id in data ) {
+        $scope.tickets[ ticket_id ] = data[ ticket_id ];
+      }
+    } );
   });
+  
+  $scope.tickets = {};
   
   $scope.sortListeners = {
       accept: function (sourceItemHandleScope, destSortableScope) {
@@ -88,11 +118,7 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$timeout', '$loca
       columns[ dst_scope.column_id ] = dst_scope.column.tickets;
     }
     
-    $http.post( '/json/employee/save_columns', columns ).success( function(data) {
-      console.log( data );
-    } ).error( function (data, status) {
-      alert("An unexpected error occurred!");
-    } );
+    $http.post( '/json/employee/save_columns', columns ).success( function(data) { console.log( data ); } );
   }
   
   $scope.show_popup = function ( ticket ) {
@@ -103,16 +129,23 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$timeout', '$loca
 } ]
 );
 
-dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$timeout', '$location', 'ngDialog', function($scope, $http, $timeout, $location, ngDialog) {
+dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$timeout', '$location', 'ngDialog', 'ticketUpdater', function($scope, $http, $timeout, $location, ngDialog, ticketUpdater) {
   $http.get('/json/lead/tickets').success(function(data) {
     $scope.col_ids = Object.keys( data.columns );
     $scope.col_ids.sort(function(a,b){ return data.columns[a].order - data.columns[b].order });
     
     $scope.columns = data.columns;
-    $scope.tickets = data.tickets;
     $scope.users   = data.users;
     $scope.temp = [];
+    
+    ticketUpdater( $scope.columns, $scope.tickets ).then( function( data ) {
+      for ( ticket_id in data ) {
+        $scope.tickets[ ticket_id ] = data[ ticket_id ];
+      }
+    } );
   });
+  
+  $scope.tickets = {};
   
   $scope.sortListeners = {
       accept: function (sourceItemHandleScope, destSortableScope) {

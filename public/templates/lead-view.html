@@ -22,10 +22,10 @@
         </md-toolbar>
         
         <div class="db-column-content">
-            <md-card class="db-card" ng-repeat="ticket_id in column.tickets" ng-init="ticket = tickets[ticket_id]" ng-model="column.tickets" ng-click="show_popup(ticket)" data-drag="true" jqyoui-draggable="{onStart: 'onDragStart', index: $index}" data-jqyoui-options="{ revert: 'invalid' }">
+            <md-card class="db-card" ng-repeat="ticket_id in column.tickets" ng-model="column.tickets" ng-click="show_popup(ticket)" data-drag="true" jqyoui-draggable="{onStart: 'onDragStart', index: $index}" data-jqyoui-options="{ revert: 'invalid' }">
                 <md-toolbar class="md-warn noselect">
                     <div class="md-toolbar-tools">
-                      <span class="md-flex">{{ticket.Subject}}</span>
+                      <span class="md-flex">{{ticket_id}} {{tickets[ticket_id].Subject}}</span>
                     </div>
                 </md-toolbar>
             </md-card>

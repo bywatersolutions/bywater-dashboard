@@ -11,12 +11,8 @@ $rt->login( username => $credentials->{login}, password => $credentials->{passwo
 
 sub search_tickets {
     my ( $search_query ) = @_;
-    
     my @ids = $rt->search( type => 'ticket', query => $search_query );
-    
-    @ids = splice( @ids, 0, 20 ); # TODO has to be some limit
-    
-    return get_tickets( \@ids );
+    return \@ids;
 }
 
 sub get_tickets {

@@ -38,6 +38,7 @@ sub startup {
   
   $auth->get("/json/get_role")->to("main#get_role");
   $auth->post("/json/update_ticket")->to("main#update_ticket");
+  $auth->post("/json/ticket_details")->to("main#ticket_details");
   
   my $lead = $auth->under( sub {
     my ( $c ) = @_;

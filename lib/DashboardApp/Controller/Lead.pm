@@ -6,26 +6,15 @@ use DashboardApp::Model::Column;
 sub show_dashboard {
   my $c = shift;
   
-  my %tickets;
-  my %seen_tickets;
   my $columns = {
     'ticket_sql' => { name => "New tickets", type => "predefined", search_query => "Owner = 'Nobody' AND (  Status = 'new' OR Status = 'open' )", tickets => [], "order" => 0 },
     #2 => { name => "My tickets", search_query => "Owner = '__CurrentUser__' AND ( Status = 'new' OR Status = 'open')", tickets => [] },
   };
   
   my $users = DashboardApp::Model::User::get_all_users();
-  
-  #####
-  
-  #my $tickets = DashboardApp::Model::Column::load_tickets();
-  #foreach my $ticket_id ( keys %$tickets ) {
-  #  my $ticket_data = $tickets->{$ticket_id};
-  #  
-  #  next unless ( $columns->{ $ticket_data->{user_id} } );
-  #  
-  #  $seen_tickets{ $ticket_id } = 1;
-  #  push( @{ $columns->{ $ticket_data->{user_id} }->{tickets} }, $ticket_id );
-  #}
+  foreach my $user ( values %$users ) {
+    delete( $user->{password} );
+  }
   
   #####
   
@@ -41,13 +30,7 @@ sub show_dashboard {
     #  return $_;    
     #};
     
-    $column->{tickets} = [];
-    foreach my $ticket_id ( keys %$tickets ) {
-      next if ( $seen_tickets{ $ticket_id } );
-      push( @{ $column->{tickets} }, $ticket_id );
-    }
-    
-    %tickets = ( %tickets, %$tickets );
+    $column->{tickets} = $tickets;
     
     return $c->render( json => { error => $error } ) if ( $error );
   }
@@ -55,11 +38,9 @@ sub show_dashboard {
   ###
   
   $c->render(json => {
-    status => "ok",
-    tickets => \%tickets,
     columns => $columns,
     users => $users
-  });
+  } );
 }
 
 sub save_columns {

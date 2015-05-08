@@ -49,4 +49,13 @@ sub update_ticket {
   $c->render(json => { status => "ok" });
 }
 
+sub ticket_details {
+  my $c = shift;
+  
+  my $json = $c->req->json;
+  my $result = DashboardApp::Model::Ticket::get_tickets( $json->{ids} );
+  
+  $c->render( json => $result );
+}
+
 1;
