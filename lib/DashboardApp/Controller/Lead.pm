@@ -39,7 +39,10 @@ sub show_dashboard {
   
   $c->render(json => {
     columns => $columns,
-    users => $users
+    users => $users,
+    rt_users => DashboardApp::Model::User::get_rt_users(),
+    queues => DashboardApp::Model::Ticket::get_queues(),
+    statuses => DashboardApp::Model::Config::get_rt_statuses()
   } );
 }
 

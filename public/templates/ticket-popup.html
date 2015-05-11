@@ -1,0 +1,19 @@
+<div class="db-card-content">
+    <div>
+        <span>Status:</span>
+        <span><select ng-init="update_dialog.status = ngDialogData.Status" ng-model="update_dialog.status" ng-options="status as status for status in statuses"></select></span>
+    </div>
+    <div>
+        <span>Queue:</span>
+        <span><select ng-init="update_dialog.queue = ngDialogData.Queue" ng-model="update_dialog.queue" ng-options="queue.name as queue.name for queue in queues"></select></span>
+    </div>
+    <div>
+        <span>Owner:</span>
+        <span><select ng-init="update_dialog.owner = ngDialogData.Owner" ng-model="update_dialog.owner" ng-options="login as name for ( login, name ) in rt_users"></select></span>
+    </div>
+    <div>
+        <span>Requestors:</span>
+        <span>{{ngDialogData.Requestors}}</span>
+    </div>
+    <div><span>Link:</span><span><a class="md-raised md-primary md-button md-default-theme" href="{{ngDialogData.link}}" target="_blank">Go to RT</a></span></div>
+</div>

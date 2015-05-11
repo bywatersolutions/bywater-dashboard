@@ -1,18 +1,3 @@
-<script type="text/ng-template" id="card-popup">
-<div class="db-card-content">
-    <div><span>Status:</span><span>{{ticket.Status}}</span></div>
-    <div><span>Queue:</span><span>{{ticket.Queue}}</span></div>
-    <div><span>Requestors:</span><span>{{ticket.Requestors}}</span></div>
-    <div><span>Creator:</span><span>{{ticket.Creator}}</span></div>
-    <div><span>Resolved:</span><span>{{ticket.Resolved}}</span></div>
-    <div><span>Priority:</span><span>{{ticket.Priority}}</span></div>
-    <div><span>Due:</span><span>{{ticket.Due}}</span></div>
-    <div><span>Created:</span><span>{{ticket.Created}}</span></div>
-    <div><span>LastUpdated:</span><span>{{ticket.LastUpdated}}</span></div>
-    <div><span>Link:</span><span><a class="md-raised md-primary md-button md-default-theme" href="{{ticket.link}}" target="_blank">Go to RT</a></span></div>
-</div>
-</script>
-
 <div class="db-table" style="width: 100%;" ng-model="column.tickets">
     <md-card class="db-lv-first-col" ng-repeat="column_id in col_ids" ng-init="column = columns[column_id]">
         <md-toolbar class="ui-state-disabled">
@@ -22,10 +7,13 @@
         </md-toolbar>
         
         <div class="db-column-content">
-            <md-card class="db-card" ng-repeat="ticket_id in column.tickets" ng-model="column.tickets" ng-click="show_popup(ticket)" data-drag="true" jqyoui-draggable="{onStart: 'onDragStart', index: $index}" data-jqyoui-options="{ revert: 'invalid' }">
+            <md-card class="db-card" ng-repeat="ticket_id in column.tickets" ng-model="column.tickets" ng-click="show_popup(ticket_id)" data-drag="true" jqyoui-draggable="{onStart: 'onDragStart', index: $index}" data-jqyoui-options="{ revert: 'invalid' }">
                 <md-toolbar class="md-warn noselect">
                     <div class="md-toolbar-tools">
-                      <span class="md-flex">{{ticket_id}} {{tickets[ticket_id].Subject}}</span>
+                      <span class="md-flex">
+                        <div>{{tickets[ticket_id].Subject}}</div>
+                        <div style="font-size: 50%;">#{{ticket_id}} {{tickets[ticket_id].LastUpdated}}</div>
+                      </span>
                     </div>
                 </md-toolbar>
             </md-card>
@@ -34,7 +22,7 @@
 
     <div class="db-lv-user-avatars">
         <md-card class="db-lv-avatar-card" ng-repeat="(user_id,user) in users" data-drop="true" jqyoui-droppable="{onDrop: 'onDrop'}" ng-model="temp">
-            <div class="db-lv-avatar-img" ng-attr-style="background-image: url(http://lorempixel.com/200/200/cats/{{user_id}});/">
+            <div class="db-lv-avatar-img" ng-attr-style="background-image: url({{user.avatar}});/">
             </div>
             <md-toolbar class="md-warn noselect">
                 <div class="md-toolbar-tools">

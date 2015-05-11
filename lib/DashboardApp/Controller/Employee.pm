@@ -4,6 +4,7 @@ use Mojo::Base 'Mojolicious::Controller';
 use DashboardApp::Model::Column;
 use DashboardApp::Model::User;
 use DashboardApp::Model::Ticket;
+use DashboardApp::Model::Config;
 
 sub show_dashboard {
   my $c = shift;
@@ -60,7 +61,12 @@ sub show_dashboard {
 
   ###
   
-  $c->render( json => { columns => $columns } );
+  $c->render( json => {
+    columns => $columns,
+    queues => DashboardApp::Model::Ticket::get_queues(),
+    statuses => DashboardApp::Model::Config::get_rt_statuses(),
+    rt_users => DashboardApp::Model::User::get_rt_users()
+  } );
 }
 
 sub save_columns {

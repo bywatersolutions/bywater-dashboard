@@ -9,6 +9,22 @@ my $credentials = $config->{rt} || die "RT credentials not found.";
 my $rt = RT::Client::REST->new( server => $credentials->{host}, timeout => 3 );
 $rt->login( username => $credentials->{login}, password => $credentials->{password} );
 
+my @queues;
+
+sub get_queues {
+    if ( !@queues ) {
+        my @ids = $rt->search( type => 'queue', query => "" );
+        foreach my $id ( @ids ) {
+          my $info = $rt->show( type => 'queue', id => $id );
+          $info->{id} =~ /(\d+)$/;
+          
+          push( @queues, { id => $1, name => $info->{Name}, description => $info->{Description} } );
+        }
+    }
+    
+    return \@queues;   
+}
+
 sub search_tickets {
     my ( $search_query ) = @_;
     my @ids = $rt->search( type => 'ticket', query => $search_query );

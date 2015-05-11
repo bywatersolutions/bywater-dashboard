@@ -85,8 +85,11 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$timeout', '$loca
   $http.get('/json/employee/tickets').success(function(data) {
     $scope.col_ids = Object.keys( data.columns );
     $scope.col_ids.sort(function(a,b){ return data.columns[a].order - data.columns[b].order });
-    $scope.columns = data.columns;
-
+    
+    for ( key in data ) {
+      $scope[ key ] = data[ key ];
+    }
+    
     ticketUpdater( $scope.columns, $scope.tickets ).then( function( data ) {
       for ( ticket_id in data ) {
         $scope.tickets[ ticket_id ] = data[ ticket_id ];
@@ -121,10 +124,13 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$timeout', '$loca
     $http.post( '/json/employee/save_columns', columns ).success( function(data) { console.log( data ); } );
   }
   
-  $scope.show_popup = function ( ticket ) {
-    child_scope = $scope.$new(true);
-    child_scope.ticket = ticket;
-    ngDialog.open({ template: 'card-popup', scope: child_scope });
+  $scope.show_popup = function ( ticket_id ) {
+    ngDialog.open({
+      template: 'templates/ticket-popup.html',
+      data: $scope.tickets[ticket_id],
+      controller: 'ticketPopupCtrl',
+      scope: $scope
+    });
   }
 } ]
 );
@@ -134,10 +140,10 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$timeout', '$location
     $scope.col_ids = Object.keys( data.columns );
     $scope.col_ids.sort(function(a,b){ return data.columns[a].order - data.columns[b].order });
     
-    $scope.columns = data.columns;
-    $scope.users   = data.users;
-    $scope.temp = [];
-    
+    for ( key in data ) {
+      $scope[ key ] = data[ key ];
+    }
+
     ticketUpdater( $scope.columns, $scope.tickets ).then( function( data ) {
       for ( ticket_id in data ) {
         $scope.tickets[ ticket_id ] = data[ ticket_id ];
@@ -186,15 +192,18 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$timeout', '$location
     } );
   }
   
-  $scope.show_popup = function ( ticket ) {
+  $scope.show_popup = function ( ticket_id ) {
     if ( this.isDragged ) {
       this.isDragged = false;
       return;
     }
 
-    child_scope = $scope.$new(true);
-    child_scope.ticket = ticket;
-    ngDialog.open({ template: 'card-popup', scope: child_scope });
+    ngDialog.open({
+      template: 'templates/ticket-popup.html',
+      data: $scope.tickets[ticket_id],
+      controller: 'ticketPopupCtrl',
+      scope: $scope
+    });
   }
 } ]
 );
@@ -221,4 +230,7 @@ dashboardApp.controller( 'redirectCtrl', [ '$scope', '$http', '$location', funct
       $location.path("/lead");
     }
   });
+} ] );
+
+dashboardApp.controller( 'ticketPopupCtrl', [ '$scope', '$http', function($scope, $http) {
 } ] );

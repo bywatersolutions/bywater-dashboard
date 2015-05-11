@@ -11,4 +11,9 @@ sub get_config {
     return $config;    
 }
 
+sub get_rt_statuses {
+    my $config = get_config();
+    return $config->{rt}->{statuses};
+}
+
 1;

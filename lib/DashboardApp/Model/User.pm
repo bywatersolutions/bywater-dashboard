@@ -22,4 +22,15 @@ sub get_all_users {
     return $users;
 }
 
+sub get_rt_users {
+    my $users = get_all_users();
+    my $result = {};
+    foreach my $user ( values %$users ) {
+        next unless ( $user->{rt_user_id} );
+        $result->{ $user->{rt_user_id} } = ( $user->{first_name} || "" ) . " " . ( $user->{last_name} || "" );
+    }
+    
+    return $result;
+}
+
 1;

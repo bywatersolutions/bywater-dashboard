@@ -1,12 +1,3 @@
-<script type="text/ng-template" id="card-popup">
-<div class="db-card-content">
-    <div><span>Status:</span><span>{{ticket.Status}}</span></div>
-    <div><span>Queue:</span><span>{{ticket.Queue}}</span></div>
-    <div><span>Requestors:</span><span>{{ticket.Requestors}}</span></div>
-    <div><span>Link:</span><span><a class="md-raised md-primary md-button md-default-theme" href="{{ticket.link}}" target="_blank">Go to RT</a></span></div>
-</div>
-</script>
-
 <div class="db-table">
     <md-card class="db-column" ng-repeat="column_id in col_ids" ng-init="column = columns[column_id]">
         <md-toolbar class="ui-state-disabled">
@@ -16,7 +7,7 @@
         </md-toolbar>
         
         <div class="db-column-content" ng-model="column.tickets" data-as-sortable="sortListeners">
-            <md-card class="db-card" ng-repeat="ticket_id in column.tickets" ng-model="column.tickets" data-as-sortable-item ng-click="show_popup(tickets[ticket_id])">
+            <md-card class="db-card" ng-repeat="ticket_id in column.tickets" ng-model="column.tickets" data-as-sortable-item ng-click="show_popup(ticket_id)">
                 <md-toolbar class="md-warn noselect" data-as-sortable-item-handle>
                     <div class="md-toolbar-tools">
                       <span class="md-flex">{{ticket_id}} {{tickets[ticket_id].Subject}}</span>
