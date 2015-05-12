@@ -3,6 +3,7 @@ use Mojo::Base 'Mojolicious::Controller';
 
 use DashboardApp::Model::Column;
 use DashboardApp::Model::User;
+use DashboardApp::Model::Ticket;
 
 sub show_dashboard {
   my $c = shift;
