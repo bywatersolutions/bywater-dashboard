@@ -42,6 +42,10 @@ sub update_ticket {
     } else {
       die "Unknown RT user!";
     }
+  } else {
+    foreach my $param ( qw/owner status queue/ ) {
+      $params->{ $param } = $json->{ $param } if ( defined $json->{ $param } );
+    }
   }
   
   DashboardApp::Model::Ticket::update_ticket( $ticket_id, $params );
@@ -54,6 +58,15 @@ sub ticket_details {
   
   my $json = $c->req->json;
   my $result = DashboardApp::Model::Ticket::get_tickets( $json->{ids} );
+  
+  $c->render( json => $result );
+}
+
+sub ticket_history {
+  my $c = shift;
+  
+  my $json = $c->req->json;
+  my $result = DashboardApp::Model::Ticket::get_history( $json->{ticket_id} );
   
   $c->render( json => $result );
 }

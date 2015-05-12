@@ -30,6 +30,8 @@ sub get_rt_users {
         $result->{ $user->{rt_user_id} } = ( $user->{first_name} || "" ) . " " . ( $user->{last_name} || "" );
     }
     
+    $result->{Nobody} = 'Nobody';
+    
     return $result;
 }
 

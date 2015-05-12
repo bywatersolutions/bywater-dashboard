@@ -9,8 +9,7 @@
         <div class="db-column-content" ng-model="column.tickets" data-as-sortable="sortListeners">
             <md-card class="db-card" ng-repeat="ticket_id in column.tickets" ng-model="column.tickets" data-as-sortable-item ng-click="show_popup(ticket_id)">
                 <md-toolbar class="md-warn noselect" data-as-sortable-item-handle>
-                    <div class="md-toolbar-tools">
-                      <span class="md-flex">{{ticket_id}} {{tickets[ticket_id].Subject}}</span>
+                    <div class="md-toolbar-tools" ng-include="'/templates/ticket-card.html'" >
                     </div>
                 </md-toolbar>
             </md-card>

@@ -9,11 +9,7 @@
         <div class="db-column-content">
             <md-card class="db-card" ng-repeat="ticket_id in column.tickets" ng-model="column.tickets" ng-click="show_popup(ticket_id)" data-drag="true" jqyoui-draggable="{onStart: 'onDragStart', index: $index}" data-jqyoui-options="{ revert: 'invalid' }">
                 <md-toolbar class="md-warn noselect">
-                    <div class="md-toolbar-tools">
-                      <span class="md-flex">
-                        <div>{{tickets[ticket_id].Subject}}</div>
-                        <div style="font-size: 50%;">#{{ticket_id}} {{tickets[ticket_id].LastUpdated}}</div>
-                      </span>
+                    <div class="md-toolbar-tools" ng-include="'/templates/ticket-card.html'">
                     </div>
                 </md-toolbar>
             </md-card>

@@ -13,7 +13,7 @@ sub show_dashboard {
   
   my %tickets;
   my %seen_tickets;
-  my $columns = DashboardApp::Model::Column::load_columns( $c->session->{user_id} );
+  my $columns = DashboardApp::Model::Column::load_columns( $c->session->{user_id}, 'employee_default_columns' );
   
   ###
   

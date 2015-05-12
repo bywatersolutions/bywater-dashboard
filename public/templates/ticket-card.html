@@ -1,0 +1,13 @@
+<div ng-switch on="tickets[ticket_id]">
+    <div ng-switch-when="undefined">
+        <img src="/images/loader.gif" style="width: 16px; height: 16px;"/>
+    </div>
+    <div ng-switch-otherwise>
+        <span class="md-flex">
+            <div>{{tickets[ticket_id].Subject}}</div>
+            <div style="font-size: 75%;">#{{ticket_id}} {{tickets[ticket_id].LastUpdated}}</div>
+        </span>
+    </div>
+</div>
+
+

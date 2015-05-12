@@ -121,3 +121,16 @@
     border-collapse: separate;
     border-spacing: 10px;
 }
+
+md-toolbar {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    height: auto;
+    min-height: 64px;
+}
+
+.md-toolbar-tools {
+    max-height: none;
+    height: auto;
+    min-height: 64px;
+}

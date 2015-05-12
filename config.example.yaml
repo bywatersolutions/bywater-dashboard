@@ -2,8 +2,15 @@ rt:
   login: "T&M Development"
   password: "changeme"
   host: "https://rt-test.bywatersolutions.com"
+  statuses: [ "new", "open", "stalled", "resolved", "rejected", "deleted", "needsinfo" ]
 
-default_columns:
+lead_default_columns:
+  col_0:
+    name: New tickets
+    type: rt
+    search_query: Owner = 'Nobody' AND (  Status = 'new' OR Status = 'open' )
+
+employee_default_columns:
   col_0:
     name: Todays TODO
     type: custom

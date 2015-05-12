@@ -2,14 +2,12 @@ package DashboardApp::Controller::Lead;
 use Mojo::Base 'Mojolicious::Controller';
 
 use DashboardApp::Model::Column;
+use DashboardApp::Model::User;
 
 sub show_dashboard {
   my $c = shift;
   
-  my $columns = {
-    'ticket_sql' => { name => "New tickets", type => "predefined", search_query => "Owner = 'Nobody' AND (  Status = 'new' OR Status = 'open' )", tickets => [], "order" => 0 },
-    #2 => { name => "My tickets", search_query => "Owner = '__CurrentUser__' AND ( Status = 'new' OR Status = 'open')", tickets => [] },
-  };
+  my $columns = DashboardApp::Model::Column::load_columns( $c->session->{user_id}, 'lead_default_columns' );
   
   my $users = DashboardApp::Model::User::get_all_users();
   foreach my $user ( values %$users ) {
