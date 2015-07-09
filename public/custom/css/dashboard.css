@@ -85,6 +85,23 @@
     margin: 5px;
 }
 
+.db-history .db-items {
+    white-space: pre-line;
+    font-size: 60%;
+    line-height: normal;
+}
+
+.db-history {
+    margin-top: 1em;
+    max-height: 300px;
+    overflow: scroll;
+}
+
+
+
+
+
+
 /* ***** */
 
 .as-sortable-item {

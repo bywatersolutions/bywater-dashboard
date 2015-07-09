@@ -1,3 +1,4 @@
+<div>#{{ngDialogData.ticket_id}} -- {{ngDialogData.ticket.Subject}}</div>
 <div class="db-card-content">
     <div>
         <span>Status:</span>
@@ -21,15 +22,17 @@
 <div>
     <a class="md-raised md-primary md-button md-default-theme" ng-click="update_ticket() && closeThisDialog()" target="_blank">Update ticket</a>
 </div>
-<div ng-switch on="history" class="history">
+<div ng-switch on="history" class="db-history">
     History:
     <div ng-switch-when="undefined">
         <img src="/images/loader.gif"/>
     </div>
-    <div ng-switch-otherwise ng-repeat="item in history" style="white-space: pre-line; font-size: 60%; line-height: normal;">
+    <div ng-switch-otherwise ng-repeat="item in history" class="db-items">
         <hr/>
         <div>Creator: {{item.Creator}}</div>
-        <div><b>{{item.Description}}</b></div>
+        <div class="db-description">
+            <b>{{item.Description}}</b>
+        </div>
         <div>{{item.Content}}</div>
     </div>
 </div>

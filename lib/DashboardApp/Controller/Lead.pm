@@ -29,6 +29,8 @@ sub show_dashboard {
     #  return $_;    
     #};
     
+    $tickets = [ reverse( @$tickets ) ] if ( $column->{sort} and $column->{sort} eq "ticket_id_desc" );
+    
     $column->{tickets} = $tickets;
     
     return $c->render( json => { error => $error } ) if ( $error );
