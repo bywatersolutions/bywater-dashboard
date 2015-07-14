@@ -60,6 +60,7 @@
     display: block;
     /*overflow: hidden;*/
     height: 100%;
+    min-width: 316px;
 }
 
 .db-lv-avatars {

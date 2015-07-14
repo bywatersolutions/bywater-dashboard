@@ -1,13 +1,13 @@
-<div class="db-table" style="width: 100%;" ng-model="column.tickets">
-    <md-card class="db-lv-first-col" ng-repeat="column_id in col_ids" ng-init="column = columns[column_id]">
+<div class="db-table" style="width: 100%;" ng-model="columns[column_id].tickets">
+    <md-card class="db-lv-first-col" ng-repeat="column_id in col_ids">
         <md-toolbar class="ui-state-disabled">
             <div class="md-toolbar-tools">
-              <span class="md-flex">{{column.name}}</span>
+              <span class="md-flex">{{columns[column_id].name}}</span>
             </div>
         </md-toolbar>
         
         <div class="db-column-content">
-            <md-card class="db-card" ng-repeat="ticket_id in column.tickets" ng-model="column.tickets" ng-click="show_popup(ticket_id)" data-drag="true" jqyoui-draggable="{onStart: 'onDragStart', index: $index}" data-jqyoui-options="{ revert: 'invalid' }">
+            <md-card class="db-card" ng-repeat="ticket_id in columns[column_id].tickets" ng-model="columns[column_id].tickets" ng-click="show_popup(ticket_id)" data-drag="true" jqyoui-draggable="{onStart: 'onDragStart', index: $index}" data-jqyoui-options="{ revert: 'invalid' }">
                 <md-toolbar class="md-warn noselect">
                     <div class="md-toolbar-tools" ng-include="'/templates/ticket-card.html'">
                     </div>

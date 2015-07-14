@@ -93,9 +93,13 @@ dashboardApp.factory( 'ticketUpdater', [ '$q', '$http', function ( $q, $http ) {
   }
 } ] );
 
-dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$timeout', '$location', 'ngDialog', 'ticketUpdater', function($scope, $http, $timeout, $location, ngDialog, ticketUpdater) {
+dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$location', 'ngDialog', 'ticketUpdater', function($scope, $http, $interval, $location, ngDialog, ticketUpdater) {
   $scope.update_tickets = function() {
-    $http.get('/json/employee/tickets').success(function(data) {
+    $scope.updater_promise = $http.get('/json/employee/tickets')
+    
+    .success(function(data) {
+      $scope.updater_promise = undefined;
+
       $scope.col_ids = Object.keys( data.columns );
       $scope.col_ids.sort(function(a,b){ return data.columns[a].order - data.columns[b].order });
       
@@ -110,13 +114,16 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$timeout', '$loca
           }
         } ).finally( function () { $scope.updater_promise = undefined; } );
       }
+    })
+
+    .error(function () {
+      $scope.updater_promise = undefined;
     });
-    
-    $timeout( function() { $scope.update_tickets(); }, 15000 );
   };
   
   $scope.tickets = {};
   $scope.update_tickets();
+  $interval( function() { $scope.update_tickets(); }, 15000 );
   
   $scope.sortListeners = {
       accept: function (sourceItemHandleScope, destSortableScope) {
@@ -154,9 +161,12 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$timeout', '$loca
 } ]
 );
 
-dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$timeout', '$location', 'ngDialog', 'ticketUpdater', function($scope, $http, $timeout, $location, ngDialog, ticketUpdater) {
+dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$interval', '$location', 'ngDialog', 'ticketUpdater', function($scope, $http, $interval, $location, ngDialog, ticketUpdater) {
   $scope.update_tickets = function() {
-    $http.get('/json/lead/tickets').success(function(data) {
+    $scope.updater_promise = $http.get('/json/lead/tickets')
+    .success(function(data) {
+      $scope.updater_promise = undefined;
+
       $scope.col_ids = Object.keys( data.columns );
       $scope.col_ids.sort(function(a,b){ return data.columns[a].order - data.columns[b].order });
       
@@ -171,13 +181,15 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$timeout', '$location
           }
         } ).finally( function () { $scope.updater_promise = undefined; } );
       }
-      
-      $timeout( function() { $scope.update_tickets(); }, 15000 );
+    })
+    .error(function () {
+      $scope.updater_promise = undefined;
     });
   }
   
   $scope.tickets = {};
   $scope.update_tickets();
+  $interval( function() { $scope.update_tickets(); }, 15000 );
   
   $scope.sortListeners = {
       accept: function (sourceItemHandleScope, destSortableScope) {
