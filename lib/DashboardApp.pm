@@ -36,7 +36,7 @@ sub startup {
   $auth->get("/json/employee/tickets")->to("employee#show_dashboard");
   $auth->post("/json/employee/save_columns")->to("employee#save_columns");
   
-  $auth->get("/json/get_role")->to("main#get_role");
+  $auth->get("/json/get_roles")->to("main#get_roles");
   $auth->post("/json/update_ticket")->to("main#update_ticket");
   $auth->post("/json/ticket_details")->to("main#ticket_details");
   $auth->post("/json/ticket_history")->to("main#ticket_history");
@@ -44,7 +44,7 @@ sub startup {
   my $lead = $auth->under( sub {
     my ( $c ) = @_;
     
-    unless ( $c->session->{role} eq "lead" ) {
+    unless ( grep { $_ eq 'lead' } @{ $c->session->{roles} } ) {
       $c->render( json => { error => "Operation not permitted." }, status => 403 );
       return 0;
     }

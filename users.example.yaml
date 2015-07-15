@@ -1,5 +1,6 @@
 lead1:
-    role: lead
+    roles:
+        - lead
     first_name: Brendan
     last_name: Lead 1
     password: 123456
@@ -7,7 +8,8 @@ lead1:
     avatar: http://lorempixel.com/200/200/cats/lead1
 
 employee1:
-    role: employee
+    roles:
+        - employee
     first_name: Jesse
     last_name: Employee1
     password: 123456
@@ -15,7 +17,8 @@ employee1:
     avatar: http://lorempixel.com/200/200/cats/employee1
 
 employee2:
-    role: employee
+    roles:
+        - employee
     first_name: Kyle
     last_name: Employee2
     password: 123456
@@ -23,9 +26,19 @@ employee2:
     avatar: http://lorempixel.com/200/200/cats/employee2
 
 employee3:
-    role: employee
+    roles:
+        - employee
     first_name: Ivan
     last_name: Employee3
     password: 123456
     rt_user_id: T&M Development
     avatar: http://lorempixel.com/200/200/cats/employee3
+
+employee4:
+    roles:
+        - employee
+    first_name: Barton
+    last_name: Employee4
+    password: 123456
+    rt_user_id: barton
+    avatar: http://lorempixel.com/200/200/cats/employee4

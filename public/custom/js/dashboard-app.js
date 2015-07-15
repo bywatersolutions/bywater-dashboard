@@ -94,6 +94,11 @@ dashboardApp.factory( 'ticketUpdater', [ '$q', '$http', function ( $q, $http ) {
 } ] );
 
 dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$location', 'ngDialog', 'ticketUpdater', function($scope, $http, $interval, $location, ngDialog, ticketUpdater) {
+  // This is duplicate code and shoud by DRY if possible - ID:2
+  $http.get('/json/get_roles').success(function(data) {
+    $scope.roles = data.roles;
+  });
+
   $scope.update_tickets = function() {
     $scope.updater_promise = $http.get('/json/employee/tickets')
     
@@ -162,6 +167,11 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$loc
 );
 
 dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$interval', '$location', 'ngDialog', 'ticketUpdater', function($scope, $http, $interval, $location, ngDialog, ticketUpdater) {
+  // This is duplicate code and shoud by DRY if possible - ID:2
+  $http.get('/json/get_roles').success(function(data) {
+    $scope.roles = data.roles;
+  });
+
   $scope.update_tickets = function() {
     $scope.updater_promise = $http.get('/json/lead/tickets')
     .success(function(data) {
@@ -259,11 +269,12 @@ dashboardApp.controller( 'loginCtrl', [ '$scope', '$http', '$timeout', '$locatio
 } ] );
 
 dashboardApp.controller( 'redirectCtrl', [ '$scope', '$http', '$location', function($scope, $http, $location) {
-  $http.get('/json/get_role').success(function(data) {
-    if ( data.role == "employee" ) {
-      $location.path("/employee");
-    } else {
+  $http.get('/json/get_roles').success(function(data) {
+    var role = data.roles[0]; // Just grab the first role for now
+    if ( role == "lead" ) {
       $location.path("/lead");
+    } else {
+      $location.path("/employee");
     }
   });
 } ] );

@@ -7,7 +7,7 @@ use Data::Dumper;
 sub check {
     my ( $login, $password ) = @_;
     my $users = LoadFile("users.yaml");
-    return $users->{ $login }->{role} if ( defined $users->{ $login } and $users->{ $login }->{password} eq $password );
+    return $users->{ $login }->{roles} if ( defined $users->{ $login } and $users->{ $login }->{password} eq $password );
 }
 
 sub get_rt_creds {

@@ -13,13 +13,15 @@ sub login {
   my $c = shift;
   
   my $json = $c->req->json;
-  my $role;
-  unless ( $role = DashboardApp::Model::User::check( $json->{login}, $json->{password} ) ) {
+  my $roles;
+  unless ( $roles = DashboardApp::Model::User::check( $json->{login}, $json->{password} ) ) {
     return $c->render(json => { error => "Wrong login or password." });
   }
   
-  $c->session({ user_id => $json->{login}, role => $role });
-  $c->render(json => { role => $role });
+  $c->session({ user_id => $json->{login}, roles => $roles });
+
+  # Default view for a user will be the first role defined
+  $c->render(json => { role => $roles->[0] });
 }
 
 sub logout {
@@ -30,9 +32,9 @@ sub logout {
     $c->redirect_to('/');
 }
 
-sub get_role {
+sub get_roles {
   my $c = shift;
-  $c->render(json => { role => $c->session->{role} || "employee" });
+  $c->render(json => { roles => $c->session->{roles} });
 }
 
 sub update_ticket {
