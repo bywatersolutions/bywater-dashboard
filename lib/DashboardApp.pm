@@ -54,6 +54,8 @@ sub startup {
   
   $lead->get("/json/lead/tickets")->to("lead#show_dashboard");
   $lead->post("/json/lead/save_columns")->to("lead#save_columns");
+
+  $r->get("/logout")->to("main#logout");
 }
   
 

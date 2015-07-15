@@ -22,6 +22,14 @@ sub login {
   $c->render(json => { role => $role });
 }
 
+sub logout {
+    my $c = shift;
+
+    $c->session( expires => 1 );
+
+    $c->redirect_to('/');
+}
+
 sub get_role {
   my $c = shift;
   $c->render(json => { role => $c->session->{role} || "employee" });
