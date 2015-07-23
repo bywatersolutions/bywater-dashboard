@@ -1,4 +1,4 @@
-var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ui.sortable', 'ngMaterial', 'ngDialog', 'ngDragDrop']);
+var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ui.sortable', 'ngMaterial', 'ngDialog']);
 
 dashboardApp.factory( 'httpInterceptor', [ '$q', '$location', function( $q, $location ) {  
     return {
