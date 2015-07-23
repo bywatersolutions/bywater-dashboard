@@ -1,10 +1,4 @@
-<a href="/logout">Logout</a>
-
-<ul><!-- This is duplicated code and should be DRY - ID=1 -->
-    <li ng-repeat="role in roles">
-        <a href="/#/{{role}}">{{role}}</a>
-    </li>
-</ul>
+<div ng-include src="'partials/toolbar.html'"></div>
 
 <div class="db-table" style="width: 100%;" ng-model="columns[column_id].tickets">
     <md-card class="db-lv-first-col" ng-repeat="column_id in col_ids">

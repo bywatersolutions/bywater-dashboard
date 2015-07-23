@@ -1,3 +1,9 @@
+@import url("//fonts.googleapis.com/css?family=Cantarell:b,i,bi");
+
+body {
+	font-family: "Cantarell", sans-serif;
+}
+
 .db-top {
     padding: 5px;
 }
@@ -142,4 +148,8 @@ md-toolbar {
     max-height: none;
     height: auto;
     min-height: 64px;
+}
+
+.md-button > .fa {
+	font-size: 150%;
 }

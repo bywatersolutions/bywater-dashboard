@@ -1,4 +1,4 @@
-var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ui.sortable', 'ngMaterial', 'ngDialog']);
+var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ui.sortable', 'ngMaterial', 'ngDialog', 'ngDragDrop', 'material.components.icon']);
 
 dashboardApp.factory( 'httpInterceptor', [ '$q', '$location', function( $q, $location ) {  
     return {
@@ -27,6 +27,11 @@ dashboardApp.factory( 'httpInterceptor', [ '$q', '$location', function( $q, $loc
 
 dashboardApp.config(['$httpProvider', function($httpProvider) {  
     $httpProvider.interceptors.push('httpInterceptor');
+}]);
+
+dashboardApp.config(['$mdIconProvider', function($mdIconProvider) {
+	// Add our font icon library
+	$mdIconProvider.defaultFontSet('fa');
 }]);
 
 dashboardApp.config(['$routeProvider',

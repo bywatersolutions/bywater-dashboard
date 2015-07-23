@@ -29,6 +29,7 @@
 <script src="/vendor/angular-dragdrop/src/angular-dragdrop.min.js"></script>
 
 <script src="/custom/js/dashboard-app.js"></script>
+<link rel="stylesheet" href="/vendor/fontawesome/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="/custom/css/dashboard.css">
 
 [% END %]

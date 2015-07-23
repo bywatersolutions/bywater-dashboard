@@ -1,0 +1,18 @@
+<md-toolbar>
+	<div class="md-toolbar-tools">
+		<h2>
+			<span>ByWater Dashboard</span>
+		</h2>
+
+		<md-button ng-if="roles.length > 1" ng-repeat="role in roles" href="/#/{{role}}">
+			{{role}}
+		</md-button>
+
+		<span flex=""></span>
+
+		<md-button href="/logout">
+			<md-icon class="fa-sign-out"></md-icon>
+			Sign Out
+		</md-button>
+	</div>
+</md-toolbar>

@@ -1,10 +1,4 @@
-<a href="/logout">Logout</a>
-
-<ul>
-    <li ng-repeat="role in roles">
-        <a href="/#/{{role}}">{{role}}</a>
-    </li>
-</ul>
+<div ng-include src="'partials/toolbar.html'"></div>
 
 <div class="db-top" layout="row" layout-sm="column">
 	<div class="db-column-wrap" flex="20" flex-sm="100" ng-repeat="column_id in col_ids">
