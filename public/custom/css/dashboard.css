@@ -143,6 +143,10 @@ md-toolbar {
     min-height: 64px;
 }
 
-.md-button > .fa {
+.md-toolbar-tools h2 {
+    margin-right: 16px;
+}
+
+.md-button .fa {
     font-size: 150%;
 }

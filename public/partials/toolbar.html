@@ -5,6 +5,10 @@
         </h2>
 
         <md-button ng-if="roles.length > 1" ng-repeat="role in roles" href="/#/{{role}}">
+            <span ng-switch on="role">
+                <md-icon ng-switch-when="employee" class="fa-user"></md-icon>
+                <md-icon ng-switch-when="lead" class="fa-users"></md-icon>
+            </span>
             {{role}}
         </md-button>
 
