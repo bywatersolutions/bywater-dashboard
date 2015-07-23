@@ -8,7 +8,7 @@ my $config;
 
 sub get_config {
     $config = LoadFile("config.yaml") unless ( $config );
-    return $config;    
+    return $config;
 }
 
 sub get_rt_statuses {

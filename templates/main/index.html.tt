@@ -1,6 +1,6 @@
-[% 
-   WRAPPER 'layouts/default.html.tt' 
-   title = 'Dashboard'
+[%
+    WRAPPER 'layouts/default.html.tt'
+    title = 'Dashboard'
 %]
 <div ng-app="dashboardApp">
     <div ng-view>
@@ -11,10 +11,10 @@
 <meta name="viewport" content="initial-scale=1, user-scalable=yes, width=device-width" />
 
 <script src="/vendor/jquery/dist/jquery.min.js"></script>
-<script src="/vendor/jquery-ui/jquery-ui.min.js"></script> 
+<script src="/vendor/jquery-ui/jquery-ui.min.js"></script>
 <script src="/vendor/angular/angular.min.js"></script>
 <script src="/vendor/angular-route/angular-route.min.js"></script>
-    
+
 <link rel="stylesheet" href="/vendor/angular-material/angular-material.css">
 <script src="/vendor/angular-aria/angular-aria.min.js"></script>
 <script src="/vendor/angular-animate/angular-animate.min.js"></script>

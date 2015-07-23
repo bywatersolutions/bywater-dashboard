@@ -1,7 +1,7 @@
 @import url("//fonts.googleapis.com/css?family=Cantarell:b,i,bi");
 
 body {
-	font-family: "Cantarell", sans-serif;
+    font-family: "Cantarell", sans-serif;
 }
 
 .db-top {
@@ -40,7 +40,7 @@ body {
 }
 
 .db-column-content {
-	min-height: 100px;
+    min-height: 100px;
 }
 
 .noselect {
@@ -121,7 +121,7 @@ body {
     position: absolute;
     pointer-events: none;
     z-index: 9999;
-    
+
     display: table;
     box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0);
 }
@@ -151,5 +151,5 @@ md-toolbar {
 }
 
 .md-button > .fa {
-	font-size: 150%;
+    font-size: 150%;
 }

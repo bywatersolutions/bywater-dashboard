@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>[% title %]</title>
-  [% PROCESS javascript %]
+    <title>[% title %]</title>
+    [% PROCESS javascript %]
 </head>
-  <body>
-    [% content %]
-  </body>
+    <body>
+        [% content %]
+    </body>
 </html>
 [% BLOCK javascript %][% END %]

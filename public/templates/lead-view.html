@@ -7,7 +7,7 @@
               <span class="md-flex">{{columns[column_id].name}}</span>
             </div>
         </md-toolbar>
-        
+
         <div class="db-column-content">
             <md-card class="db-card" ng-repeat="ticket_id in columns[column_id].tickets" ng-model="columns[column_id].tickets" ng-click="show_popup(ticket_id)" data-drag="true" jqyoui-draggable="{onStart: 'onDragStart', index: $index}" data-jqyoui-options="{ revert: 'invalid' }">
                 <md-toolbar class="md-warn noselect">
