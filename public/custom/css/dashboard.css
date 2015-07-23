@@ -1,7 +1,7 @@
-@import url("//fonts.googleapis.com/css?family=Cantarell:b,i,bi");
+@import url("//fonts.googleapis.com/css?family=Open+Sans:b,i,bi");
 
 body {
-    font-family: "Cantarell", sans-serif;
+    font-family: "Open Sans", sans-serif;
 }
 
 .db-top {
@@ -11,12 +11,6 @@ body {
 .db-column {
     border: 0px solid;
     height: 100%;
-}
-
-.db-card {
-    width: 300px;
-    text-align: center;
-    margin-bottom: 5px;
 }
 
 .db-card-content {
@@ -109,7 +103,6 @@ body {
 
 .as-sortable-item-handle {
     cursor: move;
-    background-color: blue;
 }
 
 .as-sortable-placeholder {

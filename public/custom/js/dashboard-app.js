@@ -1,4 +1,18 @@
-var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ui.sortable', 'ngMaterial', 'ngDialog', 'ngDragDrop', 'material.components.icon']);
+var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ui.sortable', 'ngMaterial', 'ngDialog', 'ngDragDrop', 'ngMaterial']);
+
+// Theming
+dashboardApp.config(['$mdIconProvider', function($mdIconProvider) {
+    // Add our font icon library
+    $mdIconProvider.defaultFontSet('fa');
+}]);
+
+dashboardApp.config(['$mdThemingProvider', function($mdThemingProvider) {
+    // Set custom colors
+    $mdThemingProvider.theme('default')
+        .primaryPalette('light-blue', {
+            'default': '500',
+        });
+}]);
 
 dashboardApp.factory( 'httpInterceptor', [ '$q', '$location', function( $q, $location ) {
     return {
@@ -27,11 +41,6 @@ dashboardApp.factory( 'httpInterceptor', [ '$q', '$location', function( $q, $loc
 
 dashboardApp.config(['$httpProvider', function($httpProvider) {
     $httpProvider.interceptors.push('httpInterceptor');
-}]);
-
-dashboardApp.config(['$mdIconProvider', function($mdIconProvider) {
-    // Add our font icon library
-    $mdIconProvider.defaultFontSet('fa');
 }]);
 
 dashboardApp.config(['$routeProvider',
@@ -162,7 +171,7 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$loc
 
     $scope.show_popup = function ( ticket_id ) {
         ngDialog.open({
-            template: 'templates/ticket-popup.html',
+            template: 'partials/ticket-popup.html',
             data: { ticket_id: ticket_id, ticket: $scope.tickets[ticket_id] },
             controller: 'ticketPopupCtrl',
             scope: $scope
@@ -250,7 +259,7 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$interval', '$locatio
         }
 
         ngDialog.open({
-            template: 'templates/ticket-popup.html',
+            template: 'partials/ticket-popup.html',
             data: { ticket_id: ticket_id, ticket: $scope.tickets[ticket_id] },
             controller: 'ticketPopupCtrl',
             scope: $scope

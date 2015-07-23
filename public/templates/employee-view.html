@@ -3,18 +3,16 @@
 <div class="db-top" layout="row" layout-sm="column">
     <div class="db-column-wrap" flex="20" flex-sm="100" ng-repeat="column_id in col_ids">
         <md-card class="db-column">
-            <md-toolbar class="ui-state-disabled">
+            <md-toolbar class="ui-state-disabled md-hue-2">
                 <div class="md-toolbar-tools">
                   <span class="md-flex">{{columns[column_id].name}}</span>
                 </div>
             </md-toolbar>
 
             <div class="db-column-content" ng-model="columns[column_id].tickets" data-as-sortable="sortListeners">
-                <md-card class="db-card" ng-repeat="ticket_id in columns[column_id].tickets" ng-model="columns[column_id].tickets" data-as-sortable-item ng-click="show_popup(ticket_id)">
-                    <md-toolbar class="md-warn noselect" data-as-sortable-item-handle>
-                        <div class="md-toolbar-tools" ng-include="'/templates/ticket-card.html'" >
-                        </div>
-                    </md-toolbar>
+                <md-card class="db-ticket-card" ng-repeat="ticket_id in columns[column_id].tickets" ng-model="columns[column_id].tickets" data-as-sortable-item data-as-sortable-item-handle ng-click="show_popup(ticket_id)">
+                    <md-card-content ng-include="'/templates/ticket-card.html'">
+                    </md-card-content>
                 </md-card>
             </div>
         </md-card>
