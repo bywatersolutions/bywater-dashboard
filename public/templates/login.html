@@ -1,9 +1,24 @@
-<div>
-    <form>
-        <table>
-        <tr><td>Login:</td><td><input ng-model="credentials.login"/></td></tr>
-        <tr><td>Password:</td><td><input ng-model="credentials.password" type="password"/></td></tr>
-        <tr><td colspan="2"><input type="submit" ng-click="submit()"/></td></tr>
-        </table>
-    </form>
+<div id="login-screen" layout="row" layout-align="center center">
+    <md-card flex="33" flex-sm="90">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>
+                    <span>ByWater Dashboard Login</span>
+                </h2>
+            </div>
+        </md-toolbar>
+        <md-card-content>
+            <form ng-submit="submit()">
+                <md-input-container class="md-no-float">
+                    <md-icon class="fa-user"></md-icon>
+                    <input ng-model="credentials.login" placeholder="Username" />
+                </md-input-container>
+                <md-input-container class="md-no-float">
+                    <md-icon class="fa-key"></md-icon>
+                    <input ng-model="credentials.password" type="password" placeholder="Password" />
+                </md-input-container>
+                <md-button class="md-primary" type="submit">Log in</md-button>
+            </form>
+        </md-card-content>
+    </md-card>
 </div>

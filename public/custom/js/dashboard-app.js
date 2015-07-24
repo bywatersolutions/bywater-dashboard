@@ -146,7 +146,8 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$loc
 
     $scope.sortListeners = {
             accept: function (sourceItemHandleScope, destSortableScope) {
-                return destSortableScope.$parent.column.type != 'rt'; // disallow dropping items into TicketSQL columns
+                return false;
+                return $scope.columns[destSortableScope.column_id].name.type != 'rt'; // disallow dropping items into TicketSQL columns
             },
             itemMoved: function (event) { $scope.save( event.source, event.dest ); },
             orderChanged: function(event) { console.log( event ); },
@@ -217,6 +218,7 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$interval', '$locatio
 
     $scope.sortListeners = {
         accept: function (sourceItemHandleScope, destSortableScope) {
+            return false;
             //return !destSortableScope.$parent.column.search_query; // disallow dropping items into TicketSQL columns
         },
         itemMoved: function (event) { /*$scope.save( event.source, event.dest );*/ },

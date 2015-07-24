@@ -4,8 +4,8 @@
     </div>
     <div ng-switch-otherwise>
         <span class="md-flex">
-            <div>{{tickets[ticket_id].Subject}}</div>
-            <div style="font-size: 75%;">#{{ticket_id}} {{tickets[ticket_id].LastUpdated}}</div>
+            <h2 class="md-title">{{tickets[ticket_id].Subject}}</h2>
+            <div class="db-ticket-desc">#{{ticket_id}} {{tickets[ticket_id].LastUpdated}}</div>
         </span>
     </div>
 </div>

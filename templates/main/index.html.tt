@@ -2,9 +2,7 @@
     WRAPPER 'layouts/default.html.tt'
     title = 'Dashboard'
 %]
-<div ng-app="dashboardApp">
-    <div ng-view>
-    </div>
+<div id="dashboard-app" ng-app="dashboardApp" ng-view>
 </div>
 [% END %]
 [% BLOCK javascript %]

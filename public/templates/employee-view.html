@@ -11,7 +11,7 @@
 
             <div class="db-column-content" ng-model="columns[column_id].tickets" data-as-sortable="sortListeners">
                 <md-card class="db-ticket-card" ng-repeat="ticket_id in columns[column_id].tickets" ng-model="columns[column_id].tickets" data-as-sortable-item data-as-sortable-item-handle ng-click="show_popup(ticket_id)">
-                    <md-card-content ng-include="'/templates/ticket-card.html'">
+                    <md-card-content ng-include="'/partials/ticket-card.html'">
                     </md-card-content>
                 </md-card>
             </div>

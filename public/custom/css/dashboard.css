@@ -1,7 +1,12 @@
-@import url("//fonts.googleapis.com/css?family=Open+Sans:b,i,bi");
+@import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,500,700");
 
 body {
     font-family: "Open Sans", sans-serif;
+    min-height: 100%;
+}
+
+#login-screen {
+    height: 100vh;
 }
 
 .db-top {
@@ -11,6 +16,17 @@ body {
 .db-column {
     border: 0px solid;
     height: 100%;
+}
+
+.db-ticket-card .md-title {
+    font-size: 16px;
+    margin: 0;
+    margin-bottom: 8px;
+}
+
+.db-ticket-desc {
+    font-size: 75%;
+    font-weight: 300;
 }
 
 .db-card-content {
@@ -46,32 +62,9 @@ body {
     user-select: none;
 }
 
-.db-lv-first-col {
-    float: left;
-    display: block;
-    /*overflow: hidden;*/
-    height: 100%;
-    min-width: 316px;
-}
-
-.db-lv-avatars {
-    margin-left: 320px;
-    overflow: hidden;
-    display: block;
-}
-
-.db-lv-avatar-card {
-    width: 200px;
-    float: left;
-    display: block;
-    text-align: center;
-    margin-bottom: 5px;
-}
-
 .db-lv-avatar-img {
     background-repeat: no-repeat;
     background-position: 50%;
-    border-radius: 50%;
     width: 190px;
     height: 190px;
     margin: 5px;
@@ -149,4 +142,13 @@ md-toolbar {
 
 .md-button .fa {
     font-size: 150%;
+}
+
+md-grid-list {
+    margin: 8px 16px;
+}
+
+/* This ridiculous selector is required in order to beat the default styling */
+md-grid-list md-grid-tile md-grid-tile-footer h3 {
+    font-weight: bold;
 }
