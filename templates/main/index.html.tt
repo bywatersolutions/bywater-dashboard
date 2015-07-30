@@ -8,24 +8,26 @@
 [% BLOCK javascript %]
 <meta name="viewport" content="initial-scale=1, user-scalable=yes, width=device-width" />
 
-<script src="/vendor/jquery/dist/jquery.min.js"></script>
-<script src="/vendor/jquery-ui/jquery-ui.min.js"></script>
-<script src="/vendor/angular/angular.min.js"></script>
-<script src="/vendor/angular-route/angular-route.min.js"></script>
+[% script('/vendor/jquery/dist/jquery') %]
+[% script('/vendor/jquery-ui/jquery-ui') %]
+[% script('/vendor/angular/angular') %]
+[% script('/vendor/angular-route/angular-route') %]
+<script src="/vendor/[% debug_frontend %]"></script>
 
 <link rel="stylesheet" href="/vendor/angular-material/angular-material.css">
-<script src="/vendor/angular-aria/angular-aria.min.js"></script>
-<script src="/vendor/angular-animate/angular-animate.min.js"></script>
-<script src="/vendor/angular-material/angular-material.min.js"></script>
+[% script('/vendor/angular-aria/angular-aria') %]
+[% script('/vendor/angular-animate/angular-animate') %]
+[% script('/vendor/angular-material/angular-material') %]
 
-<script src="/vendor/ng-sortable/dist/ng-sortable.min.js"></script>
-<script src="/vendor/ngDialog/js/ngDialog.min.js"></script>
+[% script('/vendor/ng-sortable/dist/ng-sortable') %]
+[% script('/vendor/ngDialog/js/ngDialog') %]
 <link rel="stylesheet" type="text/css" href="/vendor/ngDialog/css/ngDialog.min.css">
 <link rel="stylesheet" type="text/css" href="/vendor/ngDialog/css/ngDialog-theme-default.min.css">
 <link rel="stylesheet" type="text/css" href="/vendor/ngDialog/css/ngDialog-theme-plain.min.css">
 
-<script src="/vendor/angular-dragdrop/src/angular-dragdrop.min.js"></script>
+[% script('/vendor/angular-dragdrop/src/angular-dragdrop') %]
 
+[%# Not rendered with script() as it will never be minimized %]
 <script src="/custom/js/dashboard-app.js"></script>
 <link rel="stylesheet" href="/vendor/fontawesome/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="/custom/css/dashboard.css">

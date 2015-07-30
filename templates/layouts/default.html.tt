@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+
+[% MACRO script(basename) IF debug_frontend %]
+<script src="[% basename %].js"></script>
+[% ELSE %]
+<script src="[% basename %].min.js></script>
+[% END %]
+
 <html>
 <head>
     <title>[% title %]</title>

@@ -10,7 +10,7 @@
             </md-toolbar>
 
             <div class="db-column-content">
-                <md-card class="db-ticket-card" ng-repeat="ticket_id in columns[column_id].tickets" ng-model="columns[column_id].tickets" data-as-sortable-item data-as-sortable-item-handle data-drag="true" jqyoui-draggable="{onStart: 'onDragStart', index: $index}" data-jqyoui-options="{ revert: 'invalid' }" ng-click="show_popup(ticket_id)">
+                <md-card class="db-ticket-card" ng-repeat="ticket_id in columns[column_id].tickets" ng-model="columns[column_id].tickets" data-as-sortable-item data-drag="true" jqyoui-draggable="{onStart: 'onDragStart', index: $index}" data-jqyoui-options="{ revert: 'invalid' }" ng-click="show_popup(ticket_id)">
                     <md-card-content ng-include="'/partials/ticket-card.html'">
                     </md-card-content>
                 </md-card>

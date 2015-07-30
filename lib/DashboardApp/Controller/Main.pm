@@ -6,7 +6,10 @@ use DashboardApp::Model::Ticket;
 use Try::Tiny;
 
 sub index {
-    my $self = shift;
+    my $c = shift;
+    my $config = DashboardApp::Model::Config::get_config();
+
+    $c->stash( debug_frontend => $config->{debug_frontend} );
 }
 
 sub login {
