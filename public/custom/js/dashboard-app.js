@@ -142,7 +142,10 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$loc
 
     $scope.tickets = {};
     $scope.update_tickets();
-    $interval( function() { $scope.update_tickets(); }, 15000 );
+    var update_interval = $interval( function() { $scope.update_tickets(); }, 15000 );
+    $scope.$on( 'destroy', function() {
+        update_interval.cancel();
+    } );
 
     $scope.sortListeners = {
             accept: function (sourceItemHandleScope, destSortableScope) {
@@ -214,7 +217,10 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$interval', '$locatio
 
     $scope.tickets = {};
     $scope.update_tickets();
-    $interval( function() { $scope.update_tickets(); }, 15000 );
+    var update_interval = $interval( function() { $scope.update_tickets(); }, 15000 );
+    $scope.$on( 'destroy', function() {
+        update_interval.cancel();
+    } );
 
     $scope.sortListeners = {
         accept: function (sourceItemHandleScope, destSortableScope) {
