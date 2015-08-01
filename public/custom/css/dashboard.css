@@ -53,6 +53,10 @@ body {
     min-height: 100px;
 }
 
+.db-column-wrap md-whiteframe {
+    margin: 8px;
+}
+
 .noselect {
     -webkit-touch-callout: none;
     -webkit-user-select: none;

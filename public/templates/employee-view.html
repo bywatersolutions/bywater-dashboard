@@ -1,16 +1,16 @@
 <div ng-include src="'partials/toolbar.html'"></div>
 
 <div class="db-top" layout="row" layout-sm="column">
-    <div class="db-column-wrap" flex="20" flex-sm="100" ng-repeat="column_id in col_ids">
-        <md-card class="db-column">
+    <div class="db-column-wrap" flex="20" flex-sm="100" ng-repeat="column in columns">
+        <md-card class="db-lv-first-col">
             <md-toolbar class="ui-state-disabled md-hue-2">
                 <div class="md-toolbar-tools">
-                  <span class="md-flex">{{columns[column_id].name}}</span>
+                  <span class="md-flex">{{column.name}}</span>
                 </div>
             </md-toolbar>
 
-            <div class="db-column-content" ng-model="columns[column_id].tickets" data-as-sortable="sortListeners">
-                <md-card class="db-ticket-card" ng-repeat="ticket_id in columns[column_id].tickets" ng-model="columns[column_id].tickets" data-as-sortable-item data-as-sortable-item-handle ng-click="show_popup(ticket_id)">
+            <div class="db-column-content" ng-model="column.tickets" ng-sortable="column_sortable(column)">
+                <md-card class="db-ticket-card" ng-repeat="ticket_id in column.tickets" ng-model="column.tickets" ng-click="show_popup(ticket_id)">
                     <md-card-content ng-include="'/partials/ticket-card.html'">
                     </md-card-content>
                 </md-card>

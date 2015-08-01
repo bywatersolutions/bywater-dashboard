@@ -1,4 +1,4 @@
-var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ui.sortable', 'ngMaterial', 'ngDialog', 'ngDragDrop', 'ngMaterial']);
+var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ng-sortable', 'ngMaterial', 'ngDialog', 'ngMaterial']);
 
 // Theming
 dashboardApp.config(['$mdIconProvider', function($mdIconProvider) {
@@ -119,8 +119,12 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$loc
         .success(function(data) {
             $scope.updater_promise = undefined;
 
-            $scope.col_ids = Object.keys( data.columns );
-            $scope.col_ids.sort(function(a,b){ return data.columns[a].order - data.columns[b].order });
+            data.columns = $.map( data.columns, function( column, id ) {
+                column.column_id = id;
+                column.tickets = column.tickets || [];
+                return column;
+            } );
+            data.columns.sort(function(a,b){ return a.order - b.order });
 
             for ( key in data ) {
                 $scope[ key ] = data[ key ];
@@ -147,31 +151,40 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$loc
         update_interval.cancel();
     } );
 
-    $scope.sortListeners = {
-            accept: function (sourceItemHandleScope, destSortableScope) {
-                return false;
-                return $scope.columns[destSortableScope.column_id].name.type != 'rt'; // disallow dropping items into TicketSQL columns
+    // We have to create separate sortable configs for each column, but we have to cache them so
+    // Angular doesn't see neverending changes
+    function create_sortable(column) {
+        return {
+            animation: 300,
+            group: 'employee-tickets',
+            sort: false,
+
+            onMove: function(evt) {
+                var from_column = angular.element(evt.from).scope().column;
+                var to_column = angular.element(evt.to).scope().column;
+                return to_column.type != 'rt'; // disallow dropping items into TicketSQL columns
             },
-            itemMoved: function (event) { $scope.save( event.source, event.dest ); },
-            orderChanged: function(event) { console.log( event ); },
+
+            onAdd: function(evt) {
+                var columns = {};
+
+                if ( !column.search_query ) {
+                    columns[ column.column_id ] = evt.models;
+                }
+
+                $http.post( '/json/employee/save_columns', columns ).success( function(data) { console.log( data ); } );
+            },
+        };
     };
 
-    $scope.save = function ( src, dst ) {
-        var src_scope = src.sortableScope.$parent;
-        var dst_scope = dst.sortableScope.$parent;
-
-        var columns = {};
-
-        if ( !src_scope.column.search_query ) {
-            columns[ src_scope.column_id ] = src_scope.column.tickets;
+    var sortables = [];
+    $scope.column_sortable = function(column) {
+        if ( !sortables[column.column_id] ) {
+            sortables[column.column_id] = create_sortable(column);
         }
 
-        if ( !dst_scope.column.search_query ) {
-            columns[ dst_scope.column_id ] = dst_scope.column.tickets;
-        }
-
-        $http.post( '/json/employee/save_columns', columns ).success( function(data) { console.log( data ); } );
-    }
+        return sortables[column.column_id];
+    };
 
     $scope.show_popup = function ( ticket_id ) {
         ngDialog.open({
@@ -184,6 +197,46 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$loc
 } ]
 );
 
+dashboardApp.directive( 'dbDropTarget', [ '$timeout', function( $timeout ) {
+    return {
+        restrict: 'E',
+        link: function( scope, element, attrs ) {
+            var onDrop;
+            scope.$watch( attrs.dbOnDrop, function(value) {
+                console.log(value);
+                onDrop = value;
+            } );
+
+            element.css({
+                height: '100%',
+                position: 'relative',
+                width: '100%',
+            });
+
+            var dropTarget = $('<div class="db-drop-target">');
+            dropTarget.attr('class', 'db-drop-target');
+            dropTarget.css({
+                height: '100%',
+                left: 0,
+                position: 'absolute',
+                top: 0,
+                width: '100%',
+            });
+            element.append(dropTarget);
+
+            Sortable.create( dropTarget[0], {
+                group: attrs.dbDropGroup,
+
+                onAdd: function(evt) {
+                    var el = evt.item;
+                    el.parentNode.removeChild(el);
+                    onDrop( angular.element( element[0] ).scope(), angular.element(el).scope() );
+                },
+            } );
+        },
+    };
+} ] );
+
 dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$interval', '$location', 'ngDialog', 'ticketUpdater', function($scope, $http, $interval, $location, ngDialog, ticketUpdater) {
     // This is duplicate code and shoud by DRY if possible - ID:2
     $http.get('/json/get_roles').success(function(data) {
@@ -195,8 +248,12 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$interval', '$locatio
         .success(function(data) {
             $scope.updater_promise = undefined;
 
-            $scope.col_ids = Object.keys( data.columns );
-            $scope.col_ids.sort(function(a,b){ return data.columns[a].order - data.columns[b].order });
+            data.columns = $.map( data.columns, function( column, id ) {
+                column.column_id = id;
+                column.tickets = column.tickets || [];
+                return column;
+            } );
+            data.columns.sort(function(a,b){ return a.order - b.order });
 
             for ( key in data ) {
                 $scope[ key ] = data[ key ];
@@ -222,21 +279,14 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$interval', '$locatio
         update_interval.cancel();
     } );
 
-    $scope.sortListeners = {
-        accept: function (sourceItemHandleScope, destSortableScope) {
-            return false;
-            //return !destSortableScope.$parent.column.search_query; // disallow dropping items into TicketSQL columns
-        },
-        itemMoved: function (event) { /*$scope.save( event.source, event.dest );*/ },
-        orderChanged: function(event) { console.log( event ); }
+    $scope.column_sortable = {
+        animation: 300,
+        group: 'lead-tickets',
+        sort: false,
     };
 
-    $scope.onDragStart = function () {
-        this.isDragged = true;
-    }
-
-    $scope.onDrop = function ( event, ui ) {
-        $http.post( '/json/update_ticket', { ticket_id: this.dndDragItem, user_id: this.user_id } ).success( function(data) {
+    $scope.onDrop = function ( dest, item ) {
+        $http.post( '/json/update_ticket', { ticket_id: item.ticket_id, user_id: dest.user_id } ).success( function(data) {
             console.log( data );
         } );
     }
