@@ -10,7 +10,7 @@
             </md-toolbar>
 
             <div class="db-column-content" ng-sortable="column_sortable">
-                <md-card class="db-ticket-card" ng-repeat="ticket_id in column.tickets" ng-model="column.tickets" ng-click="show_popup(ticket_id)">
+                <md-card class="db-ticket-card" ng-repeat="ticket_id in column.tickets" ng-model="column.tickets" ng-click="show_popup(ticket_id, $event)">
                     <md-card-content ng-include="'/partials/ticket-card.html'">
                     </md-card-content>
                 </md-card>

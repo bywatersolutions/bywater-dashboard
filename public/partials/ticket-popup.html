@@ -1,38 +1,69 @@
-<div>#{{ngDialogData.ticket_id}} -- {{ngDialogData.ticket.Subject}}</div>
-<div class="db-card-content">
-    <div>
-        <span>Status:</span>
-        <span><select ng-init="update_dialog.status = ngDialogData.ticket.Status" ng-model="update_dialog.status" ng-options="status as status for status in statuses"></select></span>
-    </div>
-    <div>
-        <span>Queue:</span>
-        <span><select ng-init="update_dialog.queue = ngDialogData.ticket.Queue" ng-model="update_dialog.queue" ng-options="queue.name as queue.name for queue in queues"></select></span>
-    </div>
-    <div>
-        <span>Owner:</span>
-        <span><select ng-init="update_dialog.owner = ngDialogData.ticket.Owner" ng-model="update_dialog.owner" ng-options="login as name for ( login, name ) in rt_users"></select></span>
-    </div>
-    <div>
-        <span>Requestors:</span>
-        <span>{{ngDialogData.ticket.Requestors}}</span>
-    </div>
-    <div><span>Link:</span><span><a href="{{ngDialogData.ticket.link}}" target="_blank">Go to RT</a></span></div>
-
-</div>
-<div>
-    <a class="md-raised md-primary md-button md-default-theme" ng-click="update_ticket() && closeThisDialog()" target="_blank">Update ticket</a>
-</div>
-<div ng-switch on="history" class="db-history">
-    History:
-    <div ng-switch-when="undefined">
-        <img src="/images/loader.gif"/>
-    </div>
-    <div ng-switch-otherwise ng-repeat="item in history" class="db-items">
-        <hr/>
-        <div>Creator: {{item.Creator}}</div>
-        <div class="db-description">
-            <b>{{item.Description}}</b>
-        </div>
-        <div>{{item.Content}}</div>
-    </div>
-</div>
+<md-dialog>
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>#{{ticket_id}} -- {{ticket.Subject}}</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <md-list>
+                <md-list-item class="md-2-line">
+                    <div class="md-list-item-text">
+                        <h3>Status:</h3>
+                        <p>
+                            <select ng-model="ticket.Status" ng-options="status as status for status in statuses"></select>
+                        </p>
+                    </div>
+                </md-list-item>
+                <md-list-item class="md-2-line">
+                    <div class="md-list-item-text">
+                        <h3>Queue:</h3>
+                        <p>
+                            <select ng-model="ticket.Queue" ng-options="queue.name as queue.name for queue in queues"></select>
+                        </p>
+                    </div>
+                </md-list-item>
+                <md-list-item class="md-2-line">
+                    <div class="md-list-item-text">
+                        <h3>Owner:</h3>
+                        <p>
+                            <select ng-model="ticket.Owner" ng-options="login as name for ( login, name ) in rt_users"></select>
+                        </p>
+                    </div>
+                </md-list-item>
+                <md-list-item class="md-2-line">
+                    <div class="md-list-item-text">
+                        <h3>Requestors:</h3>
+                        <p>
+                            {{ticket.Requestors}}
+                        </p>
+                    </div>
+                </md-list-item>
+                <md-list-item class="md-2-line">
+                    <div class="md-list-item-text">
+                        <h3>Link:</h3>
+                        <p>
+                            <a href="{{ticket.link}}" target="_blank">Go to RT</a>
+                        </p>
+                    </div>
+                </md-list-item>
+            </md-list>
+<!--<div>-->
+    <!--<a class="md-raised md-primary md-button md-default-theme" ng-click="update_ticket() && closeThisDialog()" target="_blank">Update ticket</a>-->
+<!--</div>-->
+            <md-list class="db-history" ng-switch on="history">
+                <md-subheader>History:</md-subheader>
+                <div ng-switch-when="undefined">
+                    <img src="/images/loader.gif"/>
+                </div>
+                <md-list-item ng-switch-otherwise ng-repeat="item in history" class="db-items">
+                    <div class="md-list-item-text">
+                        <h3>{{item.Creator}}</h3>
+                        <h4>{{item.Description}}</h4>
+                        <p>{{item.Content}}</p>
+                    </div>
+                </md-list-item>
+            </md-list>
+        </md-dialog-content>
+    </form>
+</md-dialog>

@@ -17,11 +17,6 @@
 [% script('/vendor/angular-material/angular-material') %]
 <link rel="stylesheet" href="/vendor/angular-material/angular-material.css">
 
-[% script('/vendor/ngDialog/js/ngDialog') %]
-<link rel="stylesheet" type="text/css" href="/vendor/ngDialog/css/ngDialog.min.css">
-<link rel="stylesheet" type="text/css" href="/vendor/ngDialog/css/ngDialog-theme-default.min.css">
-<link rel="stylesheet" type="text/css" href="/vendor/ngDialog/css/ngDialog-theme-plain.min.css">
-
 [% script('/vendor/sortable.js/Sortable') %]
 <script src="/vendor/sortable.js/ng-sortable.js"></script>
 

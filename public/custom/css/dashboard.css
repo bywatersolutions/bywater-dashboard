@@ -53,10 +53,6 @@ body {
     min-height: 100px;
 }
 
-.db-column-wrap md-whiteframe {
-    margin: 8px;
-}
-
 .noselect {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -76,15 +72,14 @@ body {
 
 .db-history .db-items {
     white-space: pre-line;
-    font-size: 60%;
-    line-height: normal;
+    font-size: 80%;
 }
 
-.db-history {
-    margin-top: 1em;
-    max-height: 300px;
-    overflow: scroll;
-}
+/*.db-history {*/
+    /*margin-top: 1em;*/
+    /*max-height: 300px;*/
+    /*overflow: scroll;*/
+/*}*/
 
 
 

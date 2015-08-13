@@ -1,4 +1,4 @@
-var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ng-sortable', 'ngMaterial', 'ngDialog', 'ngMaterial']);
+var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ngMaterial']);
 
 // Theming
 dashboardApp.config(['$mdIconProvider', function($mdIconProvider) {
@@ -107,7 +107,7 @@ dashboardApp.factory( 'ticketUpdater', [ '$q', '$http', function ( $q, $http ) {
     }
 } ] );
 
-dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$location', 'ngDialog', 'ticketUpdater', function($scope, $http, $interval, $location, ngDialog, ticketUpdater) {
+dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$location', '$mdDialog', 'ticketUpdater', function($scope, $http, $interval, $location, $mdDialog, ticketUpdater) {
     // This is duplicate code and shoud by DRY if possible - ID:2
     $http.get('/json/get_roles').success(function(data) {
         $scope.roles = data.roles;
@@ -186,10 +186,10 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$loc
         return sortables[column.column_id];
     };
 
-    $scope.show_popup = function ( ticket_id ) {
-        ngDialog.open({
-            template: 'partials/ticket-popup.html',
-            data: { ticket_id: ticket_id, ticket: $scope.tickets[ticket_id] },
+    $scope.show_popup = function ( ticket_id, $event ) {
+        $mdDialog.show({
+            templateUrl: 'partials/ticket-popup.html',
+            locals: { ticket_id: ticket_id, ticket: $scope.tickets[ticket_id] },
             controller: 'ticketPopupCtrl',
             scope: $scope
         });
@@ -237,7 +237,7 @@ dashboardApp.directive( 'dbDropTarget', [ '$timeout', function( $timeout ) {
     };
 } ] );
 
-dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$interval', '$location', 'ngDialog', 'ticketUpdater', function($scope, $http, $interval, $location, ngDialog, ticketUpdater) {
+dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$interval', '$location', '$mdDialog', 'ticketUpdater', function($scope, $http, $interval, $location, $mdDialog, ticketUpdater) {
     // This is duplicate code and shoud by DRY if possible - ID:2
     $http.get('/json/get_roles').success(function(data) {
         $scope.roles = data.roles;
@@ -310,15 +310,10 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$interval', '$locatio
         } );
     }
 
-    $scope.show_popup = function ( ticket_id ) {
-        if ( this.isDragged ) {
-            this.isDragged = false;
-            return;
-        }
-
-        ngDialog.open({
-            template: 'partials/ticket-popup.html',
-            data: { ticket_id: ticket_id, ticket: $scope.tickets[ticket_id] },
+    $scope.show_popup = function ( ticket_id, $event ) {
+        $mdDialog.show({
+            templateUrl: 'partials/ticket-popup.html',
+            locals: { ticket_id: ticket_id, ticket: $scope.tickets[ticket_id] },
             controller: 'ticketPopupCtrl',
             scope: $scope
         });
@@ -351,8 +346,11 @@ dashboardApp.controller( 'redirectCtrl', [ '$scope', '$http', '$location', funct
     });
 } ] );
 
-dashboardApp.controller( 'ticketPopupCtrl', [ '$scope', '$http', function($scope, $http) {
-    $http.post( '/json/ticket_history', { ticket_id: $scope.ngDialogData.ticket_id } ).success( function(data) {
+dashboardApp.controller( 'ticketPopupCtrl', [ '$scope', '$http', 'ticket', 'ticket_id', function($scope, $http, ticket, ticket_id) {
+    console.log('ticketController!', ticket, ticket_id);
+    $scope.ticket_id = ticket_id;
+    $scope.ticket = ticket;
+    $http.post( '/json/ticket_history', { ticket_id: ticket_id } ).success( function(data) {
         $scope.history = data;
     } );
 
