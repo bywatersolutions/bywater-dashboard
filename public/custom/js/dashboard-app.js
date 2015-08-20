@@ -347,7 +347,6 @@ dashboardApp.controller( 'redirectCtrl', [ '$scope', '$http', '$location', funct
 } ] );
 
 dashboardApp.controller( 'ticketPopupCtrl', [ '$scope', '$http', 'ticket', 'ticket_id', function($scope, $http, ticket, ticket_id) {
-    console.log('ticketController!', ticket, ticket_id);
     $scope.ticket_id = ticket_id;
     $scope.ticket = ticket;
     $http.post( '/json/ticket_history', { ticket_id: ticket_id } ).success( function(data) {
