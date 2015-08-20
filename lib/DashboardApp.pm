@@ -1,6 +1,7 @@
 package DashboardApp;
 use Mojo::Base 'Mojolicious';
 
+use DashboardApp::Model::Config;
 use JSON qw/encode_json/;
 use Mojolicious::Sessions::Storable;
 use Plack::Session::Store::File;
@@ -56,6 +57,16 @@ sub startup {
     $lead->post("/json/lead/save_columns")->to("lead#save_columns");
 
     $r->get("/logout")->to("main#logout");
+
+    my $config = DashboardApp::Model::Config::get_config();
+
+    if ( $config->{debug_frontend} ) {
+        $self->hook( after_static => sub {
+            my $self = shift;
+
+            $self->res->headers->cache_control('must-revalidate, no-store, no-cache, private');
+        } );
+    }
 }
 
 

@@ -147,8 +147,8 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$loc
     $scope.tickets = {};
     $scope.update_tickets();
     var update_interval = $interval( function() { $scope.update_tickets(); }, 15000 );
-    $scope.$on( 'destroy', function() {
-        update_interval.cancel();
+    $scope.$on( '$destroy', function() {
+        $interval.cancel( update_interval );
     } );
 
     // We have to create separate sortable configs for each column, but we have to cache them so
@@ -275,8 +275,8 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$interval', '$locatio
     $scope.tickets = {};
     $scope.update_tickets();
     var update_interval = $interval( function() { $scope.update_tickets(); }, 15000 );
-    $scope.$on( 'destroy', function() {
-        update_interval.cancel();
+    $scope.$on( '$destroy', function() {
+        $interval.cancel( update_interval );
     } );
 
     $scope.column_sortable = {
@@ -346,7 +346,7 @@ dashboardApp.controller( 'redirectCtrl', [ '$scope', '$http', '$location', funct
     });
 } ] );
 
-dashboardApp.controller( 'ticketPopupCtrl', [ '$scope', '$http', 'ticket', 'ticket_id', function($scope, $http, ticket, ticket_id) {
+dashboardApp.controller( 'ticketPopupCtrl', [ '$scope', '$http', '$mdDialog', 'ticket', 'ticket_id', function($scope, $http, $mdDialog, ticket, ticket_id) {
     $scope.ticket_id = ticket_id;
     $scope.ticket = ticket;
     $http.post( '/json/ticket_history', { ticket_id: ticket_id } ).success( function(data) {
@@ -359,5 +359,9 @@ dashboardApp.controller( 'ticketPopupCtrl', [ '$scope', '$http', 'ticket', 'tick
             console.log( data );
         } );
         return true;
+    }
+
+    $scope.close_dialog = function () {
+        $mdDialog.hide();
     }
 } ] );
