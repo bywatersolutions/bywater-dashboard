@@ -1,4 +1,4 @@
-var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ngMaterial']);
+var dashboardApp = angular.module('dashboardApp', ['ngRoute', 'ngMaterial', 'ng-sortable']);
 
 // Theming
 dashboardApp.config(['$mdIconProvider', function($mdIconProvider) {

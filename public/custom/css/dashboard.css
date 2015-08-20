@@ -75,8 +75,12 @@ body {
 }
 
 #db-top-toolbar .md-toolbar-tools {
-    background: url(/images/bywater-logo.png) 16px 19px no-repeat;
+    background: url(/images/bywater-logo.png) 16px 16px no-repeat;
     padding-left: 58px;
+}
+
+.db-ticket-popup {
+    width: 50%;
 }
 
 /* ***** */
