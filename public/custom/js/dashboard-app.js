@@ -188,6 +188,7 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$loc
 
     $scope.show_popup = function ( ticket_id, $event ) {
         $mdDialog.show({
+            parent: angular.element(document.body),
             templateUrl: 'partials/ticket-popup.html',
             locals: { ticket_id: ticket_id, ticket: $scope.tickets[ticket_id] },
             controller: 'ticketPopupCtrl',

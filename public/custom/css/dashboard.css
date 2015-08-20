@@ -13,11 +13,6 @@ body {
     padding: 5px;
 }
 
-.db-column {
-    border: 0px solid;
-    height: 100%;
-}
-
 .db-ticket-card .md-title {
     font-size: 16px;
     margin: 0;
@@ -75,26 +70,20 @@ body {
     font-size: 80%;
 }
 
-/*.db-history {*/
-    /*margin-top: 1em;*/
-    /*max-height: 300px;*/
-    /*overflow: scroll;*/
-/*}*/
+.db-ticket-card {
+    cursor: move;
+}
 
-
-
-
-
+#db-top-toolbar .md-toolbar-tools {
+    background: url(/images/bywater-logo.png) 16px 19px no-repeat;
+    padding-left: 58px;
+}
 
 /* ***** */
 
 .as-sortable-item {
     -ms-touch-action: none;
     touch-action: none;
-}
-
-.as-sortable-item-handle {
-    cursor: move;
 }
 
 .as-sortable-placeholder {
