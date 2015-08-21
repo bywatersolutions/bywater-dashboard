@@ -66,9 +66,18 @@ dashboardApp.config(['$routeProvider',
 );
 
 dashboardApp.controller( 'dashboardCtrl', [ '$scope', '$http', function($scope, $http) {
-    $http.get('/json/get_roles').success(function(data) {
-        $scope.roles = data.roles;
-    });
+    function update_roles() {
+        $http.get('/json/get_roles').success(function(data) {
+            $scope.roles = data.roles;
+        });
+    }
+
+    update_roles();
+
+    $scope.$on( 'logged-in', update_roles );
+    $scope.$on( 'logged-out', function() {
+        $scope.roles = [];
+    } );
 } ] );
 
 dashboardApp.factory( 'ticketUpdater', [ '$q', '$http', function ( $q, $http ) {
@@ -321,9 +330,11 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$interval', '$locatio
 
 dashboardApp.controller( 'loginCtrl', [ '$scope', '$http', '$timeout', '$location', function($scope, $http, $timeout, $location) {
     $scope.credentials = {};
+    $scope.$emit( 'logged-out' );
 
     $scope.submit = function () {
         $http.post('/json/login', $scope.credentials).success(function(data) {
+            $scope.$emit( 'logged-in' );
             if ( data.role == "lead" ) {
                 $location.path( "/lead" );
             } else {
@@ -334,6 +345,7 @@ dashboardApp.controller( 'loginCtrl', [ '$scope', '$http', '$timeout', '$locatio
 } ] );
 
 dashboardApp.controller( 'redirectCtrl', [ '$scope', '$http', '$location', function($scope, $http, $location) {
+    // This causes a double-GET. Minor, but solvable?
     $http.get('/json/get_roles').success(function(data) {
         var role = data.roles[0]; // Just grab the first role for now
         if ( role == "lead" ) {
