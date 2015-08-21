@@ -115,7 +115,7 @@ md-toolbar {
     padding-top: 8px;
     padding-bottom: 8px;
     height: auto;
-    min-height: 64px;
+    min-height: 80px;
 }
 
 .md-toolbar-tools {

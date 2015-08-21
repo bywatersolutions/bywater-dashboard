@@ -65,6 +65,12 @@ dashboardApp.config(['$routeProvider',
     }]
 );
 
+dashboardApp.controller( 'dashboardCtrl', [ '$scope', '$http', function($scope, $http) {
+    $http.get('/json/get_roles').success(function(data) {
+        $scope.roles = data.roles;
+    });
+} ] );
+
 dashboardApp.factory( 'ticketUpdater', [ '$q', '$http', function ( $q, $http ) {
     return function ( columns, tickets ) {
         var new_ticket_ids = [];
@@ -108,11 +114,6 @@ dashboardApp.factory( 'ticketUpdater', [ '$q', '$http', function ( $q, $http ) {
 } ] );
 
 dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$location', '$mdDialog', 'ticketUpdater', function($scope, $http, $interval, $location, $mdDialog, ticketUpdater) {
-    // This is duplicate code and shoud by DRY if possible - ID:2
-    $http.get('/json/get_roles').success(function(data) {
-        $scope.roles = data.roles;
-    });
-
     $scope.update_tickets = function() {
         $scope.updater_promise = $http.get('/json/employee/tickets')
 
@@ -240,11 +241,6 @@ dashboardApp.directive( 'dbDropTarget', [ '$timeout', function( $timeout ) {
 } ] );
 
 dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$interval', '$location', '$mdDialog', 'ticketUpdater', function($scope, $http, $interval, $location, $mdDialog, ticketUpdater) {
-    // This is duplicate code and shoud by DRY if possible - ID:2
-    $http.get('/json/get_roles').success(function(data) {
-        $scope.roles = data.roles;
-    });
-
     $scope.update_tickets = function() {
         $scope.updater_promise = $http.get('/json/lead/tickets')
         .success(function(data) {

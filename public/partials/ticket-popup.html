@@ -9,8 +9,8 @@
                 </md-button>
             </div>
         </md-toolbar>
-        <md-dialog-content>
-            <md-list>
+        <md-dialog-content layout="row" layout-sm="column">
+            <md-list flex-gt-sm="20">
                 <md-list-item class="md-2-line">
                     <div class="md-list-item-text">
                         <h3>Status:</h3>
@@ -55,19 +55,20 @@
 <!--<div>-->
     <!--<a class="md-raised md-primary md-button md-default-theme" ng-click="update_ticket() && closeThisDialog()" target="_blank">Update ticket</a>-->
 <!--</div>-->
-            <md-list class="db-history" ng-switch on="history">
-                <md-subheader>History:</md-subheader>
-                <div ng-switch-when="undefined">
-                    <img src="/images/loader.gif"/>
-                </div>
-                <md-list-item ng-switch-otherwise ng-repeat="item in history" class="db-items">
-                    <div class="md-list-item-text">
-                        <h3>{{item.Creator}}</h3>
-                        <h4>{{item.Description}}</h4>
-                        <p>{{item.Content}}</p>
+            <md-content flex-gt-sm="80">
+                <md-list class="db-history" ng-switch on="history">
+                    <div ng-switch-when="undefined">
+                        <img src="/images/loader.gif"/>
                     </div>
-                </md-list-item>
-            </md-list>
+                    <md-list-item ng-switch-otherwise ng-repeat="item in history" class="db-items">
+                        <div class="md-list-item-text">
+                            <h3>{{item.Creator}}</h3>
+                            <h4>{{item.Description}}</h4>
+                            <p>{{item.Content}}</p>
+                        </div>
+                    </md-list-item>
+                </md-list>
+            </md-content>
         </md-dialog-content>
     </form>
 </md-dialog>

@@ -2,7 +2,11 @@
     WRAPPER 'layouts/default.html.tt'
     title = 'Dashboard'
 %]
-<div id="dashboard-app" ng-app="dashboardApp" ng-view>
+<div id="dashboard-app" ng-app="dashboardApp" ng-controller="dashboardCtrl">
+    <div ng-include src="'partials/toolbar.html'"></div>
+
+    <div ng-view>
+    </div>
 </div>
 [% END %]
 [% BLOCK javascript %]
