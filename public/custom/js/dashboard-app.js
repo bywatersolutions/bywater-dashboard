@@ -155,7 +155,7 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$loc
     // Angular doesn't see neverending changes
     function create_sortable(column) {
         return {
-            animation: 300,
+            animation: 50,
             group: 'employee-tickets',
             sort: false,
 
@@ -188,11 +188,12 @@ dashboardApp.controller( 'employeeCtrl', [ '$scope', '$http', '$interval', '$loc
 
     $scope.show_popup = function ( ticket_id, $event ) {
         $mdDialog.show({
-            parent: angular.element(document.body),
-            templateUrl: 'partials/ticket-popup.html',
-            locals: { ticket_id: ticket_id, ticket: $scope.tickets[ticket_id] },
             controller: 'ticketPopupCtrl',
-            scope: $scope
+            locals: { ticket_id: ticket_id, ticket: $scope.tickets[ticket_id] },
+            parent: angular.element(document.body),
+            scope: $scope.$new(),
+            targetEvent: $event,
+            templateUrl: 'partials/ticket-popup.html',
         });
     }
 } ]
@@ -316,7 +317,7 @@ dashboardApp.controller( 'leadCtrl', [ '$scope', '$http', '$interval', '$locatio
             templateUrl: 'partials/ticket-popup.html',
             locals: { ticket_id: ticket_id, ticket: $scope.tickets[ticket_id] },
             controller: 'ticketPopupCtrl',
-            scope: $scope
+            scope: $scope.$new(),
         });
     }
 } ]
