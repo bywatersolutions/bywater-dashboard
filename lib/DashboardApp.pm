@@ -12,6 +12,7 @@ sub startup {
 
     $self->secrets(['eeQu6ighiegh6zaizoh6eithuiphoo']);
 
+    $self->plugin( 'Config' );
     $self->plugin( 'tt_renderer' );
     $self->plugin( 'DashboardApp::Plugin::Memcached' => {
         memcached => {
