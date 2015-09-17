@@ -61,7 +61,7 @@ sub update_ticket {
         }
     }
 
-    DashboardApp::Model::Ticket::update_ticket( $ticket_id, $params );
+    $c->tickets_model->update_ticket( $ticket_id, $params );
 
     $c->render(json => { status => "ok" });
 }
@@ -70,7 +70,7 @@ sub ticket_details {
     my $c = shift;
 
     my $json = $c->req->json;
-    my $result = DashboardApp::Model::Ticket::get_tickets( $json->{ids} );
+    my $result = $c->tickets_model->get_tickets( $json->{ids} );
 
     $c->render( json => $result );
 }
@@ -79,7 +79,7 @@ sub ticket_history {
     my $c = shift;
 
     my $json = $c->req->json;
-    my $result = DashboardApp::Model::Ticket::get_history( $json->{ticket_id} );
+    my $result = $c->tickets_model->get_history( $json->{ticket_id} );
 
     $c->render( json => $result );
 }

@@ -11,7 +11,17 @@ $rt->login( username => $credentials->{login}, password => $credentials->{passwo
 
 my @queues;
 
+sub new {
+    my ( $class, $memcached ) = @_;
+
+    return bless( {
+        memcached => $memcached,
+    }, shift );
+}
+
 sub get_queues {
+    my ( $self ) = @_;
+
     if ( !@queues ) {
         my @ids = $rt->search( type => 'queue', query => "" );
         foreach my $id ( @ids ) {
@@ -26,13 +36,13 @@ sub get_queues {
 }
 
 sub search_tickets {
-    my ( $search_query ) = @_;
+    my ( $self, $search_query ) = @_;
     my @ids = $rt->search( type => 'ticket', query => $search_query );
     return \@ids;
 }
 
 sub get_tickets {
-    my ( $ids ) = @_;
+    my ( $self, $ids ) = @_;
 
     my $result = {};
     foreach my $id ( @$ids ) {
@@ -44,13 +54,29 @@ sub get_tickets {
 }
 
 sub update_ticket {
-    my ( $ticket_id, $params ) = @_;
+    my ( $self, $ticket_id, $params ) = @_;
 
     $rt->edit ( type => 'ticket', id => $ticket_id, set => $params );
 }
 
+sub get_history_entry {
+    my ( $self, $ticket_id, $history_id ) = @_;
+
+    my $cache_key = "history-entry-$history_id";
+    my $cached_entry = $self->{memcached}->get($cache_key);
+    return $cached_entry if ( $cached_entry );
+
+    my $response = $rt->_submit("ticket/$ticket_id/history/id/$history_id")->decoded_content;
+    my @matches = map { $_ =~ s/(?:^(\s+)|(\s+)$)//g; $_ } ( $response =~ /(.*?): (.*?)\n(?!\s)/sg );
+    my $history_entry = { splice( @matches, 2 ) };
+
+    $self->{memcached}->set( $cache_key, $history_entry );
+
+    return $history_entry;
+}
+
 sub get_history {
-    my ( $ticket_id ) = @_;
+    my ( $self, $ticket_id ) = @_;
 
     my $response = $rt->_submit("ticket/$ticket_id/history")->decoded_content;
 
@@ -58,25 +84,13 @@ sub get_history {
     my @items;
     foreach my $line ( @lines ) {
         if (my ( $id, $descr ) = ( $line =~ /(\d+): (.*)/ ) ) {
-            push( @items, { id => $id, descr => $descr } ) if ( $descr =~ /Ticket created/ or $descr =~ /Correspondence added/ );
+            push( @items, { id => $id, descr => $descr } );# if ( $descr =~ /Ticket created/ or $descr =~ /Correspondence added/ );
         }
     }
 
     return [] unless ( @items );
 
-    my @result;
-    my @ids;
-    push( @ids, $items[0]->{id} );
-    push( @ids, $items[ @items - 1 ]->{id} ) if ( @items > 1 );
-
-    foreach my $history_id ( @ids ) {
-        my $response = $rt->_submit("ticket/$ticket_id/history/id/$history_id")->decoded_content;
-        my @matches = map { $_ =~ s/(?:^(\s+)|(\s+)$)//g; $_ } ( $response =~ /(.*?): (.*?)\n(?!\s)/sg );
-        my %fields = splice( @matches, 2 );
-        push( @result, \%fields );
-    }
-
-    return \@result;
+    return [ map { $self->get_history_entry( $ticket_id, $_->{id} ) } @items ];
 }
 
 1;

@@ -2,6 +2,7 @@ package DashboardApp;
 use Mojo::Base 'Mojolicious';
 
 use DashboardApp::Model::Config;
+use DashboardApp::Model::Ticket;
 use JSON qw/encode_json/;
 use Mojolicious::Sessions::Storable;
 use Plack::Session::Store::File;
@@ -11,7 +12,15 @@ sub startup {
 
     $self->secrets(['eeQu6ighiegh6zaizoh6eithuiphoo']);
 
-    $self->plugin('tt_renderer');
+    $self->plugin( 'tt_renderer' );
+    $self->plugin( 'DashboardApp::Plugin::Memcached' => {
+        memcached => {
+            namespace => 'bws-dashboard',
+            servers => [ 'localhost:11211' ],
+        },
+    } );
+
+    $self->helper( tickets_model => sub { state $tickets_model = DashboardApp::Model::Ticket->new( $self->app->memcached ) } );
 
     my $sessions = Mojolicious::Sessions::Storable->new(
         session_store => Plack::Session::Store::File->new( dir => './sessions' )

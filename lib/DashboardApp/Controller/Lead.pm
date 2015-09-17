@@ -3,7 +3,6 @@ use Mojo::Base 'Mojolicious::Controller';
 
 use DashboardApp::Model::Column;
 use DashboardApp::Model::User;
-use DashboardApp::Model::Ticket;
 
 sub show_dashboard {
     my $c = shift;
@@ -21,7 +20,7 @@ sub show_dashboard {
         my $column = $columns->{$column_id};
         next unless ( $column->{search_query} );
 
-        my $tickets = DashboardApp::Model::Ticket::search_tickets( $column->{search_query} );
+        my $tickets = $c->tickets_model->search_tickets( $column->{search_query} );
         my $error;
         #my $error = try {
         #    return;
@@ -42,7 +41,7 @@ sub show_dashboard {
         columns => $columns,
         users => $users,
         rt_users => DashboardApp::Model::User::get_rt_users(),
-        queues => DashboardApp::Model::Ticket::get_queues(),
+        queues => $c->tickets_model->get_queues(),
         statuses => DashboardApp::Model::Config::get_rt_statuses()
     } );
 }

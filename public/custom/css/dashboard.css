@@ -65,9 +65,13 @@ body {
     margin: 5px;
 }
 
-.db-history .db-items {
-    white-space: pre-line;
+.db-history-items {
     font-size: 80%;
+}
+
+.db-history-items p {
+    margin: 0 0 2em 1em;
+    white-space: pre-line;
 }
 
 .db-ticket-card {
@@ -77,6 +81,11 @@ body {
 #db-top-toolbar .md-toolbar-tools {
     background: url(/images/bywater-logo.png) 20px 16px no-repeat;
     padding-left: 62px;
+}
+
+.db-history-entry-header h4 {
+    font-weight: normal;
+    margin-left: 1.5em;
 }
 
 /* ***** */

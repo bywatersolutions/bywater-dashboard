@@ -60,10 +60,12 @@
                     <div ng-switch-when="undefined">
                         <img src="/images/loader.gif"/>
                     </div>
-                    <md-list-item ng-switch-otherwise ng-repeat="item in history" class="db-items">
+                    <md-list-item ng-switch-otherwise ng-repeat="item in history" class="db-history-items">
                         <div class="md-list-item-text">
-                            <h3>{{item.Creator}}</h3>
-                            <h4>{{item.Description}}</h4>
+                            <div class="db-history-entry-header" layout="row" layout-sm="column">
+                                <h3>{{item.Creator}}</h3>
+                                <h4>{{item.Description}}</h4>
+                            </div>
                             <p>{{item.Content}}</p>
                         </div>
                     </md-list-item>
