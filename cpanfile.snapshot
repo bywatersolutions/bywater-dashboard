@@ -80,6 +80,17 @@ DISTRIBUTIONS
       strict 0
       version 0.88
       warnings 0
+  Cache-Memcached-1.30
+    pathname: D/DO/DORMANDO/Cache-Memcached-1.30.tar.gz
+    provides:
+      Cache::Memcached 1.30
+      Cache::Memcached::GetParser undef
+    requirements:
+      Encode 0
+      ExtUtils::MakeMaker 0
+      Storable 0
+      String::CRC32 0
+      Time::HiRes 0
   Class-Data-Inheritable-0.08
     pathname: T/TM/TMTM/Class-Data-Inheritable-0.08.tar.gz
     provides:
@@ -1886,6 +1897,19 @@ DISTRIBUTIONS
       Test::Exception 0
       Test::More 0
       URI 0
+  Readonly-2.00
+    pathname: S/SA/SANKO/Readonly-2.00.tar.gz
+    provides:
+      Readonly 2.00
+      Readonly::Array undef
+      Readonly::Hash undef
+      Readonly::Scalar undef
+    requirements:
+      CPAN::Meta 0
+      CPAN::Meta::Prereqs 0
+      ExtUtils::CBuilder 0
+      Module::Build 0.38
+      perl v5.6.0
   Stream-Buffered-0.03
     pathname: D/DO/DOY/Stream-Buffered-0.03.tar.gz
     provides:
@@ -1896,6 +1920,12 @@ DISTRIBUTIONS
     requirements:
       ExtUtils::MakeMaker 6.30
       IO::File 1.14
+  String-CRC32-1.5
+    pathname: S/SO/SOENKE/String-CRC32-1.5.tar.gz
+    provides:
+      String::CRC32 1.5
+    requirements:
+      ExtUtils::MakeMaker 0
   Sub-Uplevel-0.25
     pathname: D/DA/DAGOLDEN/Sub-Uplevel-0.25.tar.gz
     provides:

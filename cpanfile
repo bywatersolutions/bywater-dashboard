@@ -5,3 +5,5 @@ requires 'Plack::Session::Store::File', '>= 0.30';
 requires 'RT::Client::REST', '>= 0.43';
 requires 'YAML', '>= 1.15';
 requires 'Net::SSL', '>= 2.84';
+requires 'Readonly', '>= 2.00';
+requires 'Cache::Memcached', '>= 1.30';
