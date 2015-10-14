@@ -51,6 +51,7 @@ sub startup {
     $auth->post("/json/update_ticket")->to("main#update_ticket");
     $auth->post("/json/ticket_details")->to("main#ticket_details");
     $auth->post("/json/ticket_history")->to("main#ticket_history");
+    $auth->post("/json/ticket_add_history")->to("main#ticket_add_correspondence");
 
     my $lead = $auth->under( sub {
         my ( $c ) = @_;

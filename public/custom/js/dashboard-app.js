@@ -359,27 +359,34 @@ dashboardApp.controller( 'redirectCtrl', [ '$scope', '$http', '$location', funct
 dashboardApp.controller( 'ticketPopupCtrl', [ '$scope', '$http', '$mdDialog', 'ticket', 'ticket_id', function($scope, $http, $mdDialog, ticket, ticket_id) {
     $scope.ticket_id = ticket_id;
     $scope.ticket = ticket;
-    $http.post( '/json/ticket_history', { ticket_id: ticket_id } ).success( function(data) {
-        $scope.history = $.grep( data, function( history_entry ) {
-            // Filter out unhelpful entries
+    $scope.correspondence = "";
+    $scope.selected_tab_index = 0;
 
-            // While we should incorporate email success/failure at some point, for now it's
-            // clutter
-            if ( history_entry.Type.match(/EmailRecord$/) ) return false;
+    $scope.get_history = function () {
+        $http.post( '/json/ticket_history', { ticket_id: ticket_id } ).success( function(data) {
+            $scope.history = $.grep( data, function( history_entry ) {
+                // Filter out unhelpful entries
 
-            // These are always followed by a Given entry
-            if ( history_entry.Type == 'SetWatcher' && history_entry.Field == 'Owner' ) return false;
+                // While we should incorporate email success/failure at some point, for now it's
+                // clutter
+                if ( history_entry.Type.match(/EmailRecord$/) ) return false;
 
-            // Pre-process history
+                // These are always followed by a Given entry
+                if ( history_entry.Type == 'SetWatcher' && history_entry.Field == 'Owner' ) return false;
 
-            // ¿Por qué, RT?
-            if ( history_entry.Content == 'This transaction appears to have no content' ) {
-                history_entry.Content = '';
-            }
+                // Pre-process history
 
-            return true;
+                // ¿Por qué, RT?
+                if ( history_entry.Content == 'This transaction appears to have no content' ) {
+                    history_entry.Content = '';
+                }
+
+                return true;
+            } );
         } );
-    } );
+    }
+
+    $scope.get_history();
 
     $scope.update_ticket = function() {
         $scope.update_dialog.ticket_id = $scope.ngDialogData.ticket_id;
@@ -391,5 +398,13 @@ dashboardApp.controller( 'ticketPopupCtrl', [ '$scope', '$http', '$mdDialog', 't
 
     $scope.close_dialog = function () {
         $mdDialog.hide();
+    }
+
+    $scope.add_correspondence = function () {
+        $http.post( '/json/ticket_add_history', { ticket_id: ticket_id, correspondence: $scope.correspondence } );
+
+        $scope.selected_tab_index = 0;
+        $scope.history = undefined;
+        $scope.get_history();
     }
 } ] );

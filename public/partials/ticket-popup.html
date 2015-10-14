@@ -56,20 +56,38 @@
     <!--<a class="md-raised md-primary md-button md-default-theme" ng-click="update_ticket() && closeThisDialog()" target="_blank">Update ticket</a>-->
 <!--</div>-->
             <md-content flex-gt-sm="80">
-                <md-list class="db-history" ng-switch on="history">
-                    <div ng-switch-when="undefined">
-                        <img src="/images/loader.gif"/>
-                    </div>
-                    <md-list-item ng-switch-otherwise ng-repeat="item in history" class="db-history-items">
-                        <div class="md-list-item-text">
-                            <div class="db-history-entry-header" layout="row" layout-sm="column">
-                                <h3>{{item.Creator}}</h3>
-                                <h4>{{item.Description}}</h4>
-                            </div>
-                            <p>{{item.Content}}</p>
+
+            {{selected_tab_index}}
+
+            <md-tabs md-dynamic-height md-selected="selected_tab_index">
+                <md-tab label="History">
+                    <md-list class="db-history" ng-switch on="history">
+                        <div ng-switch-when="undefined">
+                            <img src="/images/loader.gif"/>
                         </div>
-                    </md-list-item>
-                </md-list>
+                        <md-list-item ng-switch-otherwise ng-repeat="item in history" class="db-history-items">
+                            <div class="md-list-item-text">
+                                <div class="db-history-entry-header" layout="row" layout-sm="column">
+                                    <h3>{{item.Creator}}</h3>
+                                    <h4>{{item.Description}}</h4>
+                                </div>
+                                <p>{{item.Content}}</p>
+                            </div>
+                        </md-list-item>
+                    </md-list>
+                </md-tab>
+                <md-tab label="Add correspondence">
+                    <md-content>
+                        <md-input-container>
+                            <label for="corr_ta">Text</label>
+                            <textarea id="corr_ta" ng-model="correspondence"></textarea>
+                        </md-input-container>
+                        <a class="md-raised md-primary md-button md-default-theme" ng-click="add_correspondence()">Add correspondence</a>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+
+
             </md-content>
         </md-dialog-content>
     </form>

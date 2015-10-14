@@ -84,4 +84,13 @@ sub ticket_history {
     $c->render( json => $result );
 }
 
+sub ticket_add_correspondence {
+    my $c = shift;
+
+    my $json = $c->req->json;
+    $c->tickets_model->add_correspondence( $json->{ticket_id}, $json->{correspondence} );
+
+    $c->render( json => { status => "ok" } );
+}
+
 1;
