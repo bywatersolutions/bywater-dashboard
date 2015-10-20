@@ -4,9 +4,15 @@ use Mojo::Base -strict;
 use RT::Client::REST;
 use DashboardApp::Model::Config;
 
+use IO::Socket::SSL; # qw(debug3);
+use Net::SSLeay;
+BEGIN { IO::Socket::SSL::set_ctx_defaults( verify_mode => Net::SSLeay->VERIFY_NONE() ); }
+
 my $config = DashboardApp::Model::Config::get_config();
 my $credentials = $config->{rt} || die "RT credentials not found.";
 my $rt = RT::Client::REST->new( server => $credentials->{host}, timeout => 3 );
+
+$rt->_ua->ssl_opts( verify_hostname => 0 );
 $rt->login( username => $credentials->{login}, password => $credentials->{password} );
 
 my @queues;
