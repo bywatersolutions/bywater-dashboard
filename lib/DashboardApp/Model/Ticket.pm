@@ -6,14 +6,18 @@ use DashboardApp::Model::Config;
 
 use IO::Socket::SSL; # qw(debug3);
 use Net::SSLeay;
-BEGIN { IO::Socket::SSL::set_ctx_defaults( verify_mode => Net::SSLeay->VERIFY_NONE() ); }
 
 my $config = DashboardApp::Model::Config::get_config();
-my $credentials = $config->{rt} || die "RT credentials not found.";
-my $rt = RT::Client::REST->new( server => $credentials->{host}, timeout => 3 );
+die "RT configuration not found." unless ( $config->{rt} );
 
-$rt->_ua->ssl_opts( verify_hostname => 0 );
-$rt->login( username => $credentials->{login}, password => $credentials->{password} );
+my $rt = RT::Client::REST->new( server => $config->{rt}->{host}, timeout => 3 );
+
+if ( $config->{rt}->{ignore_ssl_errors} ) {
+    IO::Socket::SSL::set_ctx_defaults( verify_mode => Net::SSLeay->VERIFY_NONE() );
+    $rt->_ua->ssl_opts( verify_hostname => 0 );
+}
+
+$rt->login( username => $config->{rt}->{login}, password => $config->{rt}->{password} );
 
 my @queues;
 
@@ -53,7 +57,7 @@ sub get_tickets {
     my $result = {};
     foreach my $id ( @$ids ) {
         $result->{$id} = $rt->show(type => 'ticket', id => $id);
-        $result->{$id}->{link} = $credentials->{host} . "/Ticket/Display.html?id=" . $id;
+        $result->{$id}->{link} = $config->{rt}->{host} . "/Ticket/Display.html?id=" . $id;
     }
 
     return $result;

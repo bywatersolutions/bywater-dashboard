@@ -3,6 +3,7 @@ rt:
   password: "changeme"
   host: "https://rt-test.bywatersolutions.com"
   statuses: [ "new", "open", "stalled", "resolved", "rejected", "deleted", "needsinfo" ]
+  ignore_ssl_errors: 1
 
 lead_default_columns:
   0:
@@ -15,13 +16,13 @@ employee_default_columns:
   0:
     name: Todays TODO
     type: custom
-  
+
   1:
     name: New tickets
     type: rt
     search_query: Owner = '__CurrentUser__' AND (  Status = 'new' OR Status = 'open' ) AND LastUpdated > '7 days ago'
     sort: ticket_id_desc
- 
+
   2:
     name: My Stale Tickets
     type: rt
