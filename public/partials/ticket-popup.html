@@ -10,56 +10,57 @@
             </div>
         </md-toolbar>
         <md-dialog-content layout="row" layout-sm="column">
-            <md-list flex-gt-sm="20">
-                <md-list-item class="md-2-line">
-                    <div class="md-list-item-text">
-                        <h3>Status:</h3>
-                        <p>
-                            <select ng-model="ticket.Status" ng-options="status as status for status in statuses"></select>
-                        </p>
-                    </div>
-                </md-list-item>
-                <md-list-item class="md-2-line">
-                    <div class="md-list-item-text">
-                        <h3>Queue:</h3>
-                        <p>
-                            <select ng-model="ticket.Queue" ng-options="queue.name as queue.name for queue in queues"></select>
-                        </p>
-                    </div>
-                </md-list-item>
-                <md-list-item class="md-2-line">
-                    <div class="md-list-item-text">
-                        <h3>Owner:</h3>
-                        <p>
-                            <select ng-model="ticket.Owner" ng-options="login as name for ( login, name ) in rt_users"></select>
-                        </p>
-                    </div>
-                </md-list-item>
-                <md-list-item class="md-2-line">
-                    <div class="md-list-item-text">
-                        <h3>Requestors:</h3>
-                        <p>
-                            {{ticket.Requestors}}
-                        </p>
-                    </div>
-                </md-list-item>
-                <md-list-item class="md-2-line">
-                    <div class="md-list-item-text">
-                        <h3>Link:</h3>
-                        <p>
-                            <a href="{{ticket.link}}" target="_blank">Go to RT</a>
-                        </p>
-                    </div>
-                </md-list-item>
-            </md-list>
+
 <!--<div>-->
     <!--<a class="md-raised md-primary md-button md-default-theme" ng-click="update_ticket() && closeThisDialog()" target="_blank">Update ticket</a>-->
 <!--</div>-->
-            <md-content flex-gt-sm="80">
-
-            {{selected_tab_index}}
-
+            <md-content flex>
             <md-tabs md-dynamic-height md-selected="selected_tab_index">
+                <md-tab label="RT details">
+                    <md-list flex-gt-sm="20">
+                        <md-list-item class="md-2-line">
+                            <div class="md-list-item-text">
+                                <h3>Status:</h3>
+                                <p>
+                                    <select ng-model="ticket.Status" ng-options="status as status for status in statuses"></select>
+                                </p>
+                            </div>
+                        </md-list-item>
+                        <md-list-item class="md-2-line">
+                            <div class="md-list-item-text">
+                                <h3>Queue:</h3>
+                                <p>
+                                    <select ng-model="ticket.Queue" ng-options="queue.name as queue.name for queue in queues"></select>
+                                </p>
+                            </div>
+                        </md-list-item>
+                        <md-list-item class="md-2-line">
+                            <div class="md-list-item-text">
+                                <h3>Owner:</h3>
+                                <p>
+                                    <select ng-model="ticket.Owner" ng-options="login as name for ( login, name ) in rt_users"></select>
+                                </p>
+                            </div>
+                        </md-list-item>
+                        <md-list-item class="md-2-line">
+                            <div class="md-list-item-text">
+                                <h3>Requestors:</h3>
+                                <p>
+                                    {{ticket.Requestors}}
+                                </p>
+                            </div>
+                        </md-list-item>
+                        <md-list-item class="md-2-line">
+                            <div class="md-list-item-text">
+                                <h3>Link:</h3>
+                                <p>
+                                    <a href="{{ticket.link}}" target="_blank">Go to RT</a>
+                                </p>
+                            </div>
+                        </md-list-item>
+                    </md-list>
+                </md-tab>
+
                 <md-tab label="History">
                     <md-list class="db-history" ng-switch on="history">
                         <div ng-switch-when="undefined">
@@ -76,6 +77,7 @@
                         </md-list-item>
                     </md-list>
                 </md-tab>
+
                 <md-tab label="Add correspondence">
                     <md-content>
                         <md-input-container>

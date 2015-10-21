@@ -403,7 +403,7 @@ dashboardApp.controller( 'ticketPopupCtrl', [ '$scope', '$http', '$mdDialog', 't
     $scope.add_correspondence = function () {
         $http.post( '/json/ticket_add_history', { ticket_id: ticket_id, correspondence: $scope.correspondence } );
 
-        $scope.selected_tab_index = 0;
+        $scope.selected_tab_index = 1;
         $scope.history = undefined;
         $scope.get_history();
     }
