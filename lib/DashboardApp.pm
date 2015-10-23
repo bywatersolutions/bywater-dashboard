@@ -52,6 +52,9 @@ sub startup {
     $auth->post("/json/ticket_details")->to("main#ticket_details");
     $auth->post("/json/ticket_history")->to("main#ticket_history");
     $auth->post("/json/ticket_add_history")->to("main#ticket_add_correspondence");
+    $auth->post("/json/ticket_add_history")->to("main#ticket_add_correspondence");
+
+    $auth->post("/json/sugarcrm/get_contact")->to("main#sugarcrm_get_contact");
 
     my $lead = $auth->under( sub {
         my ( $c ) = @_;

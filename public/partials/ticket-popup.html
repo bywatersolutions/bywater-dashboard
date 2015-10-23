@@ -87,6 +87,21 @@
                         <a class="md-raised md-primary md-button md-default-theme" ng-click="add_correspondence()">Add correspondence</a>
                     </md-content>
                 </md-tab>
+
+                <md-tab label="SugarCRM">
+                    <md-list class="db-sugar-crm-data" ng-switch on="sugar_crm_data">
+                        <div ng-switch-when="undefined">
+                            <img src="/images/loader.gif"/>
+                        </div>
+                        <md-list-item ng-switch-otherwise ng-repeat="contact in sugar_crm_data">
+                            <div class="md-list-item-text">
+                                <div layout="row" layout-sm="column" ng-repeat="(key, value) in contact">
+                                    {{key}}: {{value}}
+                                </div>
+                            </div>
+                        </md-list-item>
+                    </md-list>
+                </md-tab>
             </md-tabs>
 
 
