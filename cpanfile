@@ -7,3 +7,5 @@ requires 'YAML', '>= 1.15';
 requires 'Net::SSL', '>= 2.84';
 requires 'Readonly', '>= 2.00';
 requires 'Cache::Memcached', '>= 1.30';
+requires 'Hash::Merge', '>= 0.200';
+requires 'Net::SugarCRM', '>= 3.23';

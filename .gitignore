@@ -6,3 +6,4 @@ config.yaml
 users.yaml
 *.komodoproject
 /local/
+/config/*.local.yaml
