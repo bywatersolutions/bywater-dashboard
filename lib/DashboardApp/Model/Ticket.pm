@@ -24,9 +24,7 @@ my @queues;
 sub new {
     my ( $class, $memcached ) = @_;
 
-    return bless( {
-        memcached => $memcached,
-    }, shift );
+    return bless( { memcached => $memcached }, $class );
 }
 
 sub get_queues {
