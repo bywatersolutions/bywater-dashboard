@@ -16,7 +16,11 @@ var jsFiles = [
     'assets/vendor/angular-material/angular-material.js',
     'assets/vendor/Sortable/Sortable.js',
     'assets/vendor/Sortable/ng-sortable.js',
-    'assets/js/dashboard-app.js'
+    'assets/js/dashboard-app.js',
+    'assets/js/router.js',
+    'assets/js/services/**/*.js',
+    'assets/js/directives/**/*.js',
+    'assets/js/controllers/**/*.js'
 ];
 var cssFiles = [
     'assets/vendor/angular-material/angular-material.css',

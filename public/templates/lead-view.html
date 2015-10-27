@@ -8,7 +8,7 @@
             </md-toolbar>
 
             <div class="db-column-content" ng-sortable="column_sortable">
-                <md-card class="db-ticket-card" ng-repeat="ticket_id in column.tickets" ng-model="column.tickets" ng-click="show_popup(ticket_id, $event)">
+                <md-card class="db-ticket-card" ng-repeat="ticket_id in column.tickets" ng-model="column.tickets" ng-click="show_popup(ticket_id)">
                     <md-card-content ng-include="'/partials/ticket-card.html'">
                     </md-card-content>
                 </md-card>
@@ -18,7 +18,7 @@
 
     <div class="db-column-wrap" flex="80" flex-sm="100">
         <md-grid-list md-cols="12" md-cols-sm="4" md-row-height="1:1" md-gutter="16px">
-            <md-grid-tile md-colspan="2" md-rowspan="2" ng-repeat="(user_id,user) in users">
+            <md-grid-tile md-colspan="2" md-rowspan="2" ng-repeat="(user_id, user) in users">
                 <db-drop-target db-drop-group="lead-tickets" db-on-drop="onDrop">
                     <img ng-src="{{user.avatar}}" height="100%" />
                     <md-grid-tile-footer class="noselect">
