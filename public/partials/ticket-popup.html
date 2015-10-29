@@ -15,83 +15,96 @@
     <!--<a class="md-raised md-primary md-button md-default-theme" ng-click="update_ticket() && closeThisDialog()" target="_blank">Update ticket</a>-->
 <!--</div>-->
             <md-content flex>
-                <md-tabs md-selected="selected_tab_index" md-border-bottom class="bd-modal-ticket-tabs">
-                    <md-tab label="RT details">
-                        <md-list flex-gt-sm="20">
-                            <md-list-item class="md-2-line">
-                                <div class="md-list-item-text">
-                                    <md-input-container>
-                                        <label>Status:</label>
-                                        <md-select ng-model="ticket.Status">
-                                            <md-option ng-value="status" ng-repeat="status in statuses">{{ status }}</md-option>
-                                        </md-select>
-                                    </md-input-container>
-                                </div>
-                            </md-list-item>
-                            <md-list-item class="md-2-line">
-                                <div class="md-list-item-text">
-                                    <md-input-container>
-                                        <label>Queue:</label>
-                                        <md-select ng-model="ticket.Queue">
-                                            <md-option ng-value="queue.name" ng-repeat="queue in queues">{{ queue.name }}</md-option>
-                                        </md-select>
-                                    </md-input-container>
-                                </div>
-                            </md-list-item>
-                            <md-list-item class="md-2-line">
-                                <div class="md-list-item-text">
-                                    <md-input-container>
-                                        <label>Owner:</label>
-                                        <md-select ng-model="ticket.Owner">
-                                            <md-option ng-value="login" ng-repeat="(login, name) in rt_users">{{ name }}</md-option>
-                                        </md-select>
-                                    </md-input-container>
-                                </div>
-                            </md-list-item>
-                            <md-list-item class="md-2-line">
-                                <div class="md-list-item-text">
-                                    <md-input-container>
-                                        <label>Requestors:</label>
-                                        <input type="text" value="{{ ticket.Requestors }}" readonly>
-                                    </md-input-container>
-                                </div>
-                            </md-list-item>
-                            <md-list-item class="md-2-line">
-                                <div class="md-list-item-text">
-                                    <h3>Link:</h3>
-                                    <p>
-                                        <md-button class="md-raised" href="{{ticket.link}}" target="_blank">Go to RT</md-button>
-                                    </p>
-                                </div>
-                            </md-list-item>
-                        </md-list>
-                    </md-tab>
+            <md-tabs md-dynamic-height md-selected="selected_tab_index">
+                <md-tab label="RT details">
+                    <md-list flex-gt-sm="20">
+                        <md-list-item class="md-2-line">
+                            <div class="md-list-item-text">
+                                <h3>Status:</h3>
+                                <p>
+                                    <select ng-model="ticket.Status" ng-options="status as status for status in statuses"></select>
+                                </p>
+                            </div>
+                        </md-list-item>
+                        <md-list-item class="md-2-line">
+                            <div class="md-list-item-text">
+                                <h3>Queue:</h3>
+                                <p>
+                                    <select ng-model="ticket.Queue" ng-options="queue.name as queue.name for queue in queues"></select>
+                                </p>
+                            </div>
+                        </md-list-item>
+                        <md-list-item class="md-2-line">
+                            <div class="md-list-item-text">
+                                <h3>Owner:</h3>
+                                <p>
+                                    <select ng-model="ticket.Owner" ng-options="login as name for ( login, name ) in rt_users"></select>
+                                </p>
+                            </div>
+                        </md-list-item>
+                        <md-list-item class="md-2-line">
+                            <div class="md-list-item-text">
+                                <h3>Requestors:</h3>
+                                <p>
+                                    {{ticket.Requestors}}
+                                </p>
+                            </div>
+                        </md-list-item>
+                        <md-list-item class="md-2-line">
+                            <div class="md-list-item-text">
+                                <h3>Link:</h3>
+                                <p>
+                                    <a href="{{ticket.link}}" target="_blank">Go to RT</a>
+                                </p>
+                            </div>
+                        </md-list-item>
+                    </md-list>
+                </md-tab>
 
-                    <md-tab label="History">
-                        <md-list class="db-history" ng-switch on="history">
-                            <md-list-item ng-switch-when="undefined">
-                                <img src="/images/loader.gif"/>
-                            </md-list-item>
-                            <md-list-item ng-switch-otherwise ng-repeat="item in history" class="db-history-items">
-                                <div class="md-list-item-text">
-                                    <div class="db-history-entry-header" layout="row" layout-sm="column">
-                                        <h3>{{item.Creator}}</h3>
-                                        <h4>{{item.Description}}</h4>
-                                    </div>
-                                    <p>{{item.Content}}</p>
+                <md-tab label="History">
+                    <md-list class="db-history" ng-switch on="history">
+                        <div ng-switch-when="undefined">
+                            <img src="/images/loader.gif"/>
+                        </div>
+                        <md-list-item ng-switch-otherwise ng-repeat="item in history" class="db-history-items">
+                            <div class="md-list-item-text">
+                                <div class="db-history-entry-header" layout="row" layout-sm="column">
+                                    <h3>{{item.Creator}}</h3>
+                                    <h4>{{item.Description}}</h4>
                                 </div>
-                            </md-list-item>
-                        </md-list>
-                    </md-tab>
+                                <p>{{item.Content}}</p>
+                            </div>
+                        </md-list-item>
+                    </md-list>
+                </md-tab>
 
-                    <md-tab label="Add correspondence">
+                <md-tab label="Add correspondence">
+                    <md-content>
                         <md-input-container>
                             <label for="corr_ta">Text</label>
                             <textarea id="corr_ta" ng-model="correspondence"></textarea>
                         </md-input-container>
                         <a class="md-raised md-primary md-button md-default-theme" ng-click="add_correspondence()">Add correspondence</a>
-                    </md-tab>
+                    </md-content>
+                </md-tab>
+
+                <md-tab label="SugarCRM">
+                    <md-list class="db-sugar-crm-data" ng-switch on="sugar_crm_data">
+                        <div ng-switch-when="undefined">
+                            <img src="/images/loader.gif"/>
+                        </div>
+                        <md-list-item ng-switch-otherwise ng-repeat="contact in sugar_crm_data">
+                            <div class="md-list-item-text">
+                                <div layout="row" layout-sm="column" ng-repeat="(key, value) in contact">
+                                    {{key}}: {{value}}
+                                </div>
+                            </div>
+                        </md-list-item>
+                    </md-list>
+                </md-tab>
             </md-tabs>
+
+
             </md-content>
         </md-dialog-content>
     </form>

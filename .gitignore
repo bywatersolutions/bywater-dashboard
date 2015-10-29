@@ -10,3 +10,4 @@ users.yaml
 /.idea
 /node_modules
 /public/custom
+/config/*.local.yaml

@@ -3,6 +3,7 @@ use Mojo::Base 'Mojolicious::Controller';
 
 use DashboardApp::Model::User;
 use DashboardApp::Model::Ticket;
+use DashboardApp::Model::SugarCRM;
 use Try::Tiny;
 
 sub index {
@@ -91,6 +92,17 @@ sub ticket_add_correspondence {
     $c->tickets_model->add_correspondence( $json->{ticket_id}, $json->{correspondence} );
 
     $c->render( json => { status => "ok" } );
+}
+
+sub sugarcrm_get_contact {
+    my $c = shift;
+
+    my $json = $c->req->json;
+    my $sugar = DashboardApp::Model::SugarCRM->new();
+
+    my $data = $sugar->get_contact( $json->{email} );
+
+    $c->render( json => { data => $data } );
 }
 
 1;

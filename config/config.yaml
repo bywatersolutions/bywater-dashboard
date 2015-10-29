@@ -3,7 +3,13 @@ rt:
   password: "changeme"
   host: "https://rt-test.bywatersolutions.com"
   statuses: [ "new", "open", "stalled", "resolved", "rejected", "deleted", "needsinfo" ]
-  ignore_ssl_errors: 1
+  ignore_ssl_errors: 0
+
+sugar_crm:
+  login: "changeme"
+  password: "changeme"
+  api_url: "https://sugarcrm.bywatersolutions.com/service/v4/rest.php"
+  ignore_ssl_errors: 0
 
 lead_default_columns:
   0:
