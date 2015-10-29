@@ -5,7 +5,7 @@
         .config(function($mdIconProvider, $mdThemingProvider, $httpProvider) {
             $mdIconProvider.defaultFontSet('fa');
             $mdThemingProvider.theme('default')
-                .primaryPalette('light-blue', {
+                .primaryPalette('blue', {
                     'default': '500'
                 });
 

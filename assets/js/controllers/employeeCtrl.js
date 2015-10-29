@@ -95,7 +95,7 @@
                     ticket_id: ticket_id,
                     ticket: $scope.tickets[ticket_id]
                 },
-                parent: angular.element(document.body),
+                //parent: angular.element(document.body),
                 scope: $scope.$new(),
                 targetEvent: $event,
                 templateUrl: 'partials/ticket-popup.html'

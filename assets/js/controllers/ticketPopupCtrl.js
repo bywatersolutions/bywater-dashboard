@@ -51,7 +51,7 @@
         };
 
         $scope.close_dialog = function () {
-            $mdDialog.hide();
+            $mdDialog.cancel();
         };
 
         $scope.add_correspondence = function () {

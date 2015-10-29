@@ -17,8 +17,7 @@
                 } else if (response.data && response.data.error) {
                     alert(response.data.error);
                 } else {
-                    alert("Unknown error ocurred.");
-                    $log.error(response);
+                    $log.error('Unknown error ocurred:', response);
                 }
 
                 return $q.reject(response);

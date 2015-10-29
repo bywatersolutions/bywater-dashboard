@@ -149,3 +149,8 @@ md-grid-list {
 md-grid-list md-grid-tile md-grid-tile-footer h3 {
     font-weight: bold;
 }
+
+
+.bd-modal-ticket-tabs md-tab-content {
+    background: rgba(0,0,0,0.05);
+}
