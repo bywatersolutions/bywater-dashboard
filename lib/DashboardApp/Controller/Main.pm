@@ -18,11 +18,15 @@ sub login {
 
     my $json = $c->req->json;
     my $roles;
-    unless ( $roles = DashboardApp::Model::User::check( $json->{login}, $json->{password} ) ) {
+    unless ( $roles = DashboardApp::Model::User::check( $json->{login} ) ) {
         return $c->render(json => { error => "Wrong login or password." });
     }
 
-    $c->session({ user_id => $json->{login}, roles => $roles });
+    my $rt = DashboardApp::Model::Ticket->new->rt;
+    $rt->login( username => $json->{login}, password => $json->{password} );
+
+    my $rt_cookie = JSON->new->encode( { COOKIES => $rt->_cookie->{COOKIES} } );
+    $c->session({ user_id => $json->{login}, roles => $roles, rt_cookie => $rt_cookie });
 
     # Default view for a user will be the first role defined
     $c->render(json => { role => $roles->[0] });
@@ -51,8 +55,8 @@ sub update_ticket {
 
     if ( my $user_id = $json->{user_id} ) {
         my $users = DashboardApp::Model::User::get_all_users();
-        if ( $users->{$user_id} and $users->{$user_id}->{rt_user_id} ) {
-            $params->{owner} = $users->{$user_id}->{rt_user_id};
+        if ( $users->{$user_id} ) {
+            $params->{owner} = $user_id;
         } else {
             die "Unknown RT user!";
         }

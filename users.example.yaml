@@ -1,44 +1,34 @@
-lead1:
+brendan@bywatersolutions.com:
     roles:
         - lead
     first_name: Brendan
     last_name: Lead 1
-    password: 123456
-    rt_user_id: brendan@bywatersolutions.com
     avatar: http://lorempixel.com/200/200/cats/lead1
 
-employee1:
+jesse@bywatersolutions.com:
     roles:
         - employee
     first_name: Jesse
     last_name: Employee1
-    password: 123456
-    rt_user_id: jesse@bywatersolutions.com
     avatar: http://lorempixel.com/200/200/cats/employee1
 
-employee2:
+kyle:
     roles:
         - employee
     first_name: Kyle
     last_name: Employee2
-    password: 123456
-    rt_user_id: kyle
     avatar: http://lorempixel.com/200/200/cats/employee2
 
-employee3:
+"T&M Development":
     roles:
         - employee
     first_name: Ivan
     last_name: Employee3
-    password: 123456
-    rt_user_id: T&M Development
     avatar: http://lorempixel.com/200/200/cats/employee3
 
-employee4:
+barton:
     roles:
         - employee
     first_name: Barton
     last_name: Employee4
-    password: 123456
-    rt_user_id: barton
     avatar: http://lorempixel.com/200/200/cats/employee4

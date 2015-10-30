@@ -43,9 +43,6 @@ sub show_dashboard {
         next unless ( $column->{type} eq "rt" and $column->{search_query} );
 
         my $query = $column->{search_query};
-        my $users = DashboardApp::Model::User::get_all_users();
-        my $user_id = $users->{ $c->session->{user_id} }->{rt_user_id} or die "rt_user_id is not specified for user " . $c->session->{user_id};
-        $query =~ s/__CurrentUser__/$user_id/g;
 
         my $tickets = $c->tickets_model->search_tickets( $query );
         $tickets = [ reverse( @$tickets ) ] if ( $column->{sort} and $column->{sort} eq "ticket_id_desc" );

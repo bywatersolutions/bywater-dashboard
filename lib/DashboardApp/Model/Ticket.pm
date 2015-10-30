@@ -6,34 +6,43 @@ use DashboardApp::Model::Config;
 
 use IO::Socket::SSL; # qw(debug3);
 use Net::SSLeay;
+use JSON qw/decode_json/;
 
 my $config = DashboardApp::Model::Config::get_config();
 die "RT configuration not found." unless ( $config->{rt} );
 
-my $rt = RT::Client::REST->new( server => $config->{rt}->{host}, timeout => 3 );
-
-if ( $config->{rt}->{ignore_ssl_errors} ) {
-    IO::Socket::SSL::set_ctx_defaults( verify_mode => Net::SSLeay->VERIFY_NONE() );
-    $rt->_ua->ssl_opts( verify_hostname => 0 );
-}
-
-$rt->login( username => $config->{rt}->{login}, password => $config->{rt}->{password} );
-
 my @queues;
 
 sub new {
-    my ( $class, $memcached ) = @_;
+    my ( $class, $memcached, $rt_cookie ) = @_;
+    return bless( { memcached => $memcached, rt_cookie => $rt_cookie }, $class );
+}
 
-    return bless( { memcached => $memcached }, $class );
+sub rt {
+    my ( $self ) = @_;
+
+    unless ( $self->{rt} ) {
+        my $rt = RT::Client::REST->new( server => $config->{rt}->{host}, timeout => 3 );
+
+        if ( $config->{rt}->{ignore_ssl_errors} ) {
+            IO::Socket::SSL::set_ctx_defaults( verify_mode => Net::SSLeay->VERIFY_NONE() );
+            $rt->_ua->ssl_opts( verify_hostname => 0 );
+        }
+
+        $rt->_cookie( bless( decode_json( $self->{rt_cookie} ), 'HTTP::Cookies' ) ) if ( $self->{rt_cookie} );
+        $self->{rt} = $rt;
+    }
+
+    return $self->{rt};
 }
 
 sub get_queues {
     my ( $self ) = @_;
 
     if ( !@queues ) {
-        my @ids = $rt->search( type => 'queue', query => "" );
+        my @ids = $self->rt->search( type => 'queue', query => "" );
         foreach my $id ( @ids ) {
-            my $info = $rt->show( type => 'queue', id => $id );
+            my $info = $self->rt->show( type => 'queue', id => $id );
             $info->{id} =~ /(\d+)$/;
 
             push( @queues, { id => $1, name => $info->{Name}, description => $info->{Description} } );
@@ -45,7 +54,7 @@ sub get_queues {
 
 sub search_tickets {
     my ( $self, $search_query ) = @_;
-    my @ids = $rt->search( type => 'ticket', query => $search_query );
+    my @ids = $self->rt->search( type => 'ticket', query => $search_query );
     return \@ids;
 }
 
@@ -54,7 +63,7 @@ sub get_tickets {
 
     my $result = {};
     foreach my $id ( @$ids ) {
-        $result->{$id} = $rt->show(type => 'ticket', id => $id);
+        $result->{$id} = $self->rt->show(type => 'ticket', id => $id);
         $result->{$id}->{link} = $config->{rt}->{host} . "/Ticket/Display.html?id=" . $id;
     }
 
@@ -64,7 +73,7 @@ sub get_tickets {
 sub update_ticket {
     my ( $self, $ticket_id, $params ) = @_;
 
-    $rt->edit ( type => 'ticket', id => $ticket_id, set => $params );
+    $self->rt->edit ( type => 'ticket', id => $ticket_id, set => $params );
 }
 
 sub get_history_entry {
@@ -74,7 +83,7 @@ sub get_history_entry {
     my $cached_entry = $self->{memcached}->get($cache_key);
     return $cached_entry if ( $cached_entry );
 
-    my $response = $rt->_submit("ticket/$ticket_id/history/id/$history_id")->decoded_content;
+    my $response = $self->rt->_submit("ticket/$ticket_id/history/id/$history_id")->decoded_content;
     my @matches = map { $_ =~ s/(?:^(\s+)|(\s+)$)//g; $_ } ( $response =~ /(.*?): (.*?)\n(?!\s)/sg );
     my $history_entry = { splice( @matches, 2 ) };
 
@@ -86,7 +95,7 @@ sub get_history_entry {
 sub get_history {
     my ( $self, $ticket_id ) = @_;
 
-    my $response = $rt->_submit("ticket/$ticket_id/history")->decoded_content;
+    my $response = $self->rt->_submit("ticket/$ticket_id/history")->decoded_content;
 
     my @lines = split("\n", $response);
     my @items;
@@ -103,7 +112,7 @@ sub get_history {
 
 sub add_correspondence {
     my ( $self, $ticket_id, $message ) = @_;
-    $rt->correspond( ticket_id => $ticket_id, message => $message )
+    $self->rt->correspond( ticket_id => $ticket_id, message => $message )
 }
 
 1;

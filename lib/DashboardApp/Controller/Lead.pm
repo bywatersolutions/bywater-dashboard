@@ -8,11 +8,7 @@ sub show_dashboard {
     my $c = shift;
 
     my $columns = DashboardApp::Model::Column::load_columns( $c->session->{user_id}, 'lead_default_columns' );
-
     my $users = DashboardApp::Model::User::get_all_users();
-    foreach my $user ( values %$users ) {
-        delete( $user->{password} );
-    }
 
     #####
 

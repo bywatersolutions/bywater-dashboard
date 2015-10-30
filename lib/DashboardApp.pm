@@ -21,7 +21,10 @@ sub startup {
         },
     } );
 
-    $self->helper( tickets_model => sub { state $tickets_model = DashboardApp::Model::Ticket->new( $self->app->memcached ) } );
+    $self->helper( tickets_model => sub {
+        my ( $c ) = @_;
+        return DashboardApp::Model::Ticket->new( $self->app->memcached, $c->session->{rt_cookie} )
+    } );
 
     my $sessions = Mojolicious::Sessions::Storable->new(
         session_store => Plack::Session::Store::File->new( dir => './sessions' )
