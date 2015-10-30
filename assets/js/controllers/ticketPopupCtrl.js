@@ -45,6 +45,8 @@
             } );
         };
 
+        $scope.get_sugar_crm_data();
+
         $scope.update_ticket = function() {
             $scope.update_dialog.ticket_id = $scope.ngDialogData.ticket_id;
             $http.post('/json/update_ticket', $scope.update_dialog).then(

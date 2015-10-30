@@ -72,7 +72,7 @@ sub get_contact {
 		foreach my $contact ( @$contacts ) {
 			my $item = {};
 			foreach my $field ( @contact_fields ) {
-				$item->{$field} = $contact->$field();
+				$item->{$field} = $contact->$field() if ( $contact->has( $field ) );
 			}
 			push( @result, $item );
 		}
