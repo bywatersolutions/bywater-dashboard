@@ -48,18 +48,18 @@
         $scope.get_sugar_crm_data();
 
         $scope.update_ticket = function() {
-            $scope.update_dialog.ticket_id = $scope.ngDialogData.ticket_id;
-            $http.post('/json/update_ticket', $scope.update_dialog).then(
+            var postData = angular.merge({}, $scope.ticket);
+            postData.ticket_id = $scope.ticket_id;
+            $http.post('/json/update_ticket', postData).then(
                 function(response) {
                     $log.debug( response.data );
+                    $mdDialog.hide();
                 }
             );
-
-            return true;
         };
 
         $scope.close_dialog = function () {
-            $mdDialog.cancel();
+            $mdDialog.hide();
         };
 
         $scope.add_correspondence = function () {

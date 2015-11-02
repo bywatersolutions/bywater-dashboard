@@ -23,7 +23,7 @@
                     }
 
                     if (!$scope.updater_promise) {
-                        $scope.updater_promise = ticketUpdater($scope.columns, $scope.tickets ).then(
+                        $scope.updater_promise = ticketUpdater($scope.columns, $scope.tickets).then(
                             function(data) {
                                 for (var ticket_id in data) {
                                     if (data.hasOwnProperty(ticket_id)) {
@@ -31,7 +31,7 @@
                                     }
                                 }
                             }
-                        ).finally(function () { $scope.updater_promise = undefined; });
+                        ).finally(function() { $scope.updater_promise = undefined; });
                     }
                 },
                 function () {
@@ -43,18 +43,31 @@
         $scope.tickets = {};
         $scope.update_tickets();
 
-        var update_interval = $interval(function() { $scope.update_tickets(); }, 15000);
+        var update_interval = $interval(function() {
+            if (!dragTicketProgress) {
+                $scope.update_tickets();
+            }
+        }, 15000);
         $scope.$on('$destroy', function() {
             $interval.cancel(update_interval);
         });
 
         // We have to create separate sortable configs for each column, but we have to cache them so
         // Angular doesn't see neverending changes
+        var dragTicketProgress = false;
         function create_sortable(column) {
             return {
                 animation: 50,
                 group: 'employee-tickets',
                 sort: false,
+
+                onStart: function() {
+                    dragTicketProgress = true;
+                },
+
+                onEnd: function() {
+                    dragTicketProgress = false;
+                },
 
                 onMove: function(evt) {
                     //var from_column = angular.element(evt.from).scope().column;
@@ -65,7 +78,6 @@
 
                 onAdd: function(evt) {
                     var columns = {};
-
                     if (!column.search_query) {
                         columns[column.column_id] = evt.models;
                     }
@@ -93,11 +105,11 @@
                 controller: 'ticketPopupCtrl',
                 locals: {
                     ticket_id: ticket_id,
-                    ticket: $scope.tickets[ticket_id]
+                    ticket: angular.merge({}, $scope.tickets[ticket_id])
                 },
                 //parent: angular.element(document.body),
                 scope: $scope.$new(),
-                targetEvent: $event,
+                //targetEvent: $event,
                 templateUrl: 'partials/ticket-popup.html'
             });
         }
