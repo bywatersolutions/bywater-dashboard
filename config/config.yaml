@@ -15,33 +15,34 @@ lead_default_columns:
   0:
     name: New tickets
     type: rt
-    search_query: Owner = 'Nobody' AND (  Status = 'new' OR Status = 'open' )
+    search_query: 'Owner = "Nobody" AND (  Status = "new" OR Status = "open" )'
     sort: ticket_id_desc
 
 employee_default_columns:
   0:
     name: Todays TODO
     type: custom
+    search_query: 'Owner = "__CurrentUser__" AND CF.{ToDo} = "1" AND (  Status = "new" OR Status = "open" )'
 
   1:
     name: New tickets
     type: rt
-    search_query: Owner = '__CurrentUser__' AND (  Status = 'new' OR Status = 'open' ) AND LastUpdated > '7 days ago'
+    search_query: 'Owner = "__CurrentUser__" AND (  Status = "new" OR Status = "open" ) AND LastUpdated > "7 days ago" AND CF.{ToDo} != "1"'
     sort: ticket_id_desc
 
   2:
     name: My Stale Tickets
     type: rt
-    search_query: Status != 'resolved' AND Queue != 'Bugs' AND Queue != 'Development' AND LastUpdated < '- 15 days' AND Queue != 'Systems' AND Status != 'answered' AND Status != 'onhold' AND Owner = '__CurrentUser__' AND Queue != 'Training' AND Queue != 'Migrations'
+    search_query: 'Status != "resolved" AND Queue != "Bugs" AND Queue != "Development" AND LastUpdated < "- 15 days" AND Queue != "Systems" AND Status != "answered" AND Status != "onhold" AND Owner = "__CurrentUser__" AND Queue != "Training" AND Queue != "Migrations" AND CF.{ToDo} != "1"'
 
   3:
     name: Partner Updates Past 48hrs
     type: rt
-    search_query: Owner = '__CurrentUser__' AND LastUpdatedBy != '__CurrentUser__' AND LastUpdated > '2 day ago' AND Status != 'resolved' AND Status != 'answered' AND (  Queue != 'Development' AND Queue != 'Migrations' AND Queue != 'Bugs' )
+    search_query: 'Owner = "__CurrentUser__" AND LastUpdatedBy != "__CurrentUser__" AND LastUpdated > "2 day ago" AND Status != "resolved" AND Status != "answered" AND (  Queue != "Development" AND Queue != "Migrations" AND Queue != "Bugs" ) AND CF.{ToDo} != "1"'
     sort: ticket_id
 
   4:
     name: Closed Tickets Updated
     type: rt
-    search_query: Owner = '__CurrentUser__' AND LastUpdatedBy != '__CurrentUser__' AND LastUpdated > '1 day ago' AND (  Queue != 'Development' AND Queue != 'Migrations' AND Queue != 'Bugs' ) AND Status != 'new' AND Status != 'open' AND Status != 'onhold' AND Status != 'needsinfo'
+    search_query: 'Owner = "__CurrentUser__" AND LastUpdatedBy != "__CurrentUser__" AND LastUpdated > "1 day ago" AND (  Queue != "Development" AND Queue != "Migrations" AND Queue != "Bugs" ) AND Status != "new" AND Status != "open" AND Status != "onhold" AND Status != "needsinfo" AND CF.{ToDo} != "1"'
 

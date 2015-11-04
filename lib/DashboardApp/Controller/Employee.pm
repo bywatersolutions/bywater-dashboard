@@ -12,21 +12,7 @@ sub show_dashboard {
     ###
 
     my %tickets;
-    my %seen_tickets;
     my $columns = DashboardApp::Model::Column::load_columns( $c->session->{user_id}, 'employee_default_columns' );
-
-    ###
-
-    my $tickets = DashboardApp::Model::Column::load_tickets();
-
-    foreach my $ticket_id ( keys %$tickets ) {
-        my $ticket_data = $tickets->{ $ticket_id };
-
-        if ( $ticket_data->{column_id} && $columns->{ $ticket_data->{column_id} } ) {
-            push( @{ $columns->{ $ticket_data->{column_id} }->{tickets} }, $ticket_id );
-            $seen_tickets{ $ticket_id } = 1;
-        }
-    }
 
     #####
 
@@ -40,7 +26,7 @@ sub show_dashboard {
     # Fetching tickets from RT
     foreach my $column_id ( keys %$columns ) {
         my $column = $columns->{$column_id};
-        next unless ( $column->{type} eq "rt" and $column->{search_query} );
+        next unless ( $column->{search_query} );
 
         my $query = $column->{search_query};
 
@@ -51,7 +37,6 @@ sub show_dashboard {
 
         $column->{tickets} = [];
         foreach my $ticket_id ( @$tickets ) {
-            next if ( $seen_tickets{ $ticket_id } );
             push( @{ $column->{tickets} }, $ticket_id );
         }
 
@@ -77,17 +62,18 @@ sub save_columns {
         return $c->render(json => { error => "Hash ref expected." });
     }
 
-    my $tickets = DashboardApp::Model::Column::load_tickets();
+    my $columns = DashboardApp::Model::Column::load_columns( $c->session->{user_id}, 'employee_default_columns' );
 
     foreach my $column_id ( keys %$json ) {
+        next unless ( $columns->{$column_id}->{type} eq "custom" );
+
         my $ticket_ids = $json->{$column_id};
         foreach my $ticket_id ( @$ticket_ids ) {
             # FIXME user_id check
-            $tickets->{$ticket_id}->{column_id} = $column_id;
+            #$tickets->{$ticket_id}->{column_id} = $column_id;
+            $c->tickets_model->update_ticket( $ticket_id, { 'CF.{ToDo}' => 1 } );
         }
     }
-
-    DashboardApp::Model::Column::dump_tickets( $tickets );
 
     $c->render(json => { status => "ok" });
 }
