@@ -1271,6 +1271,49 @@ DISTRIBUTIONS
       base 0
       strict 0
       warnings 0
+  Email-Abstract-3.008
+    pathname: R/RJ/RJBS/Email-Abstract-3.008.tar.gz
+    provides:
+      Email::Abstract 3.008
+      Email::Abstract::EmailMIME 3.008
+      Email::Abstract::EmailSimple 3.008
+      Email::Abstract::MIMEEntity 3.008
+      Email::Abstract::MailInternet 3.008
+      Email::Abstract::MailMessage 3.008
+      Email::Abstract::Plugin 3.008
+    requirements:
+      Carp 0
+      Email::Simple 1.998
+      ExtUtils::MakeMaker 0
+      MRO::Compat 0
+      Module::Pluggable 1.5
+      Scalar::Util 0
+      perl 5.006
+      strict 0
+      warnings 0
+  Email-Date-Format-1.005
+    pathname: R/RJ/RJBS/Email-Date-Format-1.005.tar.gz
+    provides:
+      Email::Date::Format 1.005
+    requirements:
+      Exporter 5.57
+      ExtUtils::MakeMaker 0
+      Time::Local 0
+      strict 0
+      warnings 0
+  Email-Simple-2.208
+    pathname: R/RJ/RJBS/Email-Simple-2.208.tar.gz
+    provides:
+      Email::Simple 2.208
+      Email::Simple::Creator 2.208
+      Email::Simple::Header 2.208
+    requirements:
+      Carp 0
+      Email::Date::Format 0
+      ExtUtils::MakeMaker 0
+      perl 5.008
+      strict 0
+      warnings 0
   Encode-Locale-1.05
     pathname: G/GA/GAAS/Encode-Locale-1.05.tar.gz
     provides:
@@ -1692,6 +1735,15 @@ DISTRIBUTIONS
       ExtUtils::MakeMaker 6.59
       Test::More 0.47
       perl 5.006
+  Mail-Thread-2.55
+    pathname: T/TM/TMTM/Mail-Thread-2.55.tar.gz
+    provides:
+      Mail::Thread 2.55
+      Mail::Thread::Container 2.55
+    requirements:
+      Email::Abstract 0
+      ExtUtils::MakeMaker 0
+      Test::More 0
   Module-Build-0.4214
     pathname: L/LE/LEONT/Module-Build-0.4214.tar.gz
     provides:
@@ -1778,6 +1830,22 @@ DISTRIBUTIONS
       Try::Tiny 0
       strict 0
       warnings 0
+  Module-Pluggable-5.2
+    pathname: S/SI/SIMONW/Module-Pluggable-5.2.tar.gz
+    provides:
+      Devel::InnerPackage 0.4
+      Module::Pluggable 5.2
+      Module::Pluggable::Object 5.2
+    requirements:
+      Exporter 5.57
+      ExtUtils::MakeMaker 0
+      File::Basename 0
+      File::Find 0
+      File::Spec 3.00
+      File::Spec::Functions 0
+      if 0
+      perl 5.00503
+      strict 0
   Module-Runtime-0.014
     pathname: Z/ZE/ZEFRAM/Module-Runtime-0.014.tar.gz
     provides:
@@ -2840,6 +2908,39 @@ DISTRIBUTIONS
       Test::SharedFork 0.29
       Time::HiRes 0
       perl 5.008001
+  Text-Autoformat-1.72
+    pathname: N/NE/NEILB/Text-Autoformat-1.72.tar.gz
+    provides:
+      Text::Autoformat 1.72
+      Text::Autoformat::Hang 1.72
+      Text::Autoformat::NullHang 1.72
+    requirements:
+      Carp 0
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      Text::Reform 0
+      Text::Tabs 0
+      overload 0
+      perl 5.006
+      strict 0
+      warnings 0
+  Text-Quoted-2.09
+    pathname: A/AL/ALEXMV/Text-Quoted-2.09.tar.gz
+    provides:
+      Text::Quoted 2.09
+    requirements:
+      ExtUtils::MakeMaker 6.59
+      Text::Autoformat 0
+      Text::Tabs 0
+      perl 5.006
+  Text-Reform-1.20
+    pathname: C/CH/CHORNY/Text-Reform-1.20.tar.gz
+    provides:
+      Text::Reform 1.20
+    requirements:
+      Exporter 0
+      Test::More 0
+      perl 5.005
   TimeDate-2.30
     pathname: G/GB/GBARR/TimeDate-2.30.tar.gz
     provides:
