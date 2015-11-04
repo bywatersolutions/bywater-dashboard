@@ -61,7 +61,7 @@ sub update_ticket {
             die "Unknown RT user!";
         }
     } else {
-        foreach my $param ( qw/owner status queue/ ) {
+        foreach my $param ( qw/Owner Status Queue/ ) {
             $params->{ $param } = $json->{ $param } if ( defined $json->{ $param } );
         }
     }
