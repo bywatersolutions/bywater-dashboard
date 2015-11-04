@@ -42,28 +42,4 @@ sub show_dashboard {
     } );
 }
 
-sub save_columns {
-    my $c = shift;
-
-    my $json = $c->req->json;
-
-    if ( ref( $json ) ne 'HASH' ) {
-        return $c->render(json => { error => "Hash ref expected." });
-    }
-
-    my $tickets = DashboardApp::Model::Column::load_tickets();
-
-    foreach my $user_id ( keys %$json ) {
-        my $ticket_ids = $json->{$user_id};
-        foreach my $ticket_id ( @$ticket_ids ) {
-            $tickets->{$ticket_id}->{user_id} = $user_id;
-            #$tickets->{$ticket_id}->{column_id} = undef;
-        }
-    }
-
-    DashboardApp::Model::Column::dump_tickets( $tickets );
-
-    $c->render(json => { status => "ok" });
-}
-
 1;
