@@ -109,6 +109,7 @@
                 },
                 //parent: angular.element(document.body),
                 scope: $scope.$new(),
+                parent: 'body',
                 //targetEvent: $event,
                 templateUrl: 'partials/ticket-popup.html'
             });

@@ -57,20 +57,12 @@
                     </md-tab>
 
                     <md-tab label="History">
-                        <md-content layout-padding ng-switch on="history">
-                            <div ng-switch-when="undefined" layout="row" layout-align="center">
-                                <img src="/images/loader.gif"/>
+                        <md-content ng-switch on="history">
+                            <div layout="row" layout-sm="column" layout-align="space-around" ng-switch-when="undefined">
+                                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                             </div>
-                            <md-list ng-switch-otherwise  class="db-history-items">
-                                <md-list-item ng-repeat="item in history" class="db-history-item">
-                                    <div class="md-list-item-text" flex="100">
-                                        <div class="db-history-entry-header" layout="row" layout-sm="column">
-                                            <h3>{{ item.Creator }}</h3>
-                                            <h4>{{ item.Description }}</h4>
-                                        </div>
-                                        <p>{{ item.Content }}</p>
-                                    </div>
-                                </md-list-item>
+                            <md-list ng-switch-otherwise class="tickets-history" >
+                                <md-list-item ng-repeat="item in history" class="ticket-history" ticket-history="item"></md-list-item>
                             </md-list>
                         </md-content>
                     </md-tab>
@@ -86,18 +78,24 @@
                     </md-tab>
 
                     <md-tab label="SugarCRM">
-                        <md-list class="db-sugar-crm-data" ng-switch on="sugar_crm_data">
-                            <div ng-switch-when="undefined">
-                                <img src="/images/loader.gif"/>
+                        <div ng-switch on="sugar_crm_data">
+                            <div layout="row" layout-sm="column" layout-align="space-around" ng-switch-when="undefined">
+                                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                             </div>
-                            <md-list-item ng-switch-otherwise ng-repeat="contact in sugar_crm_data">
-                                <div class="md-list-item-text">
-                                    <div layout="row" layout-sm="column" ng-repeat="(key, value) in contact">
-                                        {{key}}: {{value}}
+                            <md-list ng-switch-otherwise ng-repeat="contact in sugar_crm_data_parsed" class="sugar-contact">
+                                <md-list-item class="sugar-contact__row" layout="row" layout-sm="column" ng-repeat="row in contact" ng-class="{'sugar-contact__row--odd': $odd}">
+                                    <div class="sugar-contact__column" layout="row" layout-sm="column" layout-align="space-between center">
+                                        <div class="sugar-contact__key md-caption"><b>{{ row[0].key }}:</b></div>
+                                        <div class="sugar-contact__value"><small>{{ row[0].value }}</small></div>
                                     </div>
-                                </div>
-                            </md-list-item>
-                        </md-list>
+                                    <div class="sugar-contact__column" layout="row" layout-sm="column" layout-align="space-between center">
+                                        <div class="sugar-contact__key md-caption"><b>{{ row[1].key }}:</b></div>
+                                        <div class="sugar-contact__value"><small>{{ row[1].value }}</small></div>
+                                    </div>
+                                    <md-divider></md-divider>
+                                </md-list-item>
+                            </md-list>
+                        </div>
                     </md-tab>
                 </md-tabs>
             </md-content>

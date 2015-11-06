@@ -7,7 +7,66 @@
         $scope.correspondence = "";
         $scope.selected_tab_index = 0;
 
-        $scope.get_history = function () {
+        $scope.update_ticket = function() {
+            var postData = angular.merge({}, $scope.ticket);
+            postData.ticket_id = $scope.ticket_id;
+            $http.post('/json/update_ticket', postData).then(
+                function(response) {
+                    $log.debug( response.data );
+                    $mdDialog.hide();
+                }
+            );
+        };
+
+        $scope.close_dialog = function () {
+            $mdDialog.hide();
+        };
+
+        $scope.add_correspondence = function () {
+            $http.post('/json/ticket_add_history', { ticket_id: ticket_id, correspondence: $scope.correspondence} )
+                .then(function() {
+                    $scope.selected_tab_index = 1;
+                    $scope.history = undefined;
+                    get_history();
+                })
+                .catch(function() {
+                    $scope.selected_tab_index = 1;
+                    $scope.history = undefined;
+                    get_history();
+                });
+        };
+
+        function get_sugar_crm_data () {
+            $http.post( '/json/sugarcrm/get_contact', { email: ticket["Creator"] } ).success( function(data) {
+                $scope.sugar_crm_data = data.data;
+
+                $scope.sugar_crm_data_parsed = $scope.sugar_crm_data.map(function(contact) {
+                    var rows = [],
+                        row = [];
+
+                    for(var key in contact) {
+                        if (contact.hasOwnProperty(key)) {
+                            if (row.length == 2) {
+                                rows.push(row);
+                                row = [];
+                            }
+
+                            row.push({
+                                key: key,
+                                value: contact[key]
+                            });
+                        }
+                    }
+
+                    return rows;
+                });
+
+                $log.debug($scope.sugar_crm_data_parsed);
+            });
+        }
+        get_sugar_crm_data();
+
+        function get_history() {
             $http.post('/json/ticket_history', {ticket_id: ticket_id}).then(
                 function(response) {
                     var data = response.data;
@@ -35,39 +94,7 @@
                     });
                 }
             );
-        };
-
-        $scope.get_history();
-
-        $scope.get_sugar_crm_data = function () {
-            $http.post( '/json/sugarcrm/get_contact', { email: ticket["Creator"] } ).success( function(data) {
-                $scope.sugar_crm_data = data.data;
-            } );
-        };
-
-        $scope.get_sugar_crm_data();
-
-        $scope.update_ticket = function() {
-            var postData = angular.merge({}, $scope.ticket);
-            postData.ticket_id = $scope.ticket_id;
-            $http.post('/json/update_ticket', postData).then(
-                function(response) {
-                    $log.debug( response.data );
-                    $mdDialog.hide();
-                }
-            );
-        };
-
-        $scope.close_dialog = function () {
-            $mdDialog.hide();
-        };
-
-        $scope.add_correspondence = function () {
-            $http.post('/json/ticket_add_history', {ticket_id: ticket_id, correspondence: $scope.correspondence});
-
-            $scope.selected_tab_index = 1;
-            $scope.history = undefined;
-            $scope.get_history();
-        };
+        }
+        get_history();
     });
 })(angular);

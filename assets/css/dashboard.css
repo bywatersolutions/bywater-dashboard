@@ -13,12 +13,6 @@ body {
     padding: 5px;
 }
 
-.db-ticket-card .md-title {
-    font-size: 16px;
-    margin: 0;
-    margin-bottom: 8px;
-}
-
 .db-ticket-desc {
     font-size: 75%;
     font-weight: 300;
@@ -72,10 +66,6 @@ body {
 .db-history-items p {
     margin: 0 0 2em 1em;
     white-space: pre-line;
-}
-
-.db-ticket-card {
-    cursor: move;
 }
 
 #db-top-toolbar .md-toolbar-tools {

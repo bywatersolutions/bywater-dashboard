@@ -1,0 +1,59 @@
+.tickets-history {
+    padding: 0 !important;
+}
+
+.ticket-history {
+    padding-top: 16px !important;
+    padding-bottom: 20px !important;
+    position: relative;
+}
+.ticket-history:hover {
+    background: #fff;
+}
+
+.ticket-history__title {
+    align-items: center;
+    margin-bottom: 15px;
+    justify-content: space-between;
+}
+
+.ticket-history__description {
+    margin-right: 30px;
+}
+
+.ticket-history__show-btn,
+.ticket-history__hide-btn {
+    color: #66bb6a;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 20px;
+}
+.ticket-history__show-btn:hover,
+.ticket-history__hide-btn:hover,
+.ticket-history__show-btn:active,
+.ticket-history__hide-btn:active {
+    color: #43a047;
+    cursor: pointer;
+}
+
+.ticket-history__message {
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.ticket-history__more {
+    padding-top: 10px;
+}
+.ticket-history__more ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.ticket-history__more li {
+    margin-bottom: 10px;
+}
+
+.ticket-history__more li > ul {
+    margin-left: 20px;
+}

@@ -1,0 +1,28 @@
+.db-ticket-card {
+    border-top: 1px solid #f6f6f6;
+    border-radius: 0;
+    box-shadow: none;
+    cursor: move;
+    margin: 0;
+    position: relative;
+}
+.db-ticket-card--odd {
+    background: rgba(227,242,253,.75);
+}
+.db-ticket-card:hover {
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
+    z-index: 10;
+}
+.db-ticket-card:first-child {
+    border-top: none;
+}
+.db-ticket-card:last-child {
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.db-ticket-card .md-title {
+    font-size: 16px;
+    margin: 0;
+    margin-bottom: 8px;
+}

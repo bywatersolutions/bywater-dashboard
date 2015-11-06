@@ -13,6 +13,7 @@ var jsFiles = [
     'assets/vendor/angular-animate/angular-animate.js',
     'assets/vendor/angular-aria/angular-aria.js',
     'assets/vendor/angular-route/angular-route.js',
+    'assets/vendor/angular-sanitize/angular-sanitize.js',
     'assets/vendor/angular-material/angular-material.js',
     'assets/vendor/Sortable/Sortable.js',
     'assets/vendor/Sortable/ng-sortable.js',
@@ -20,11 +21,13 @@ var jsFiles = [
     'assets/js/router.js',
     'assets/js/services/**/*.js',
     'assets/js/directives/**/*.js',
+    'assets/js/filters/**/*.js',
     'assets/js/controllers/**/*.js'
 ];
 var cssFiles = [
     'assets/vendor/angular-material/angular-material.css',
     'assets/vendor/font-awesome/css/font-awesome.css',
+    'assets/css/blocks/**/*.css',
     'assets/css/dashboard.css'
 ];
 var destDir = 'public/custom';
