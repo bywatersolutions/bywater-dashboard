@@ -1,5 +1,5 @@
 .tickets-history {
-    padding: 0 !important;
+    padding: 0 0 20px !important;
 }
 
 .ticket-history {
@@ -26,8 +26,8 @@
     color: #66bb6a;
     display: block;
     position: absolute;
-    top: 0;
-    right: 20px;
+    bottom: 2px;
+    left: 15px;
 }
 .ticket-history__show-btn:hover,
 .ticket-history__hide-btn:hover,
@@ -55,5 +55,17 @@
 }
 
 .ticket-history__more li > ul {
-    margin-left: 20px;
+    border-left: 3px solid #616161;
+    margin-left: 10px;
+    padding-left: 10px;
+}
+
+.ticket-history__more > ul > li > ul {
+    border-color: #5e35b1;
+}
+.ticket-history__more > ul > li > ul > li > ul {
+    border-color: #1565c0;
+}
+.ticket-history__more > ul > li > ul > li > ul > li > ul {
+    border-color: #546e7a;
 }
