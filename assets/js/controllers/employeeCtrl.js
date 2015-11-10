@@ -78,7 +78,8 @@
 
                 onAdd: function(evt) {
                     var columns = {};
-                    if (!column.search_query) {
+
+                    if (column.type != "rt") {
                         columns[column.column_id] = evt.models;
                     }
 

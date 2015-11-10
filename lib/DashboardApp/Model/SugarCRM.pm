@@ -37,6 +37,7 @@ my @contact_fields = (
 	'modified_user_id',
 	'modified_by_name',
 );
+my $labels;
 
 sub new {
 	my ( $class ) = @_;
@@ -63,6 +64,21 @@ sub _api {
 	return $api;
 }
 
+sub _field_labels {
+	my ( $self ) = @_;
+
+	unless ( $labels ) {
+		my $result = $self->_api()->get_module_fields('Contacts');
+		$labels = {};
+		foreach my $field_id ( keys %{ $result->{module_fields} } ) {
+		    $labels->{ $field_id } = $result->{module_fields}->{ $field_id }->{label};
+		    $labels->{ $field_id } =~ s/:\s*$//;
+		}
+	}
+
+	return $labels;
+}
+
 sub get_contact {
 	my ( $self, $email ) = @_;
 	my $contacts = $self->_api()->get_contacts_from_mail( $email );
@@ -78,7 +94,7 @@ sub get_contact {
 		}
 	}
 
-	return \@result;
+	return { contacts => \@result, labels => $self->_field_labels() };
 }
 
 1;

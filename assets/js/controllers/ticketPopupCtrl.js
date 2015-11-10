@@ -40,7 +40,7 @@
             $http.post( '/json/sugarcrm/get_contact', { email: ticket["Creator"] } ).success( function(data) {
                 $scope.sugar_crm_data = data.data;
 
-                $scope.sugar_crm_data_parsed = $scope.sugar_crm_data.map(function(contact) {
+                $scope.sugar_crm_data_parsed = $scope.sugar_crm_data.contacts.map(function(contact) {
                     var rows = [],
                         row = [];
 
@@ -52,7 +52,7 @@
                             }
 
                             row.push({
-                                key: key,
+                                key: $scope.sugar_crm_data.labels[key],
                                 value: contact[key]
                             });
                         }
