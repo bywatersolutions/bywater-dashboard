@@ -1,16 +1,11 @@
 package DashboardApp::Model::User;
 
 use Mojo::Base -strict;
-use YAML qw/LoadFile/;
 use Data::Dumper;
 
-sub check {
-    my ( $login ) = @_;
-    my $users = LoadFile("users.yaml");
-    return $users->{ $login }->{roles} if ( defined $users->{ $login } );
-}
-
 sub get_all_users {
+    my ( $schema ) = @_;
+
     my $users = LoadFile("users.yaml");
     return $users;
 }

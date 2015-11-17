@@ -19,18 +19,26 @@ sub login {
 
     my $json = $c->req->json;
     my $roles;
-    unless ( $roles = DashboardApp::Model::User::check( $json->{login} ) ) {
-        return $c->render(json => { error => "Wrong login or password." });
+
+    my $user = $c->schema->resultset('User')->search({ rt_username => $json->{login} })->first;
+
+    return $c->render(json => { error => "Wrong login or password." }) unless ( $user );
+
+    my @roles;
+    foreach my $role ( $user->user_roles ) {
+        push( @roles, $role->role );
     }
+
+    return $c->render(json => { error => "No roles defined." }) unless ( @roles );
 
     my $rt = DashboardApp::Model::Ticket->new->rt;
     $rt->login( username => $json->{login}, password => $json->{password} );
 
     my $rt_cookie = JSON->new->encode( { COOKIES => $rt->_cookie->{COOKIES} } );
-    $c->session({ user_id => $json->{login}, roles => $roles, rt_cookie => $rt_cookie });
+    $c->session({ user_id => $json->{login}, roles => \@roles, rt_cookie => $rt_cookie });
 
     # Default view for a user will be the first role defined
-    $c->render(json => { role => $roles->[0] });
+    $c->render(json => { role => $roles[0] });
 }
 
 sub logout {
@@ -55,8 +63,8 @@ sub update_ticket {
     my $params = {};
 
     if ( my $user_id = $json->{user_id} ) {
-        my $users = DashboardApp::Model::User::get_all_users();
-        if ( $users->{$user_id} ) {
+        my $user = $c->schema->search({ rt_username => $user_id })->first;
+        if ( $user ) {
             $params->{owner} = $user_id;
         } else {
             die "Unknown RT user!";

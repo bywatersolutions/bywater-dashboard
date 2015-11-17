@@ -1,11 +1,14 @@
 package DashboardApp;
 use Mojo::Base 'Mojolicious';
 
+use DashboardApp::Schema;
 use DashboardApp::Model::Config;
 use DashboardApp::Model::Ticket;
 use JSON qw/encode_json/;
 use Mojolicious::Sessions::Storable;
 use Plack::Session::Store::File;
+
+my $schema;
 
 sub startup {
     my $self = shift;
@@ -24,6 +27,16 @@ sub startup {
     $self->helper( tickets_model => sub {
         my ( $c ) = @_;
         return DashboardApp::Model::Ticket->new( $self->app->memcached, $c->session->{rt_cookie} )
+    } );
+
+    $self->helper( schema => sub {
+        my ( $c ) = @_;
+        state $schema;
+        unless ( $schema ) {
+            my $config = DashboardApp::Model::Config::get_config();
+            $schema = DashboardApp::Schema->connect( $config->{db}->{dsn}, $config->{db}->{username}, $config->{db}->{password} );
+        }
+        return $schema;
     } );
 
     my $sessions = Mojolicious::Sessions::Storable->new(
@@ -85,6 +98,5 @@ sub startup {
         } );
     }
 }
-
 
 1;

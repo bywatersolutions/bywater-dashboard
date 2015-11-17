@@ -10,3 +10,6 @@ requires 'Cache::Memcached', '>= 1.30';
 requires 'Hash::Merge', '>= 0.200';
 requires 'Net::SugarCRM', '>= 3.23';
 requires 'Text::Quoted', '>= 2.08';
+
+requires 'DBIx::Class', '>= 0.082';
+requires 'DBIx::Class::Migration', '>= 0.057';

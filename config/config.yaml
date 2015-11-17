@@ -1,3 +1,8 @@
+db:
+  dsn: "dbi:mysql:database=bywater_dashboard"
+  username: user
+  password: password
+
 rt:
   login: "T&M Development"
   password: "changeme"
