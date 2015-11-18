@@ -15,6 +15,6 @@ __PACKAGE__->load_namespaces;
 # Created by DBIx::Class::Schema::Loader v0.07043 @ 2015-11-17 14:21:32
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nsY+Iyy0m0ycHgQ1OoOYkQ
 
-our $VERSION = 1;
+our $VERSION = 2;
 
 1;

@@ -1,0 +1,7 @@
+$HASH1 = {
+           avatar_url  => 'http://lorempixel.com/200/200/cats/jesse',
+           first_name  => 'Jesse',
+           last_name   => 'Employee 1',
+           rt_username => 'jesse@bywatersolutions.com',
+           user_id     => 2
+         };
