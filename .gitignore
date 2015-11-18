@@ -11,3 +11,5 @@ users.yaml
 /node_modules
 /public/custom
 /config/*.local.yaml
+/lib/DashboardApp/Controller/Test.pm
+*.swp
