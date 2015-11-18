@@ -49,7 +49,7 @@ sub show_dashboard {
         columns => $columns,
         queues => $c->tickets_model->get_queues(),
         statuses => DashboardApp::Model::Config::get_rt_statuses(),
-        rt_users => DashboardApp::Model::User::get_rt_users()
+        rt_users => $c->app->model('user')->get_rt_users()
     } );
 }
 

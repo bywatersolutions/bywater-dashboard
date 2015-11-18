@@ -8,7 +8,7 @@ sub show_dashboard {
     my $c = shift;
 
     my $columns = DashboardApp::Model::Column::load_columns( $c->session->{user_id}, 'lead_default_columns' );
-    my $users = DashboardApp::Model::User::get_all_users();
+    my $users = $c->app->model('user')->get_all_users();
 
     #####
 
@@ -36,7 +36,7 @@ sub show_dashboard {
     $c->render(json => {
         columns => $columns,
         users => $users,
-        rt_users => DashboardApp::Model::User::get_rt_users(),
+        rt_users => $c->app->model('user')->get_rt_users(),
         queues => $c->tickets_model->get_queues(),
         statuses => DashboardApp::Model::Config::get_rt_statuses()
     } );

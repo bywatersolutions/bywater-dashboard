@@ -3141,6 +3141,14 @@ DISTRIBUTIONS
       JSON::PP 2.27103
       Pod::Simple 3.09
       Time::Local 1.2
+  Mojolicious-Plugin-Model-0.05
+    pathname: A/AV/AVKHOZOV/Mojolicious-Plugin-Model-0.05.tar.gz
+    provides:
+      MojoX::Model undef
+      Mojolicious::Plugin::Model 0.05
+    requirements:
+      Module::Build::Tiny 0.035
+      Mojolicious 5.80
   Mojolicious-Plugin-SessionStore-0.05
     pathname: H/HA/HAYAJO/Mojolicious-Plugin-SessionStore-0.05.tar.gz
     provides:
