@@ -40,6 +40,8 @@ sub startup {
         return $schema;
     } );
 
+    my $config = DashboardApp::Model::Config::get_config();
+
     my $sessions = Mojolicious::Sessions::Storable->new(
         session_store => Plack::Session::Store::File->new( dir => './sessions' )
     );
@@ -73,6 +75,8 @@ sub startup {
 
     $auth->post("/json/sugarcrm/get_contact")->to("main#sugarcrm_get_contact");
 
+    $auth->get("/test")->to("test#test") if ( $config->{debug_backend} );
+
     my $lead = $auth->under( sub {
         my ( $c ) = @_;
 
@@ -88,8 +92,6 @@ sub startup {
     $lead->post("/json/lead/save_columns")->to("lead#save_columns");
 
     $r->get("/logout")->to("main#logout");
-
-    my $config = DashboardApp::Model::Config::get_config();
 
     if ( $config->{debug_frontend} ) {
         $self->hook( after_static => sub {

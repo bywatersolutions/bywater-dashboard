@@ -9,41 +9,7 @@ use DashboardApp::Model::Config;
 sub show_dashboard {
     my $c = shift;
 
-    ###
-
-    my %tickets;
-    my $columns = DashboardApp::Model::Column::load_columns( $c->session->{user_id}, 'employee_default_columns' );
-
-    #####
-
-    # FIXME fetch list of all opened tickets assigned to user and filter stuff here.
-    #foreach my $column ( values %$columns ) {
-    #    $column->{tickets} = [ grep { $tickets{ $_ } } @{ $column->{tickets} } ];
-    #}
-
-    #####
-
-    # Fetching tickets from RT
-    foreach my $column_id ( keys %$columns ) {
-        my $column = $columns->{$column_id};
-        next unless ( $column->{search_query} );
-
-        my $query = $column->{search_query};
-
-        my $tickets = $c->tickets_model->search_tickets( $query );
-        $tickets = [ reverse( @$tickets ) ] if ( $column->{sort} and $column->{sort} eq "ticket_id_desc" );
-
-        my $error = "";
-
-        $column->{tickets} = [];
-        foreach my $ticket_id ( @$tickets ) {
-            push( @{ $column->{tickets} }, $ticket_id );
-        }
-
-        return $c->render( json => { error => $error } ) if ( $error );
-    }
-
-    ###
+    my $columns = $c->model('View')->get( $c->session->{user_id}, $c->tickets_model, 'employee' );
 
     $c->render( json => {
         columns => $columns,

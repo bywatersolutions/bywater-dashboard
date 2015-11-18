@@ -41,6 +41,40 @@ schema:
           order: 1
           size:
             - 0
+        column_order:
+          data_type: integer
+          default_value: 0
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: column_order
+          order: 7
+          size:
+            - 0
+        column_sort:
+          data_type: enum
+          default_value: ticket_id_asc
+          extra:
+            list:
+              - ticket_id_asc
+              - ticket_id_desc
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: column_sort
+          order: 6
+          size:
+            - 0
+        name:
+          data_type: text
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: name
+          order: 5
+          size:
+            - 0
         rt_query:
           data_type: text
           default_value: ~

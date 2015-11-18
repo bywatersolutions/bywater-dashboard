@@ -7,29 +7,8 @@ use DashboardApp::Model::User;
 sub show_dashboard {
     my $c = shift;
 
-    my $columns = DashboardApp::Model::Column::load_columns( $c->session->{user_id}, 'lead_default_columns' );
+    my $columns = $c->model('View')->get( $c->session->{user_id}, $c->tickets_model, 'lead' );
     my $users = $c->app->model('user')->get_all_users();
-
-    #####
-
-    foreach my $column_id ( keys %$columns ) {
-        my $column = $columns->{$column_id};
-        next unless ( $column->{search_query} );
-
-        my $tickets = $c->tickets_model->search_tickets( $column->{search_query} );
-        my $error;
-        #my $error = try {
-        #    return;
-        #} catch {
-        #    return $_;
-        #};
-
-        $tickets = [ reverse( @$tickets ) ] if ( $column->{sort} and $column->{sort} eq "ticket_id_desc" );
-
-        $column->{tickets} = $tickets;
-
-        return $c->render( json => { error => $error } ) if ( $error );
-    }
 
     ###
 

@@ -4,6 +4,11 @@
 BEGIN;
 
 ;
+ALTER TABLE columns DROP COLUMN name,
+                    DROP COLUMN column_sort,
+                    DROP COLUMN column_order;
+
+;
 ALTER TABLE users DROP INDEX rt_username;
 
 ;

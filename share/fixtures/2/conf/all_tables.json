@@ -1,29 +1,29 @@
 {
-   "belongs_to" : {
-      "fetch" : 0
-   },
    "sets" : [
       {
-         "class" : "User",
+         "class" : "UserRole",
+         "quantity" : "all"
+      },
+      {
+         "class" : "Column",
          "quantity" : "all"
       },
       {
          "quantity" : "all",
-         "class" : "Column"
+         "class" : "View"
       },
       {
-         "class" : "View",
-         "quantity" : "all"
-      },
-      {
-         "class" : "UserRole",
-         "quantity" : "all"
+         "quantity" : "all",
+         "class" : "User"
       }
    ],
+   "has_many" : {
+      "fetch" : 0
+   },
    "might_have" : {
       "fetch" : 0
    },
-   "has_many" : {
+   "belongs_to" : {
       "fetch" : 0
    }
 }

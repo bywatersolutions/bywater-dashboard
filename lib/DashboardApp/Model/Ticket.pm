@@ -54,6 +54,7 @@ sub get_queues {
 
 sub search_tickets {
     my ( $self, $search_query ) = @_;
+
     my @ids = $self->rt->search( type => 'ticket', query => $search_query );
     return \@ids;
 }

@@ -58,6 +58,24 @@ __PACKAGE__->table("columns");
   data_type: 'text'
   is_nullable: 1
 
+=head2 name
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 column_sort
+
+  data_type: 'enum'
+  default_value: 'ticket_id_asc'
+  extra: {list => ["ticket_id_asc","ticket_id_desc"]}
+  is_nullable: 1
+
+=head2 column_order
+
+  data_type: 'integer'
+  default_value: 0
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -73,6 +91,17 @@ __PACKAGE__->add_columns(
   },
   "rt_query",
   { data_type => "text", is_nullable => 1 },
+  "name",
+  { data_type => "text", is_nullable => 1 },
+  "column_sort",
+  {
+    data_type => "enum",
+    default_value => "ticket_id_asc",
+    extra => { list => ["ticket_id_asc", "ticket_id_desc"] },
+    is_nullable => 1,
+  },
+  "column_order",
+  { data_type => "integer", default_value => 0, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -105,8 +134,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2015-11-17 18:20:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:92vHqqEQ+i2FNdEwKYVSVA
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2015-11-18 14:46:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:10gudl1kcvRo/uRVi68IkA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

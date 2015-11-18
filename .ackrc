@@ -1,2 +1,5 @@
 --ignore-dir=local
 --ignore-dir=public/vendor
+--ignore-dir=public/custom
+--ignore-dir=assets/vendor
+--ignore-dir=share/
