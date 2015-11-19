@@ -60,6 +60,7 @@
             );
         };
 
+        /* FIXME -- not needed anymore?
         $scope.save = function(src, dst) {
             var src_scope = src.sortableScope.$parent;
             var dst_scope = dst.sortableScope.$parent;
@@ -79,7 +80,7 @@
                     $log.debug( response.data );
                 }
             );
-        };
+        };*/
 
         $scope.show_popup = function(ticket_id) {
             $mdDialog.show({

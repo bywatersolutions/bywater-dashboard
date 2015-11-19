@@ -44,7 +44,7 @@ sub get {
 		$columns->{ $column->column_id } = $hashref;
 	}
 
-	return $columns;
+	return ( $view->view_id, $columns );
 }
 
 1;

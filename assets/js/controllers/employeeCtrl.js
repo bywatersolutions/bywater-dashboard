@@ -7,6 +7,7 @@
                 function(response) {
                     var data = response.data;
 
+                    $scope.veiw_id = data.view_id;
                     $scope.updater_promise = undefined;
 
                     data.columns = $.map(data.columns, function(column, id){
@@ -119,6 +120,7 @@
         $scope.$on("openViewSettingsEvent", function (event, args) {
             var $child_scope = $scope.$new();
             $child_scope.columns = $scope.columns;
+            $child_scope.view_id = $scope.view_id;
             $mdDialog.show({
                 controller: 'viewSettingsCtrl',
                 locals: {},
@@ -127,6 +129,7 @@
                 templateUrl: 'partials/view-settings-popup.html'
             }).then(function(){
                 $log.debug("View settings dialog promise resolved");
+                $scope.update_tickets();
             });
         });
     });

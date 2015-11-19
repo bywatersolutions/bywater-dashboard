@@ -74,6 +74,7 @@ sub startup {
     $auth->post("/json/ticket_add_history")->to("main#ticket_add_correspondence");
 
     $auth->post("/json/sugarcrm/get_contact")->to("main#sugarcrm_get_contact");
+    $auth->post("/json/view/save_settings")->to("main#view_save_settings");
 
     $auth->get("/test")->to("test#test") if ( $config->{debug_backend} );
 
