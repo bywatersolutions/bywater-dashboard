@@ -115,5 +115,19 @@
                 templateUrl: 'partials/ticket-popup.html'
             });
         }
+
+        $scope.$on("openViewSettingsEvent", function (event, args) {
+            var $child_scope = $scope.$new();
+            $child_scope.columns = $scope.columns;
+            $mdDialog.show({
+                controller: 'viewSettingsCtrl',
+                locals: {},
+                scope: $child_scope,
+                parent: 'body',
+                templateUrl: 'partials/view-settings-popup.html'
+            }).then(function(){
+                $log.debug("View settings dialog promise resolved");
+            });
+        });
     });
 })(angular);
