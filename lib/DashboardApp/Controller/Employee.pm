@@ -10,12 +10,15 @@ sub show_dashboard {
 
     my ( $view_id, $columns ) = $c->model('View')->get( $c->session->{user_id}, $c->tickets_model, 'employee' );
 
+    my $config = DashboardApp::Model::Config::get_config();
+
     $c->render( json => {
         view_id => $view_id,
         columns => $columns,
         queues => $c->tickets_model->get_queues(),
         statuses => DashboardApp::Model::Config::get_rt_statuses(),
-        rt_users => $c->app->model('user')->get_rt_users()
+        rt_users => $c->app->model('user')->get_rt_users(),
+        header_rows => $config->{card_popup}->{header}->{rows},
     } );
 }
 

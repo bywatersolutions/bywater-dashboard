@@ -2,7 +2,12 @@
     <form>
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>#{{ticket_id}} -- {{ticket.Subject}}</h2>
+                <div>
+                    <h2>#{{ticket_id}} -- {{ticket.Subject}}</h2>
+                    <div ng-repeat="row in header_rows">
+                        <span ng-repeat="( label, data ) in row" ng-if="this[ data[0] ][ data[1] ]" >{{label}}: {{ this[ data[0] ][ data[1] ] }}</span>
+                    </div>
+                </div>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="close_dialog()" aria-label="Close">
                     <md-icon class="fa-close"></md-icon>

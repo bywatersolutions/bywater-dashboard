@@ -39,6 +39,7 @@
         function get_sugar_crm_data () {
             $http.post( '/json/sugarcrm/get_contact', { email: ticket["Creator"] } ).success( function(data) {
                 $scope.sugar_crm_data = data.data;
+                $scope.contact = data.data.contacts[0]; // for easy configuration of pop-up window read-only data
 
                 $scope.sugar_crm_data_parsed = $scope.sugar_crm_data.contacts.map(function(contact) {
                     var rows = [],
