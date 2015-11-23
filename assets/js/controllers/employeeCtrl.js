@@ -15,7 +15,7 @@
                         column.tickets = column.tickets || [];
 
                         return column;
-                    }).sort(function(a,b){ return a.order - b.order; });
+                    }).sort(function(a,b){ return a.column_order - b.column_order; });
 
                     for (var key in data) {
                         if (data.hasOwnProperty(key)) {

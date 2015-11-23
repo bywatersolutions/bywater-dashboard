@@ -28,8 +28,8 @@ sub get {
 	}
 
 	my $columns = {};
-	foreach my $column ( $view->columns_rel( undef, { order_by => 'column_order' } )->all ) {
-		next unless ( $column->rt_query );
+	foreach my $column ( $view->columns_rel()->all ) {
+		next unless ( defined $column->rt_query );
 
 		my $tickets = $tickets_model->search_tickets( $column->rt_query );
 		$tickets = [ reverse( @$tickets ) ] if ( $column->column_sort and $column->column_sort eq "ticket_id_desc" );
