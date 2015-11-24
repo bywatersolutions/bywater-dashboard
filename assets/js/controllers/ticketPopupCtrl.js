@@ -6,6 +6,7 @@
         $scope.ticket = ticket;
         $scope.correspondence = "";
         $scope.selected_tab_index = 0;
+        $scope.privacy = "private";
 
         $scope.update_ticket = function() {
             var postData = angular.merge({}, $scope.ticket);

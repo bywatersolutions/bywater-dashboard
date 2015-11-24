@@ -72,6 +72,10 @@
                                             <textarea id="corr_ta" ng-model="correspondence" md-no-autogrow class="correspondence-textarea"></textarea>
                                         </md-input-container>
                                         <div layout="row">
+                                            <md-radio-group ng-model="privacy" layout="row">
+                                                <md-radio-button value="private">Private</md-radio-button>
+                                                <md-radio-button value="public">Public</md-radio-button>
+                                            </md-radio-group>
                                             <div flex></div>
                                             <md-button class="md-raised md-primary" ng-click="add_correspondence()">Add correspondence</md-button>
                                         </div>
