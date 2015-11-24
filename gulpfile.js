@@ -17,6 +17,8 @@ var jsFiles = [
     'assets/vendor/angular-material/angular-material.js',
     'assets/vendor/Sortable/Sortable.js',
     'assets/vendor/Sortable/ng-sortable.js',
+    'assets/vendor/Chart.js/Chart.js',
+    'assets/vendor/angular-chart.js/dist/angular-chart.js',
     'assets/js/dashboard-app.js',
     'assets/js/router.js',
     'assets/js/services/**/*.js',
@@ -27,6 +29,7 @@ var jsFiles = [
 var cssFiles = [
     'assets/vendor/angular-material/angular-material.css',
     'assets/vendor/font-awesome/css/font-awesome.css',
+    'assets/vendor/angular-chart.js/dist/angular-chart.css',
     'assets/css/blocks/**/*.css',
     'assets/css/dashboard.css'
 ];
@@ -40,6 +43,16 @@ gulp.task('js', function() {
        .pipe(ngAnnotate())
        .pipe(concat('dashboard-app.js'))
        .pipe(uglify())
+       .pipe(sourcemaps.write('.'))
+       .pipe(gulp.dest(destDir + '/js'));
+});
+
+gulp.task('jsdev', function() {
+   return gulp.src(jsFiles)
+       .pipe(sourcemaps.init())
+       .pipe(ngAnnotate())
+       .pipe(concat('dashboard-app.js'))
+       //.pipe(uglify())
        .pipe(sourcemaps.write('.'))
        .pipe(gulp.dest(destDir + '/js'));
 });
@@ -64,6 +77,6 @@ gulp.task('fonts', function() {
 gulp.task('default', ['fonts', 'css', 'js']);
 
 gulp.task('watch', ['fonts'], function() {
-    gulp.watch('assets/js/**/*.js', ['js']);
+    gulp.watch('assets/js/**/*.js', ['jsdev']);
     gulp.watch('assets/css/**/*.css', ['css']);
 });

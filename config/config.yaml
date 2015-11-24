@@ -28,6 +28,46 @@ card_popup:
     Phone number: [ "contact", "phone_work" ]
     Email: [ "contact", "email1" ]
 
+reports:
+  queries:
+    -
+      descr: "Tickets created in the past 7 days"
+      query: "Created > '7 days ago' AND Status != 'Spam'"
+    -
+      descr: "Tickets created in the past 30 days"
+      query: "Created > '30 days ago' AND Status != 'Spam'"
+    -
+      descr: "Ticket updates in the past 7 days"
+      query: "Updated > '7 days ago' AND Status != 'Spam'"
+    -
+      descr: "Ticket updates in the past 30 days"
+      query: "Updated > '30 days ago' AND Status != 'Spam'"
+    -
+      descr: "Ticket resolved in the past 7 days ago"
+      query: "Resolved > '7 days ago'"
+    -
+      descr: "Tickets resolved in the past 30 days"
+      query: "Resolved > '30 days ago'"
+  departments:
+    -
+      descr: ByWater Dev Team
+      query: OwnerGroup = 'ByWater Dev Team'
+    -
+      descr: ByWater Display Team
+      query: OwnerGroup = 'ByWater Display Team'
+    -
+      descr: ByWater Education Team
+      query: OwnerGroup = 'ByWater Education Team'
+    -
+      descr: ByWater Migrations Team
+      query: OwnerGroup = 'ByWater Migrations Team'
+    -
+      descr: ByWater Support Team
+      query: OwnerGroup = 'ByWater Support Team'
+    -
+      descr: ByWater Systems Team
+      query: OwnerGroup = 'ByWater Systems Team'
+
 lead_default_columns:
   -
     name: New tickets

@@ -21,6 +21,7 @@
     "Sortable": "sortable.js#~1.4.2",
     "jquery": "~2.1.4",
     "angular-material": "master",
-    "angular-sanitize": "~1.4.7"
+    "angular-sanitize": "~1.4.7",
+    "angular-chart.js": "~0.8.6"
   }
 }

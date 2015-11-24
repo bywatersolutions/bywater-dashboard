@@ -15,6 +15,10 @@
                 templateUrl: 'templates/login.html',
                 controller: 'loginCtrl'
             }).
+            when('/reports', {
+                templateUrl: 'templates/reports.html',
+                controller: 'reportsCtrl'
+            }).
             otherwise({
                 template: 'Please wait.',
                 controller: 'redirectCtrl'

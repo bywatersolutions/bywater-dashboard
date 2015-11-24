@@ -76,6 +76,9 @@ sub startup {
     $auth->post("/json/sugarcrm/get_contact")->to("main#sugarcrm_get_contact");
     $auth->post("/json/view/save_settings")->to("main#view_save_settings");
 
+    $auth->post("/json/reports/get")->to("reports#get");
+    $auth->post("/json/reports/get_data")->to("reports#get_data");
+
     $auth->get("/test")->to("test#test") if ( $config->{debug_backend} );
 
     my $lead = $auth->under( sub {

@@ -1,0 +1,37 @@
+<div>
+	<div>
+		<md-input-container>
+			<label>Query</label>
+			<md-select ng-model="query">
+				<md-option ng-repeat="query in config.queries" value="{{$index}}">
+				{{query.descr}}
+				</md-option>
+			</md-select>
+		</md-input-container>
+
+		<md-input-container>
+			<label>Department</label>
+			<md-select ng-model="department">
+				<md-option ng-repeat="department in config.departments" value="{{$index}}">
+				{{department.descr}}
+				</md-option>
+			</md-select>
+		</md-input-container>
+
+		<md-button class="md-raised md-primary" ng-click="update_data()">Update</md-button>
+	</div>
+	<div>
+		<md-radio-group ng-model="grouping" layout="row">
+			<md-radio-button value="Creator">Creator</md-radio-button>
+			<md-radio-button value="Owner">Owner</md-radio-button>
+			<md-radio-button value="Status">Status</md-radio-button>
+			<md-radio-button value="Queue">Queue</md-radio-button>
+		</md-radio-group>
+	</div>
+	<div flex="40" layout-padded>
+		<canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels" chart-legend="true" chart-series="series" chart-click="onClick" >
+		</canvas>
+	</div>
+</div>
+
+
