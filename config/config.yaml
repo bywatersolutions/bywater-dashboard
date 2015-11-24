@@ -17,18 +17,16 @@ sugar_crm:
   ignore_ssl_errors: 0
 
 card_popup:
-  header:
-    rows:
-      -
-        Requestor: [ "ticket", "Requestor" ]
-        Owner: [ "ticket", "Owner" ]
-        Status: [ "ticket", "Status" ]
-        Queue: [ "ticket", "Queue" ]
-      -
-        Name: [ "contact", "full_name" ]
-        Library: [ "contact", "account_name" ]
-        Phone number: [ "contact", "phone_work" ]
-        Email: [ "contact", "email1" ]
+  header_row:
+    Requestor: [ "ticket", "Requestor" ]
+    Owner: [ "ticket", "Owner" ]
+    Status: [ "ticket", "Status" ]
+    Queue: [ "ticket", "Queue" ]
+  history_column:
+    Name: [ "contact", "full_name" ]
+    Library: [ "contact", "account_name" ]
+    Phone number: [ "contact", "phone_work" ]
+    Email: [ "contact", "email1" ]
 
 lead_default_columns:
   -

@@ -4,9 +4,7 @@
             <div class="md-toolbar-tools">
                 <div>
                     <h2>#{{ticket_id}} -- {{ticket.Subject}}</h2>
-                    <div ng-repeat="row in header_rows">
-                        <span ng-repeat="( label, data ) in row" ng-if="this[ data[0] ][ data[1] ]" >{{label}}: {{ this[ data[0] ][ data[1] ] }}</span>
-                    </div>
+                        <span ng-repeat="( label, data ) in popup_config.header_row" ng-if="this[ data[0] ][ data[1] ]" >{{label}}: {{ this[ data[0] ][ data[1] ] }}</span>
                 </div>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="close_dialog()" aria-label="Close">
@@ -66,19 +64,32 @@
                             <div layout="row" layout-sm="column" layout-align="space-around" ng-switch-when="undefined">
                                 <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                             </div>
-                            <md-list ng-switch-otherwise class="tickets-history" >
-                                <md-list-item ng-repeat="item in history" class="ticket-history" ticket-history="item"></md-list-item>
-                            </md-list>
-                        </md-content>
-                    </md-tab>
+                            <div layout="row" ng-switch-otherwise>
+                                <div flex="75">
+                                    <md-content layout-padding>
+                                        <md-input-container layout="row">
+                                            <label for="corr_ta">Text</label>
+                                            <textarea id="corr_ta" ng-model="correspondence" md-no-autogrow class="correspondence-textarea"></textarea>
+                                        </md-input-container>
+                                        <div layout="row">
+                                            <div flex></div>
+                                            <md-button class="md-raised md-primary" ng-click="add_correspondence()">Add correspondence</md-button>
+                                        </div>
+                                    </md-content>
 
-                    <md-tab label="Add correspondence">
-                        <md-content layout-padding>
-                            <md-input-container>
-                                <label for="corr_ta">Text</label>
-                                <textarea id="corr_ta" ng-model="correspondence" md-no-autogrow class="correspondence-textarea"></textarea>
-                            </md-input-container>
-                            <md-button class="md-raised md-primary" ng-click="add_correspondence()">Add correspondence</md-button>
+                                    <md-list class="tickets-history">
+                                        <md-list-item layout="column" ng-repeat="item in history" class="ticket-history" ticket-history="item" >
+                                        </md-list-item>
+                                    </md-list>
+                                </div>
+                                <div flex>
+                                    <md-list>
+                                        <md-list-item layout="column" ng-repeat="( label, data ) in popup_config.history_column" ng-if="this[ data[0] ][ data[1] ]">
+                                            {{label}}: {{ this[ data[0] ][ data[1] ] }}
+                                        </md-list-item>
+                                    </md-list>
+                                </div>
+                            </div>
                         </md-content>
                     </md-tab>
 
