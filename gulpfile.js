@@ -19,6 +19,7 @@ var jsFiles = [
     'assets/vendor/Sortable/ng-sortable.js',
     'assets/vendor/Chart.js/Chart.js',
     'assets/vendor/angular-chart.js/dist/angular-chart.js',
+    'assets/vendor/angular-material-data-table/dist/md-data-table.min.js',
     'assets/js/dashboard-app.js',
     'assets/js/router.js',
     'assets/js/services/**/*.js',
@@ -30,6 +31,7 @@ var cssFiles = [
     'assets/vendor/angular-material/angular-material.css',
     'assets/vendor/font-awesome/css/font-awesome.css',
     'assets/vendor/angular-chart.js/dist/angular-chart.css',
+    'assets/vendor/angular-material-data-table/dist/md-data-table.min.css',
     'assets/css/blocks/**/*.css',
     'assets/css/dashboard.css'
 ];

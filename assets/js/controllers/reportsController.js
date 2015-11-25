@@ -10,11 +10,11 @@
 
 		$http.post('/json/reports/get', {}).then( function(response) {
 			$scope.config = response.data.config;
+			$scope.update_data();
 		} );
 
 		$scope.update_data = function () {
 			$http.post('/json/reports/get_data', { query: $scope.query, department: $scope.department } ).then( function(response) {
-				//$scope.config = response.data.config;
 				console.log( response.data );
 				var tickets = response.data.tickets;
 
@@ -44,8 +44,7 @@
 				keys   = Object.keys(keys  ).sort(function(a,b){ return a.localeCompare(b); });
 				groups = Object.keys(groups).sort(function(a,b){ return a.localeCompare(b); });
 
-				console.log( keys );
-				console.log( groups );
+				$scope.tickets = data;
 
 				var chart_data = [];
 				for ( var group_idx in groups ) {
@@ -56,29 +55,19 @@
 						if ( !data[ group ] || !data[ group ][ key ] ) {
 							serie.push( 0 );
 						} else {
-							console.log( data[ group ][ key ] );
-							console.log( data[ group ][ key ].length );
 							serie.push( data[ group ][ key ].length );
+							if ( !$scope.tickets[ group ] ) $scope.tickets[ group ] = {};
 						}
 					}
 					chart_data.push( serie );
 				}
 
-				console.log( chart_data );
 				$scope.labels = keys;
 				$scope.series = groups;
 				$scope.data = chart_data;
-				//console.log( data );
-				//
 			} );
 		}
 
-		$scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-		$scope.series = ['Series A', 'Series B'];
-		$scope.data = [
-			[65, 59, 80, 81, 56, 55, 40],
-			[28, 48, 40, 19, 86, 27, 90]
-		];
 		$scope.onClick = function (points, evt) {
 			console.log(points, evt);
 		};
