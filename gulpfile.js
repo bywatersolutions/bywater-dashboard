@@ -5,9 +5,12 @@ var ngAnnotate = require('gulp-ng-annotate');
 var uglify = require('gulp-uglify');
 var minifyCss = require('gulp-minify-css');
 var autoprefixer = require('gulp-autoprefixer');
-var copy =require('gulp-copy');
+var copy = require('gulp-copy');
+var environments = require('gulp-environments');
+var gutil = require('gulp-util');
+var plumber = require('gulp-plumber');
 
-var jsFiles = [
+var jsVendorFiles = [
     'assets/vendor/jquery/dist/jquery.js',
     'assets/vendor/angular/angular.js',
     'assets/vendor/angular-animate/angular-animate.js',
@@ -20,6 +23,8 @@ var jsFiles = [
     'assets/vendor/Chart.js/Chart.js',
     'assets/vendor/angular-chart.js/dist/angular-chart.js',
     'assets/vendor/angular-material-data-table/dist/md-data-table.min.js',
+];
+var jsFiles = [
     'assets/js/dashboard-app.js',
     'assets/js/router.js',
     'assets/js/services/**/*.js',
@@ -37,30 +42,34 @@ var cssFiles = [
 ];
 var destDir = 'public/custom';
 
+var development = environments.development;
+var production = environments.production;
 
+gulp.task('vendor', function() {
+    return gulp.src(jsVendorFiles)
+        .pipe(development(plumber()))
+        .pipe(development(sourcemaps.init()))
+        .pipe(ngAnnotate().on('error', gutil.log))
+        .pipe(concat('vendor.js'))
+        .pipe(production(uglify()))
+        .pipe(development(sourcemaps.write('.')))
+        .pipe(gulp.dest(destDir + '/js'));
+});
 
 gulp.task('js', function() {
    return gulp.src(jsFiles)
-       .pipe(sourcemaps.init())
-       .pipe(ngAnnotate())
+       .pipe(development(plumber()))
+       .pipe(development(sourcemaps.init()))
+       .pipe(ngAnnotate().on('error', gutil.log))
        .pipe(concat('dashboard-app.js'))
-       .pipe(uglify())
-       .pipe(sourcemaps.write('.'))
-       .pipe(gulp.dest(destDir + '/js'));
-});
-
-gulp.task('jsdev', function() {
-   return gulp.src(jsFiles)
-       .pipe(sourcemaps.init())
-       .pipe(ngAnnotate())
-       .pipe(concat('dashboard-app.js'))
-       //.pipe(uglify())
-       .pipe(sourcemaps.write('.'))
+       .pipe(production(uglify()))
+       .pipe(development(sourcemaps.write('.')))
        .pipe(gulp.dest(destDir + '/js'));
 });
 
 gulp.task('css', function() {
     return gulp.src(cssFiles)
+        .pipe(development(plumber()))
         .pipe(sourcemaps.init())
         .pipe(autoprefixer({browsers: ['last 2 versions', 'IE 9', 'IE 10']}))
         .pipe(concat('dashboard.css'))
@@ -76,9 +85,9 @@ gulp.task('fonts', function() {
 
 
 
-gulp.task('default', ['fonts', 'css', 'js']);
+gulp.task('default', ['fonts', 'css', 'vendor', 'js']);
 
-gulp.task('watch', ['fonts'], function() {
-    gulp.watch('assets/js/**/*.js', ['jsdev']);
+gulp.task('watch', ['fonts', 'vendor', 'js', 'css'], function() {
+    gulp.watch('assets/js/**/*.js', ['js']);
     gulp.watch('assets/css/**/*.css', ['css']);
 });
