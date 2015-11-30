@@ -67,11 +67,10 @@ sub startup {
     $auth->post("/json/employee/save_columns")->to("employee#save_columns");
 
     $auth->get("/json/get_roles")->to("main#get_roles");
-    $auth->post("/json/update_ticket")->to("main#update_ticket");
-    $auth->post("/json/ticket_details")->to("main#ticket_details");
-    $auth->post("/json/ticket_history")->to("main#ticket_history");
-    $auth->post("/json/ticket_add_history")->to("main#ticket_add_correspondence");
-    $auth->post("/json/ticket_add_history")->to("main#ticket_add_correspondence");
+    $auth->post("/json/update_ticket")->to("main#update_ticket");   # FIXME change to json/ticket/update for consistency
+    $auth->post("/json/ticket_details")->to("main#ticket_details"); # FIXME change to json/ticket/details
+    $auth->post("/json/ticket_history")->to("main#ticket_history"); # FIXME change to json/ticket/history
+    $auth->post("/json/ticket/add_correspondence")->to("main#ticket_add_correspondence");
 
     $auth->post("/json/sugarcrm/get_contact")->to("main#sugarcrm_get_contact");
     $auth->post("/json/view/save_settings")->to("main#view_save_settings");

@@ -111,10 +111,5 @@ sub get_history {
     return [ map { $self->get_history_entry( $ticket_id, $_->{id} ) } @items ];
 }
 
-sub add_correspondence {
-    my ( $self, $ticket_id, $message ) = @_;
-    $self->rt->correspond( ticket_id => $ticket_id, message => $message )
-}
-
 1;
 

@@ -15,6 +15,10 @@
         <md-dialog-content layout="row" layout-sm="column">
             <md-content flex>
                 <md-tabs md-selected="selected_tab_index">
+                    <md-tab label="History">
+                        <div ng-include="'/partials/ticket-popup/history.html'"></div>
+                    </md-tab>
+
                     <md-tab label="RT details">
                         <md-content layout-padding>
                             <div layout="row" layout-sm="column">
@@ -59,17 +63,13 @@
                         </md-content>
                     </md-tab>
 
-                    <md-tab label="History">
-                        <div ng-include="'/partials/ticket-popup/history.html'"></div>
-                    </md-tab>
-
                     <md-tab label="SugarCRM">
                         <div ng-switch on="sugar_crm_data">
                             <div layout="row" layout-sm="column" layout-align="space-around" ng-switch-when="undefined">
                                 <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                             </div>
-                            <div ng-switch-when="error" class="sugar-contacts__error">Error on server. Please retry again later.</div>
-                            <div ng-switch-when="null" class="sugar-contacts__empty">No contacts information</div>
+                            <div ng-switch-when="error" class="sugar-contacts__error">Unknown server error ocurred, please try again.</div>
+                            <div ng-switch-when="null" class="sugar-contacts__empty">No contact information was found.</div>
                             <section ng-switch-otherwise ng-repeat="(contactKey, contact) in sugar_crm_data_parsed track by $index" class="sugar-contact">
                                 <div class="label">{{ contactKey }}</div>
                                 <md-list-item class="sugar-contact__row" layout="row" layout-sm="column" ng-repeat="row in contact" ng-class="{'sugar-contact__row--odd': $odd}">

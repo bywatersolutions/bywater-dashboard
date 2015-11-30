@@ -4,7 +4,7 @@
     angular.module('dashboardApp').controller('ticketPopupCtrl', function($scope, $http, $mdDialog, ticket, ticket_id, $log) {
         $scope.ticket_id = ticket_id;
         $scope.ticket = ticket;
-        $scope.correspondence = "";
+        $scope.message = "";
         $scope.selected_tab_index = 0;
         $scope.privacy = "private";
 
@@ -24,14 +24,12 @@
         };
 
         $scope.add_correspondence = function () {
-            $http.post('/json/ticket_add_history', { ticket_id: ticket_id, correspondence: $scope.correspondence} )
+            $http.post('/json/ticket/add_correspondence', { ticket_id: ticket_id, message: $scope.message, privacy: $scope.privacy } )
                 .then(function() {
-                    $scope.selected_tab_index = 1;
                     $scope.history = undefined;
                     get_history();
                 })
                 .catch(function() {
-                    $scope.selected_tab_index = 1;
                     $scope.history = undefined;
                     get_history();
                 });

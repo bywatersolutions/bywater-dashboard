@@ -124,9 +124,13 @@ sub ticket_history {
 
 sub ticket_add_correspondence {
     my $c = shift;
-
     my $json = $c->req->json;
-    $c->tickets_model->add_correspondence( $json->{ticket_id}, $json->{correspondence} );
+
+    if ( $json->{privacy} eq "public" ) {
+        $c->tickets_model->rt->correspond( ticket_id => $json->{ticket_id}, message => $json->{message} );
+    } else {
+        $c->tickets_model->rt->comment( ticket_id => $json->{ticket_id}, message => $json->{message} );
+    }
 
     $c->render( json => { status => "ok" } );
 }
