@@ -39,15 +39,15 @@
 
         function get_sugar_crm_data () {
             $http.post( '/json/sugarcrm/get_contact', { email: ticket["Creator"] } )
-                .then(function(data) {
+                .then(function( response ) {
                     $scope.sugar_crm_data = null;
                     $scope.sugar_crm_data_parsed = {};
-                    if (data.data.contacts.length == 0) {
+                    if (response.data.contacts.length == 0) {
                         return;
                     }
 
-                    $scope.sugar_crm_data = data.data;
-                    $scope.contact = data.data.contacts[0]; // for easy configuration of pop-up window read-only data
+                    $scope.sugar_crm_data = response.data;
+                    $scope.contact = response.data.contacts[0]; // for easy configuration of pop-up window read-only data
                     $scope.sugar_crm_data.contacts.forEach(function(contact) {
                         var rows = [],
                             row = [],
@@ -59,7 +59,7 @@
                             contactKey = contact['name'];
                         }
                         if (angular.isDefined(contact['email']) && angular.isDefined(contactKey)) {
-                            contactKey += ' (' + contact['email'] + ')';
+                            contactKey += ' (' + ( contact['email'] || contact['email1'] ) + ')';
                         } else {
                             contactKey = contact['email'];
                         }

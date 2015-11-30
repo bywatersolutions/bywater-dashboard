@@ -139,7 +139,7 @@ sub sugarcrm_get_contact {
 
     my $data = $sugar->get_contact( $json->{email} );
 
-    $c->render( json => { data => $data } );
+    $c->render( json => $data );
 }
 
 sub view_save_settings {
