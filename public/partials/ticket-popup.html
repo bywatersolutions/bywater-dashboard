@@ -4,7 +4,7 @@
             <div class="md-toolbar-tools">
                 <div>
                     <h2>#{{ticket_id}} -- {{ticket.Subject}}</h2>
-                        <span ng-repeat="( label, data ) in popup_config.header_row" ng-if="this[ data[0] ][ data[1] ]" >{{label}}: {{ this[ data[0] ][ data[1] ] }}</span>
+                        <span ng-repeat="(label, data) in popup_config.header_row" ng-if="this[data[0]][data[1]]" class="db-ticket-popup__header-item">{{label}}: <b>{{ this[data[0]][data[1]] }}</b></span>
                 </div>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="close_dialog()" aria-label="Close">
@@ -60,41 +60,7 @@
                     </md-tab>
 
                     <md-tab label="History">
-                        <md-content ng-switch on="history">
-                            <div layout="row" layout-sm="column" layout-align="space-around" ng-switch-when="undefined">
-                                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-                            </div>
-                            <div layout="row" ng-switch-otherwise>
-                                <div flex="75">
-                                    <md-content layout-padding>
-                                        <md-input-container layout="row">
-                                            <label for="corr_ta">Text</label>
-                                            <textarea id="corr_ta" ng-model="correspondence" md-no-autogrow class="correspondence-textarea"></textarea>
-                                        </md-input-container>
-                                        <div layout="row">
-                                            <md-radio-group ng-model="privacy" layout="row">
-                                                <md-radio-button value="private">Private</md-radio-button>
-                                                <md-radio-button value="public">Public</md-radio-button>
-                                            </md-radio-group>
-                                            <div flex></div>
-                                            <md-button class="md-raised md-primary" ng-click="add_correspondence()">Add correspondence</md-button>
-                                        </div>
-                                    </md-content>
-
-                                    <md-list class="tickets-history">
-                                        <md-list-item layout="column" ng-repeat="item in history" class="ticket-history" ticket-history="item" >
-                                        </md-list-item>
-                                    </md-list>
-                                </div>
-                                <div flex>
-                                    <md-list>
-                                        <md-list-item layout="column" ng-repeat="( label, data ) in popup_config.history_column" ng-if="this[ data[0] ][ data[1] ]">
-                                            {{label}}: {{ this[ data[0] ][ data[1] ] }}
-                                        </md-list-item>
-                                    </md-list>
-                                </div>
-                            </div>
-                        </md-content>
+                        <div ng-include="'/partials/ticket-popup/history.html'"></div>
                     </md-tab>
 
                     <md-tab label="SugarCRM">
@@ -102,7 +68,10 @@
                             <div layout="row" layout-sm="column" layout-align="space-around" ng-switch-when="undefined">
                                 <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                             </div>
-                            <md-list ng-switch-otherwise ng-repeat="contact in sugar_crm_data_parsed" class="sugar-contact">
+                            <div ng-switch-when="error" class="sugar-contacts__error">Error on server. Please retry again later.</div>
+                            <div ng-switch-when="null" class="sugar-contacts__empty">No contacts information</div>
+                            <section ng-switch-otherwise ng-repeat="(contactKey, contact) in sugar_crm_data_parsed track by $index" class="sugar-contact">
+                                <div class="label">{{ contactKey }}</div>
                                 <md-list-item class="sugar-contact__row" layout="row" layout-sm="column" ng-repeat="row in contact" ng-class="{'sugar-contact__row--odd': $odd}">
                                     <div class="sugar-contact__column" layout="row" layout-sm="column" layout-align="space-between center">
                                         <div class="sugar-contact__key md-caption"><b>{{ row[0].key }}:</b></div>
@@ -114,7 +83,7 @@
                                     </div>
                                     <md-divider></md-divider>
                                 </md-list-item>
-                            </md-list>
+                            </section>
                         </div>
                     </md-tab>
                 </md-tabs>

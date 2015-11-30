@@ -139,21 +139,3 @@ md-grid-list {
 md-grid-list md-grid-tile md-grid-tile-footer h3 {
     font-weight: bold;
 }
-
-.db-ticket-popup md-tabs {
-    min-height: 60vh !important;
-}
-.db-ticket-popup md-tab-content {
-    background: #f6f6f6;
-}
-.db-ticket-popup md-tab-content md-content {
-    background: transparent;
-}
-.db-ticket-popup .correspondence-textarea {
-    background: #fff;
-    height: calc(60vh - 200px);
-    padding: 8px;
-}
-.db-history-item {
-    border-bottom: 1px solid #ddd;
-}

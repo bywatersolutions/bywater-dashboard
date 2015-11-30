@@ -56,11 +56,21 @@
         // We have to create separate sortable configs for each column, but we have to cache them so
         // Angular doesn't see neverending changes
         var dragTicketProgress = false;
+        var columnsFromPut = [];
         function create_sortable(column) {
+            if (column.type == 'rt' && columnsFromPut.indexOf('employee-tickets' + column.column_id) == -1) {
+                columnsFromPut.push('employee-tickets' + column.column_id);
+            }
+
             return {
                 animation: 50,
-                group: 'employee-tickets',
-                sort: false,
+                group: column.type == 'rt' ?
+                    'employee-tickets' + column.column_id :
+                    {
+                        name: 'employee-tickets-rt',
+                        put: columnsFromPut,
+                    },
+                sort: column.type == 'rt' ? true : false,
 
                 onStart: function() {
                     dragTicketProgress = true;
@@ -70,19 +80,8 @@
                     dragTicketProgress = false;
                 },
 
-                onMove: function(evt) {
-                    //var from_column = angular.element(evt.from).scope().column;
-                    var to_column = angular.element(evt.to).scope().column;
-
-                    return to_column.type != 'rt'; // disallow dropping items into TicketSQL columns
-                },
-
                 onAdd: function(evt) {
                     var columns = {};
-
-                    if (column.type != "rt") {
-                        columns[column.column_id] = evt.models;
-                    }
 
                     $http.post('/json/employee/save_columns', columns).then(
                         function(response) {
@@ -102,7 +101,7 @@
             return sortables[column.column_id];
         };
 
-        $scope.show_popup = function(ticket_id, $event) {
+        $scope.show_popup = function(ticket_id) {
             $mdDialog.show({
                 controller: 'ticketPopupCtrl',
                 locals: {
@@ -115,16 +114,16 @@
                 //targetEvent: $event,
                 templateUrl: 'partials/ticket-popup.html'
             });
-        }
+        };
 
-        $scope.$on("openViewSettingsEvent", function (event, args) {
-            var $child_scope = $scope.$new();
-            $child_scope.columns = $scope.columns;
-            $child_scope.view_id = $scope.view_id;
+        $scope.$on("openViewSettingsEvent", function() {
             $mdDialog.show({
                 controller: 'viewSettingsCtrl',
-                locals: {},
-                scope: $child_scope,
+                locals: {
+                    columns: $scope.columns.slice(),
+                    view_id: $scope.view_id
+                },
+                //scope: $child_scope,
                 parent: 'body',
                 templateUrl: 'partials/view-settings-popup.html'
             }).then(function(){

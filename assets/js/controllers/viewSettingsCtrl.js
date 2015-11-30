@@ -1,7 +1,11 @@
 (function(angular) {
     'use strict';
 
-    angular.module('dashboardApp').controller('viewSettingsCtrl', function($scope, $http, $mdDialog, $log) {
+    angular.module('dashboardApp').controller('viewSettingsCtrl', function($scope, $http, $mdDialog, $log, columns, view_id) {
+        $scope.columns = columns;
+        $scope.view_id = view_id;
+        $scope.showFlags = {};
+
         $scope.close_dialog = function () {
             $mdDialog.cancel();
         };
@@ -16,19 +20,39 @@
             );
         };
 
+        $scope.sortable = {
+            animation: 50,
+            group: 'settings-columns',
+            sort: true,
+            handle: '.db-settings__drag-handle'
+        };
+
+        /*
         $scope.move = function( is_move_up, index ) {
-          var new_index = is_move_up ? index + 1 : index - 1;
-          if ( new_index >= $scope.columns.length || new_index <= 0 ) return;
+            var new_index = is_move_up ? index + 1 : index - 1;
+            if (
+                (is_move_up && new_index >= $scope.columns.length) ||
+                (!is_move_up && new_index < 0)
+            ) {
+                return;
+            }
 
-          $scope.columns.splice( index + 1 , 0, $scope.columns.splice(index, 1)[0]);
-        }
+            $log.debug('down', new_index);
 
-        $scope.delete = function( index ) {
-          $scope.columns.splice(index, 1);
-        }
+            $scope.columns.splice(new_index, 0, $scope.columns.splice(index, 1)[0]);
+        };
+        */
+
+        $scope.delete = function( index, $event ) {
+            $event.stopPropagation();
+
+            if (confirm("Delete column '" + $scope.columns[index].name + "'")) {
+                $scope.columns.splice(index, 1);
+            }
+        };
 
         $scope.add = function () {
-          $scope.columns.push({});
-        }
+          $scope.columns.push({ name: 'New column' });
+        };
     });
 })(angular);

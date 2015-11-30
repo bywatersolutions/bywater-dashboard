@@ -69,3 +69,37 @@
 .ticket-history__more > ul > li > ul > li > ul > li > ul {
     border-color: #546e7a;
 }
+
+.ticket-histories > md-list {
+    padding: 0;
+}
+
+.ticket-history__client {
+    background: #f2f2f2;
+    margin: 32px 10px 15px;
+}
+.ticket-history__client md-list-item {
+    min-height: 24px;
+}
+.ticket-history__client-value {
+    color: #1E88E5;
+}
+
+.ticket-history__show-correspondence {
+    padding: 15px 0;
+}
+.ticket-history__correspondence.ng-hide-add,
+.ticket-history__correspondence.ng-hide-remove {
+    transition: all ease 0.25s;
+}
+.ticket-history__correspondence {
+    opacity: 1;
+    transform: scaleY(1);
+    transform-origin: center top;
+    padding-bottom: 15px;
+}
+.ticket-history__correspondence.ng-hide {
+    line-height: 0;
+    opacity: 0;
+    transform: scaleY(0);
+}

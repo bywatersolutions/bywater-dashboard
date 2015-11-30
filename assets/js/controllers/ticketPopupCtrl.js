@@ -38,33 +38,52 @@
         };
 
         function get_sugar_crm_data () {
-            $http.post( '/json/sugarcrm/get_contact', { email: ticket["Creator"] } ).success( function(data) {
-                $scope.sugar_crm_data = data.data;
-                $scope.contact = data.data.contacts[0]; // for easy configuration of pop-up window read-only data
-
-                $scope.sugar_crm_data_parsed = $scope.sugar_crm_data.contacts.map(function(contact) {
-                    var rows = [],
-                        row = [];
-
-                    for(var key in contact) {
-                        if (contact.hasOwnProperty(key)) {
-                            if (row.length == 2) {
-                                rows.push(row);
-                                row = [];
-                            }
-
-                            row.push({
-                                key: $scope.sugar_crm_data.labels[key],
-                                value: contact[key]
-                            });
-                        }
+            $http.post( '/json/sugarcrm/get_contact', { email: ticket["Creator"] } )
+                .then(function(data) {
+                    $scope.sugar_crm_data = null;
+                    $scope.sugar_crm_data_parsed = {};
+                    if (data.data.contacts.length == 0) {
+                        return;
                     }
 
-                    return rows;
-                });
+                    $scope.sugar_crm_data = data.data;
+                    $scope.contact = data.data.contacts[0]; // for easy configuration of pop-up window read-only data
+                    $scope.sugar_crm_data.contacts.forEach(function(contact) {
+                        var rows = [],
+                            row = [],
+                            contactKey;
 
-                $log.debug($scope.sugar_crm_data_parsed);
-            });
+                        if (angular.isDefined(contact['full_name']) && contact['full_name']) {
+                            contactKey = contact['full_name'];
+                        } else if (angular.isDefined(contact['name']) && contact['name']) {
+                            contactKey = contact['name'];
+                        }
+                        if (angular.isDefined(contact['email']) && angular.isDefined(contactKey)) {
+                            contactKey += ' (' + contact['email'] + ')';
+                        } else {
+                            contactKey = contact['email'];
+                        }
+
+                        for(var key in contact) {
+                            if (contact.hasOwnProperty(key)) {
+                                if (row.length == 2) {
+                                    rows.push(row);
+                                    row = [];
+                                }
+
+                                row.push({
+                                    key: $scope.sugar_crm_data.labels[key],
+                                    value: contact[key]
+                                });
+                            }
+                        }
+
+                        $scope.sugar_crm_data_parsed[contactKey] = rows;
+                    });
+                })
+                .catch( function() {
+                    $scope.sugar_crm_data = 'error';
+                });
         }
         get_sugar_crm_data();
 

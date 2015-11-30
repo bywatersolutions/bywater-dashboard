@@ -1,7 +1,4 @@
-<style>
-.bwd-odd { background: #f4f4fa; }
-</style>
-<md-dialog class="db-ticket-popup" flex="80" flex-sm="90">
+<md-dialog class="db-view-settings-popup" flex="80" flex-sm="90">
 	<md-toolbar>
 		<div class="md-toolbar-tools">
 			<h2>View settings</h2>
@@ -13,66 +10,48 @@
 	</md-toolbar>
 	<md-dialog-content layout="row" layout-sm="column">
 			<md-content flex layout-fill layout-padding>
-				<md-list flex="100">
-					<md-list-item class="md-3-line" ng-repeat="column in columns" layout-padded ng-class-odd="'bwd-odd'">
-						<div class="md-list-item-text" layout-margin>
+				<md-list flex="100" ng-sortable="sortable">
+					<md-list-item class="db-settings__column" ng-repeat="column in columns" layout-padded layout="column" ng-class-odd="'db-settings__column--odd'" ng-init="showFlags[$index] = false">
+						<div class="db-settings__column--header db-settings__column--fullwidth" layout="row" layout-sm="column" layout-align="space-between center" ng-click="showFlags[$index] = !showFlags[$index]" flex="none">
+							<div><span class="db-settings__drag-handle"><i class="fa fa-bars fa-lg"></i></span> {{ column.name }}</div>
+							<div><md-button class="md-warn db-settings__column-delete" ng-click="delete($index, $event)">Delete</md-button></div>
+						</div>
+						<div class="db-settings__column-more db-settings__column--fullwidth ng-hide" ng-show="showFlags[$index]" flex="none" layout-padding>
 							<div layout="row">
-							<md-input-container flex="25">
-								<label>Column name:</label>
-								<input ng-model="column.name" flex="100">
-							</md-input-container>
+								<md-input-container flex="50">
+									<label>Column name:</label>
+									<input ng-model="column.name" flex="100">
+								</md-input-container>
 
-							<md-input-container flex>
-								<label>Column query:</label>
-								<input ng-model="column.rt_query" flex="100">
-							</md-input-container>
-							</div>
-
-							<div layout="row">
-								<div  flex="25">
-									<div>Sort order:</div>
-									<md-select ng-model="column.column_sort" placeholder="Sort order">
+								<md-input-container flex="25">
+									<label>Sort order:</label>
+									<md-select ng-model="column.column_sort">
 										<md-option value="ticket_id_asc">Ticket ID, ascending</md-option>
 										<md-option value="ticket_id_desc">Ticket ID, descending</md-option>
 									</md-select>
-								</div>
-
-
-								<div flex="25">
-									<div>Column type:</div>
+								</md-input-container>
+								<md-input-container class="md-input-has-value" flex="25">
+									<label>Column type:</label>
 									<md-radio-group ng-model="column.type" layout="row">
 										<md-radio-button value="rt" class="md-primary">RT</md-radio-button>
 										<md-radio-button value="custom">Custom</md-radio-button>
 									</md-radio-group>
-								</div>
+								</md-input-container>
+							</div>
 
-								<div flex="25">
-									<div>Order:</div>
-									<div>
-										<md-button class="md-raised md-primary" ng-click="move(false, $index)" style="min-width: 5px;" aria-label="Up">
-											<md-icon class="fa fa-arrow-up"></md-icon>
-										</md-button>
-										<md-button class="md-raised md-primary" ng-click="move(true, $index)"  style="min-width: 5px;" aria-label="Down">
-											<md-icon class="fa fa-arrow-down"></md-icon>
-										</md-button>
-									</div>
-								</div>
-
-								<div flex="25">
-									Actions:
-									<div>
-										<md-button class="md-raised md-warn" ng-click="delete($index)">Delete</md-button>
-									</div>
-								</div>
+							<div layout="row">
+								<md-input-container flex="100">
+									<label>Column query:</label>
+									<input ng-model="column.rt_query" flex="100">
+								</md-input-container>
 							</div>
 						</div>
 					</md-list-item>
 				</md-list>
 
-				<div flex layout="row">
-						<div flex="100"></div>
-						<md-button class="md-raised md-primary" ng-click="add()">Add</md-button>
-						<md-button class="md-raised md-primary" ng-click="save_settings()">Save</md-button>
+				<div layout="row" layout-align="end center">
+					<md-button class="md-raised md-primary md-green" ng-click="add()">Add column</md-button>
+					<md-button class="md-raised md-primary" ng-click="save_settings()">Save</md-button>
 				</div>
 			</md-content>
 	</md-dialog-content>

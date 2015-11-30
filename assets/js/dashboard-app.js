@@ -1,7 +1,7 @@
 (function(angular) {
    'use strict';
 
-    angular.module('dashboardApp', ['ngRoute', 'ngSanitize', 'ngMaterial', 'ng-sortable', 'chart.js'])
+    angular.module('dashboardApp', ['ngRoute', 'ngSanitize', 'ngMaterial', 'ng-sortable', 'chart.js', 'ngAnimate'])
         .config(function($mdIconProvider, $mdThemingProvider, $httpProvider) {
             $mdIconProvider.defaultFontSet('fa');
             $mdThemingProvider.theme('default')

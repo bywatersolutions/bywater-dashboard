@@ -1,0 +1,26 @@
+.db-ticket-popup md-tabs {
+    min-height: 60vh !important;
+}
+.db-ticket-popup md-tab-content {
+    background: #f6f6f6;
+}
+.db-ticket-popup md-tab-content md-content {
+    background: transparent;
+}
+.db-ticket-popup .correspondence-textarea {
+    background: #fff;
+    min-height: 130px;
+    padding: 8px;
+}
+.db-ticket-popup .md-input-focused .correspondence-textarea {
+    border-width: 0 0 1px;
+    padding-bottom: 8px;
+}
+.db-history-item {
+    border-bottom: 1px solid #ddd;
+}
+
+.db-ticket-popup__header-item {
+    font-size: 0.8571rem;
+    margin-right: 15px;
+}
