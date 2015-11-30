@@ -46,19 +46,19 @@ sugar_crm:
 
 card_popup:
   header_row:
-    Requestor: [ "ticket", "Requestor" ]
-    Owner: [ "ticket", "Owner" ]
-    Status: [ "ticket", "Status" ]
-    Queue: [ "ticket", "Queue" ]
+    - [ "Requestor", "ticket", "Requestor" ]
+    - [ "Owner", "ticket", "Owner" ]
+    - [ "Status", "ticket", "Status" ]
+    - [ "Queue", "ticket", "Queue" ]
   history_column:
-    Name: [ "contact", "full_name" ]
-    Library: [ "contact", "account_name" ]
-    Phone number: [ "contact", "phone_work" ]
-    Email: [ "contact", "email1" ]
-    Koha Inst. Type: [ "system", "system_koha_installation_type" ]
-    Koha Version: [ "system", "system_koha_version" ]
-    Koha Branch: [ "system", "system_local_koha_branch" ]
-    Koha Database: [ "system", "database_name_c" ]
+    - [ "Name", "contact", "full_name" ]
+    - [ "Library", "contact", "account_name" ]
+    - [ "Phone number", "contact", "phone_work" ]
+    - [ "Email", "contact", "email1" ]
+    - [ "Koha Inst. Type", "system", "system_koha_installation_type" ]
+    - [ "Koha Version", "system", "system_koha_version" ]
+    - [ "Koha Branch", "system", "system_local_koha_branch" ]
+    - [ "Koha Database", "system", "database_name_c" ]
 
 reports:
   queries:

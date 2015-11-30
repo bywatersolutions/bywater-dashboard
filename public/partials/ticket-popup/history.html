@@ -26,8 +26,8 @@
             </div>
             <div flex>
                 <md-list class="ticket-history__client md-whiteframe-1dp">
-                    <md-list-item ng-repeat="(label, data) in popup_config.history_column" ng-if="this[data[0]][data[1]]">
-                        <small>{{label}}: <span class="ticket-history__client-value">{{ this[data[0]][data[1]] }}</span></small>
+                    <md-list-item ng-repeat="data in popup_config.history_column" ng-if="this[data[1]][data[2]]">
+                        <small>{{data[0]}}: <span class="ticket-history__client-value">{{ this[data[1]][data[2]] }}</span></small>
                     </md-list-item>
                 </md-list>
             </div>

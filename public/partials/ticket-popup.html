@@ -4,7 +4,7 @@
             <div class="md-toolbar-tools">
                 <div>
                     <h2>#{{ticket_id}} -- {{ticket.Subject}}</h2>
-                        <span ng-repeat="(label, data) in popup_config.header_row" ng-if="this[data[0]][data[1]]" class="db-ticket-popup__header-item">{{label}}: <b>{{ this[data[0]][data[1]] }}</b></span>
+                        <span ng-repeat="data in popup_config.header_row" ng-if="this[data[1]][data[2]]" class="db-ticket-popup__header-item">{{data[0]}}: <b>{{ this[data[1]][data[2]] }}</b></span>
                 </div>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="close_dialog()" aria-label="Close">
