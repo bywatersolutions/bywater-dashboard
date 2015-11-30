@@ -46,6 +46,7 @@
 
                     $scope.sugar_crm_data = response.data;
                     $scope.contact = response.data.contacts[0]; // for easy configuration of pop-up window read-only data
+                    $scope.system = response.data.system;
                     $scope.sugar_crm_data.contacts.forEach(function(contact) {
                         var rows = [],
                             row = [],
@@ -70,7 +71,7 @@
                                 }
 
                                 row.push({
-                                    key: $scope.sugar_crm_data.labels[key],
+                                    key: $scope.sugar_crm_data.labels['Contacts'][key],
                                     value: contact[key]
                                 });
                             }
