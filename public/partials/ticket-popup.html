@@ -70,20 +70,25 @@
                             </div>
                             <div ng-switch-when="error" class="sugar-contacts__error">Unknown server error ocurred, please try again.</div>
                             <div ng-switch-when="null" class="sugar-contacts__empty">No contact information was found.</div>
-                            <section ng-switch-otherwise ng-repeat="(contactKey, contact) in sugar_crm_data_parsed track by $index" class="sugar-contact">
-                                <div class="label">{{ contactKey }}</div>
-                                <md-list-item class="sugar-contact__row" layout="row" layout-sm="column" ng-repeat="row in contact" ng-class="{'sugar-contact__row--odd': $odd}">
-                                    <div class="sugar-contact__column" layout="row" layout-sm="column" layout-align="space-between center">
-                                        <div class="sugar-contact__key md-caption"><b>{{ row[0].key }}:</b></div>
-                                        <div class="sugar-contact__value"><small>{{ row[0].value }}</small></div>
+                            <div ng-switch-otherwise>
+                                <h3 layout-padding>Contacts</h3>
+                                <section ng-repeat="(contactKey, contact) in sugar_crm_data_parsed track by $index" class="sugar-contact" ng-init="showContact[$index] = contacts_count > 1 ? false : true">
+                                    <div class="sugar-contact__label" ng-class-odd="'sugar-contact__label--odd'" ng-click="showContact[$index] = !showContact[$index]">{{ contactKey }}</div>
+                                    <div class="sugar-contact__more-info ng-hide" ng-show="showContact[$index]">
+                                        <md-list-item class="sugar-contact__row" layout="row" layout-sm="column" ng-repeat="row in contact" ng-class="{'sugar-contact__row--odd': $odd}">
+                                            <div class="sugar-contact__column" layout="row" layout-sm="column" layout-align="space-between center">
+                                                <div class="sugar-contact__key md-caption"><b>{{ row[0].key }}:</b></div>
+                                                <div class="sugar-contact__value"><small>{{ row[0].value }}</small></div>
+                                            </div>
+                                            <div class="sugar-contact__column" layout="row" layout-sm="column" layout-align="space-between center">
+                                                <div class="sugar-contact__key md-caption"><b>{{ row[1].key }}:</b></div>
+                                                <div class="sugar-contact__value"><small>{{ row[1].value }}</small></div>
+                                            </div>
+                                            <md-divider></md-divider>
+                                        </md-list-item>
                                     </div>
-                                    <div class="sugar-contact__column" layout="row" layout-sm="column" layout-align="space-between center">
-                                        <div class="sugar-contact__key md-caption"><b>{{ row[1].key }}:</b></div>
-                                        <div class="sugar-contact__value"><small>{{ row[1].value }}</small></div>
-                                    </div>
-                                    <md-divider></md-divider>
-                                </md-list-item>
-                            </section>
+                                </section>
+                            </div>
                         </div>
                     </md-tab>
                 </md-tabs>

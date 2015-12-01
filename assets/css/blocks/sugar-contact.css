@@ -1,9 +1,32 @@
 .sugar-contact {
     padding: 0 !important;
 }
+
+.sugar-contact__label {
+    background: #fff;
+    border-bottom: 1px solid #eeeeee;
+    color: #2196F3;
+    outline: 0;
+    padding: 10px 15px;
+}
+.sugar-contact__label:first-child {
+    border-top: 1px solid #eeeeee;
+}
+.sugar-contact__label:hover {
+    cursor: pointer;
+    background: #f2f2f2;
+}
+
+.sugar-contact__row {
+    min-height: 36px;
+}
+.sugar-contact__row b {
+    opacity: 0.75;
+}
 .sugar-contact__row--odd {
     background: #eee;
 }
+
 .sugar-contact__column {
     width: 100%;
 }

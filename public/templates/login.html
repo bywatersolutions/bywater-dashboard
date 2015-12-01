@@ -8,12 +8,12 @@
             </div>
         </md-toolbar>
         <md-card-content>
-            <form ng-submit="submit()">
-                <md-input-container class="md-no-float">
+            <form ng-submit="submit()" layout="column">
+                <md-input-container md-no-float class="md-block">
                     <md-icon class="fa-user"></md-icon>
                     <input ng-model="credentials.login" placeholder="Username" />
                 </md-input-container>
-                <md-input-container class="md-no-float">
+                <md-input-container md-no-float class="md-block">
                     <md-icon class="fa-key"></md-icon>
                     <input ng-model="credentials.password" type="password" placeholder="Password" />
                 </md-input-container>

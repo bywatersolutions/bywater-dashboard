@@ -61,6 +61,3 @@
 .db-settings__column-more md-radio-group {
     order: 2;
 }
-.db-settings__column-more md-select {
-    margin-top: 24px;
-}

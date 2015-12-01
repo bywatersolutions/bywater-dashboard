@@ -7,6 +7,8 @@
         $scope.message = "";
         $scope.selected_tab_index = 0;
         $scope.privacy = "private";
+        $scope.showContact = {};
+        $scope.contacts_count = 0;
 
         $scope.update_ticket = function() {
             var postData = angular.merge({}, $scope.ticket);
@@ -37,6 +39,7 @@
 
         function get_sugar_crm_data () {
             $http.post( '/json/sugarcrm/get_contact', { email: ticket["Creator"] } )
+            //$http.get( '/custom/get_contact.json' )
                 .then(function( response ) {
                     $scope.sugar_crm_data = null;
                     $scope.sugar_crm_data_parsed = {};
@@ -46,6 +49,7 @@
 
                     $scope.sugar_crm_data = response.data;
                     $scope.contact = response.data.contacts[0]; // for easy configuration of pop-up window read-only data
+                    $scope.contacts_count = response.data.contacts.length;
                     $scope.system = response.data.system;
                     $scope.sugar_crm_data.contacts.forEach(function(contact) {
                         var rows = [],

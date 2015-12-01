@@ -9,10 +9,12 @@
         <div layout="row" class="ticket-history__correspondence ng-hide" ng-show="showCorrespondence">
             <div flex="75">
                 <md-content layout-padding>
-                    <md-input-container>
-                        <label for="corr_ta">Text</label>
-                        <textarea id="corr_ta" ng-model="$parent.message" md-no-autogrow class="correspondence-textarea"></textarea>
-                    </md-input-container>
+                    <div>
+                        <md-input-container class="md-block">
+                            <label for="corr_ta">Text</label>
+                            <textarea id="corr_ta" ng-model="$parent.message" md-no-autogrow class="correspondence-textarea"></textarea>
+                        </md-input-container>
+                    </div>
                     <div layout="row">
                         <md-radio-group ng-model="$parent.privacy" layout="row">
                             <md-radio-button value="private">Private</md-radio-button>
