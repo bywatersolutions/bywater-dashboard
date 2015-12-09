@@ -2,7 +2,10 @@
     <form>
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>#{{ticket_id}} -- {{ticket.Subject}}</h2>
+                <div>
+                    <h2>#{{ticket_id}} -- {{ticket.Subject}}</h2>
+                        <span ng-repeat="data in popup_config.header_row" ng-if="this[data[1]][data[2]]" class="db-ticket-popup__header-item">{{data[0]}}: <b>{{ this[data[1]][data[2]] }}</b></span>
+                </div>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="close_dialog()" aria-label="Close">
                     <md-icon class="fa-close"></md-icon>
@@ -10,66 +13,80 @@
             </div>
         </md-toolbar>
         <md-dialog-content layout="row" layout-sm="column">
-            <md-list flex-gt-sm="20">
-                <md-list-item class="md-2-line">
-                    <div class="md-list-item-text">
-                        <h3>Status:</h3>
-                        <p>
-                            <select ng-model="ticket.Status" ng-options="status as status for status in statuses"></select>
-                        </p>
-                    </div>
-                </md-list-item>
-                <md-list-item class="md-2-line">
-                    <div class="md-list-item-text">
-                        <h3>Queue:</h3>
-                        <p>
-                            <select ng-model="ticket.Queue" ng-options="queue.name as queue.name for queue in queues"></select>
-                        </p>
-                    </div>
-                </md-list-item>
-                <md-list-item class="md-2-line">
-                    <div class="md-list-item-text">
-                        <h3>Owner:</h3>
-                        <p>
-                            <select ng-model="ticket.Owner" ng-options="login as name for ( login, name ) in rt_users"></select>
-                        </p>
-                    </div>
-                </md-list-item>
-                <md-list-item class="md-2-line">
-                    <div class="md-list-item-text">
-                        <h3>Requestors:</h3>
-                        <p>
-                            {{ticket.Requestors}}
-                        </p>
-                    </div>
-                </md-list-item>
-                <md-list-item class="md-2-line">
-                    <div class="md-list-item-text">
-                        <h3>Link:</h3>
-                        <p>
-                            <a href="{{ticket.link}}" target="_blank">Go to RT</a>
-                        </p>
-                    </div>
-                </md-list-item>
-            </md-list>
-<!--<div>-->
-    <!--<a class="md-raised md-primary md-button md-default-theme" ng-click="update_ticket() && closeThisDialog()" target="_blank">Update ticket</a>-->
-<!--</div>-->
-            <md-content flex-gt-sm="80">
-                <md-list class="db-history" ng-switch on="history">
-                    <div ng-switch-when="undefined">
-                        <img src="/images/loader.gif"/>
-                    </div>
-                    <md-list-item ng-switch-otherwise ng-repeat="item in history" class="db-history-items">
-                        <div class="md-list-item-text">
-                            <div class="db-history-entry-header" layout="row" layout-sm="column">
-                                <h3>{{item.Creator}}</h3>
-                                <h4>{{item.Description}}</h4>
+            <md-content flex>
+                <md-tabs md-selected="selected_tab_index">
+                    <md-tab label="History">
+                        <div ng-include="'/partials/ticket-popup/history.html'"></div>
+                    </md-tab>
+
+                    <md-tab label="RT details">
+                        <md-content layout-padding>
+                            <div layout="row" layout-sm="column">
+                                <div class="md-list-item-text flex-sm-100 flex-25">
+                                    <md-input-container>
+                                        <label>Status:</label>
+                                        <md-select ng-model="ticket.Status">
+                                            <md-option ng-value="status" ng-repeat="status in statuses">{{ status }}</md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+
+                                <div class="md-list-item-text flex-sm-100 flex-25">
+                                    <md-input-container>
+                                        <label>Queue:</label>
+                                        <md-select ng-model="ticket.Queue">
+                                            <md-option ng-value="queue.name" ng-repeat="queue in queues">{{ queue.name }}</md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+
+                                <div class="md-list-item-text flex-sm-100 flex-25">
+                                    <md-input-container>
+                                        <label>Owner:</label>
+                                        <md-select ng-model="ticket.Owner">
+                                            <md-option ng-value="login" ng-repeat="(login, name) in rt_users">{{ name }}</md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+
+                                <div class="md-list-item-text flex-sm-100 flex-25">
+                                    <md-input-container>
+                                        <label>Requestors:</label>
+                                        <input type="text" value="{{ ticket.Requestors }}" readonly disabled>
+                                    </md-input-container>
+                                </div>
                             </div>
-                            <p>{{item.Content}}</p>
+                            <div layout="row" layout-align="end center" layout-sm="column">
+                                <md-button class="md-raised md-primary" ng-click="update_ticket()">Update ticket</md-button>
+                                <md-button class="md-raised" href="{{ticket.link}}" target="_blank">Go to RT</md-button>
+                            </div>
+                        </md-content>
+                    </md-tab>
+
+                    <md-tab label="SugarCRM">
+                        <div ng-switch on="sugar_crm_data">
+                            <div layout="row" layout-sm="column" layout-align="space-around" ng-switch-when="undefined">
+                                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                            </div>
+                            <div ng-switch-when="error" class="sugar-contacts__error">Unknown server error ocurred, please try again.</div>
+                            <div ng-switch-when="null" class="sugar-contacts__empty">No contact information was found.</div>
+                            <section ng-switch-otherwise ng-repeat="(contactKey, contact) in sugar_crm_data_parsed track by $index" class="sugar-contact">
+                                <div class="label">{{ contactKey }}</div>
+                                <md-list-item class="sugar-contact__row" layout="row" layout-sm="column" ng-repeat="row in contact" ng-class="{'sugar-contact__row--odd': $odd}">
+                                    <div class="sugar-contact__column" layout="row" layout-sm="column" layout-align="space-between center">
+                                        <div class="sugar-contact__key md-caption"><b>{{ row[0].key }}:</b></div>
+                                        <div class="sugar-contact__value"><small>{{ row[0].value }}</small></div>
+                                    </div>
+                                    <div class="sugar-contact__column" layout="row" layout-sm="column" layout-align="space-between center">
+                                        <div class="sugar-contact__key md-caption"><b>{{ row[1].key }}:</b></div>
+                                        <div class="sugar-contact__value"><small>{{ row[1].value }}</small></div>
+                                    </div>
+                                    <md-divider></md-divider>
+                                </md-list-item>
+                            </section>
                         </div>
-                    </md-list-item>
-                </md-list>
+                    </md-tab>
+                </md-tabs>
             </md-content>
         </md-dialog-content>
     </form>

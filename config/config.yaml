@@ -1,0 +1,136 @@
+db:
+  dsn: "dbi:mysql:database=bywater_dashboard"
+  username: user
+  password: password
+
+rt:
+  login: "T&M Development"
+  password: "changeme"
+  host: "https://rt-test.bywatersolutions.com"
+  statuses: [ "new", "open", "stalled", "resolved", "rejected", "deleted", "needsinfo" ]
+  ignore_ssl_errors: 0
+
+sugar_crm:
+  login: "changeme"
+  password: "changeme"
+  api_url: "https://sugarcrm.bywatersolutions.com/service/v4/rest.php"
+  ignore_ssl_errors: 0
+  fields:
+    Contacts:
+      - id
+      - name
+      - last_name
+      - full_name
+      - first_name
+      - title
+      - library_c
+      - contacttype_c
+      - phone_work
+      - notes
+      - email
+      - email1
+      - account_id
+      - account_name
+      - primary_address_street
+      - primary_address_city
+      - primary_address_state
+      - primary_address_country
+      - primary_address_postalcode
+      - modified_user_id
+      - modified_by_name
+    SYS_Systems:
+      - system_koha_installation_type
+      - system_koha_version
+      - system_local_koha_branch
+      - database_name_c
+
+card_popup:
+  header_row:
+    - [ "Requestor", "ticket", "Requestor" ]
+    - [ "Owner", "ticket", "Owner" ]
+    - [ "Status", "ticket", "Status" ]
+    - [ "Queue", "ticket", "Queue" ]
+  history_column:
+    - [ "Name", "contact", "full_name" ]
+    - [ "Library", "contact", "account_name" ]
+    - [ "Phone number", "contact", "phone_work" ]
+    - [ "Email", "contact", "email1" ]
+    - [ "Koha Inst. Type", "system", "system_koha_installation_type" ]
+    - [ "Koha Version", "system", "system_koha_version" ]
+    - [ "Koha Branch", "system", "system_local_koha_branch" ]
+    - [ "Koha Database", "system", "database_name_c" ]
+
+reports:
+  queries:
+    -
+      descr: "Tickets created in the past 7 days"
+      query: "Created > '7 days ago' AND Status != 'Spam'"
+    -
+      descr: "Tickets created in the past 30 days"
+      query: "Created > '30 days ago' AND Status != 'Spam'"
+    -
+      descr: "Ticket updates in the past 7 days"
+      query: "Updated > '7 days ago' AND Status != 'Spam'"
+    -
+      descr: "Ticket updates in the past 30 days"
+      query: "Updated > '30 days ago' AND Status != 'Spam'"
+    -
+      descr: "Ticket resolved in the past 7 days ago"
+      query: "Resolved > '7 days ago'"
+    -
+      descr: "Tickets resolved in the past 30 days"
+      query: "Resolved > '30 days ago'"
+  departments:
+    -
+      descr: ByWater Dev Team
+      query: OwnerGroup = 'ByWater Dev Team'
+    -
+      descr: ByWater Display Team
+      query: OwnerGroup = 'ByWater Display Team'
+    -
+      descr: ByWater Education Team
+      query: OwnerGroup = 'ByWater Education Team'
+    -
+      descr: ByWater Migrations Team
+      query: OwnerGroup = 'ByWater Migrations Team'
+    -
+      descr: ByWater Support Team
+      query: OwnerGroup = 'ByWater Support Team'
+    -
+      descr: ByWater Systems Team
+      query: OwnerGroup = 'ByWater Systems Team'
+
+lead_default_columns:
+  -
+    name: New tickets
+    type: rt
+    search_query: 'Owner = "Nobody" AND (  Status = "new" OR Status = "open" )'
+    sort: ticket_id_desc
+
+employee_default_columns:
+  -
+    name: Todays TODO
+    type: custom
+    search_query: 'Owner = "__CurrentUser__" AND CF.{ToDo} = "1" AND (  Status = "new" OR Status = "open" )'
+
+  -
+    name: New tickets
+    type: rt
+    search_query: 'Owner = "__CurrentUser__" AND (  Status = "new" OR Status = "open" ) AND LastUpdated > "7 days ago"'
+    sort: ticket_id_desc
+
+  -
+    name: My Stale Tickets
+    type: rt
+    search_query: 'Status != "resolved" AND Queue != "Bugs" AND Queue != "Development" AND LastUpdated < "- 15 days" AND Queue != "Systems" AND Status != "answered" AND Status != "onhold" AND Owner = "__CurrentUser__" AND Queue != "Training" AND Queue != "Migrations"'
+
+  -
+    name: Partner Updates Past 48hrs
+    type: rt
+    search_query: 'Owner = "__CurrentUser__" AND LastUpdatedBy != "__CurrentUser__" AND LastUpdated > "2 day ago" AND Status != "resolved" AND Status != "answered" AND (  Queue != "Development" AND Queue != "Migrations" AND Queue != "Bugs" )'
+
+  -
+    name: Closed Tickets Updated
+    type: rt
+    search_query: 'Owner = "__CurrentUser__" AND LastUpdatedBy != "__CurrentUser__" AND LastUpdated > "1 day ago" AND (  Queue != "Development" AND Queue != "Migrations" AND Queue != "Bugs" ) AND Status != "new" AND Status != "open" AND Status != "onhold" AND Status != "needsinfo"'
+

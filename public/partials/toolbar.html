@@ -14,6 +14,11 @@
 
         <span flex=""></span>
 
+        <md-button ng-if="roles && roles.length" ng-click="show_settings()">
+            <md-icon class="fa-cog"></md-icon>
+            Settings
+        </md-button>
+
         <md-button href="/logout" ng-if="roles && roles.length">
             <md-icon class="fa-sign-out"></md-icon>
             Sign Out

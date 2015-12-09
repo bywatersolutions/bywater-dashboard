@@ -1,0 +1,31 @@
+.sugar-contact {
+    padding: 0 !important;
+}
+.sugar-contact__row--odd {
+    background: #eee;
+}
+.sugar-contact__column {
+    width: 100%;
+}
+.sugar-contact__column:first-child {
+    padding-right: 40px;
+}
+.sugar-contact__key {
+    padding-right: 15px;
+}
+
+.sugar-contacts__error,
+.sugar-contacts__empty {
+    font-size: 1.2857rem;
+    margin-top: 30px;
+    text-align: center;
+}
+
+@media (max-width: 599px) {
+    .sugar-contact__column.layout-sm-column {
+        padding-right: 0;
+    }
+    .sugar-contact__key {
+        padding-right: 0;
+    }
+}

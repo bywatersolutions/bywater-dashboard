@@ -6,7 +6,7 @@
 <script src="[% basename %].min.js"></script>
 [% END %]
 
-<html>
+<html ng-app="dashboardApp">
 <head>
     <title>[% title %]</title>
     [% PROCESS javascript %]

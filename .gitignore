@@ -1,7 +1,15 @@
 /public/vendor
+/assets/vendor
 /sessions/*
 !/sessions/.gitkeep
 /tmp
 config.yaml
 users.yaml
 *.komodoproject
+/local/
+/.idea
+/node_modules
+/public/custom
+/config/*.local.yaml
+/lib/DashboardApp/Controller/Test.pm
+*.swp

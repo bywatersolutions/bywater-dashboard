@@ -3,7 +3,10 @@ use Mojo::Base 'Mojolicious::Controller';
 
 use DashboardApp::Model::User;
 use DashboardApp::Model::Ticket;
+use DashboardApp::Model::SugarCRM;
+use Text::Quoted;
 use Try::Tiny;
+use Mojo::Exception;
 
 sub index {
     my $c = shift;
@@ -17,14 +20,26 @@ sub login {
 
     my $json = $c->req->json;
     my $roles;
-    unless ( $roles = DashboardApp::Model::User::check( $json->{login}, $json->{password} ) ) {
-        return $c->render(json => { error => "Wrong login or password." });
+
+    my $user = $c->schema->resultset('User')->search({ rt_username => $json->{login} })->first;
+
+    return $c->render(json => { error => "Wrong login or password." }) unless ( $user );
+
+    my @roles;
+    foreach my $role ( $user->user_roles ) {
+        push( @roles, $role->role );
     }
 
-    $c->session({ user_id => $json->{login}, roles => $roles });
+    return $c->render(json => { error => "No roles defined." }) unless ( @roles );
+
+    my $rt = DashboardApp::Model::Ticket->new->rt;
+    $rt->login( username => $json->{login}, password => $json->{password} );
+
+    my $rt_cookie = JSON->new->encode( { COOKIES => $rt->_cookie->{COOKIES} } );
+    $c->session({ user_id => $user->user_id, roles => \@roles, rt_cookie => $rt_cookie });
 
     # Default view for a user will be the first role defined
-    $c->render(json => { role => $roles->[0] });
+    $c->render(json => { role => $roles[0] });
 }
 
 sub logout {
@@ -49,14 +64,14 @@ sub update_ticket {
     my $params = {};
 
     if ( my $user_id = $json->{user_id} ) {
-        my $users = DashboardApp::Model::User::get_all_users();
-        if ( $users->{$user_id} and $users->{$user_id}->{rt_user_id} ) {
-            $params->{owner} = $users->{$user_id}->{rt_user_id};
+        my $user = $c->schema->search({ rt_username => $user_id })->first;
+        if ( $user ) {
+            $params->{owner} = $user_id;
         } else {
             die "Unknown RT user!";
         }
     } else {
-        foreach my $param ( qw/owner status queue/ ) {
+        foreach my $param ( qw/Owner Status Queue/ ) {
             $params->{ $param } = $json->{ $param } if ( defined $json->{ $param } );
         }
     }
@@ -81,7 +96,93 @@ sub ticket_history {
     my $json = $c->req->json;
     my $result = $c->tickets_model->get_history( $json->{ticket_id} );
 
+    Text::Quoted::set_quote_characters( undef );
+
+    my $sub;
+    $sub = sub {
+        my $data = $_[0];
+
+        my @result = ();
+        foreach my $item ( @$data ) {
+            if ( ref($item) eq "HASH" ) {
+                next if ( $item->{empty} );
+                push( @result, $item->{text} );
+            } else {
+                push( @result, &$sub( $item ) );
+            }
+        }
+
+        return \@result;
+    };
+
+    foreach my $item ( @$result ) {
+        $item->{Content} = &$sub( extract( $item->{Content} ) );
+    }
+
     $c->render( json => $result );
+}
+
+sub ticket_add_correspondence {
+    my $c = shift;
+    my $json = $c->req->json;
+
+    if ( $json->{privacy} eq "public" ) {
+        $c->tickets_model->rt->correspond( ticket_id => $json->{ticket_id}, message => $json->{message} );
+    } else {
+        $c->tickets_model->rt->comment( ticket_id => $json->{ticket_id}, message => $json->{message} );
+    }
+
+    $c->render( json => { status => "ok" } );
+}
+
+sub sugarcrm_get_contact {
+    my $c = shift;
+
+    my $json = $c->req->json;
+    my $sugar = DashboardApp::Model::SugarCRM->new();
+
+    my $data = $sugar->get_contact( $json->{email} );
+
+    $c->render( json => $data );
+}
+
+sub view_save_settings {
+    my $c = shift;
+
+    my $json = $c->req->json;
+    my $view = $c->app->schema->resultset('View')->find( $json->{view_id} );
+
+    Mojo::Exception->throw('No such view') unless ( $view );
+    Mojo::Exception->throw('Security violation') unless ( $view->role->user_id == $c->session->{user_id} );
+
+    my $db_columns = {};
+    foreach my $column ( $view->columns_rel->all ) {
+        $db_columns->{ $column->column_id } = $column;
+    }
+
+    # Updating columns
+    my $idx = 0;
+    foreach my $column ( @{ $json->{columns} } ) {
+        $column->{column_order} = $idx++;
+        my $params = { map { $_ => $column->{$_} } qw/rt_query column_sort column_order name type/ };
+        $params->{view_id} = $view->view_id;
+
+        unless ( $column->{column_id} ) {
+            $c->app->schema->resultset('Column')->create( $params );
+        } else {
+            if ( my $db_column = $db_columns->{ $column->{column_id} } ) {
+                $db_column->update( $params );
+                delete( $db_columns->{ $column->{column_id} } );
+            }
+        }
+    }
+
+    # Deleting columns that weren't in JSON from the front-end
+    foreach my $db_column ( values %$db_columns ) {
+        $db_column->delete;
+    }
+
+    $c->render( json => $c->req->json );
 }
 
 1;

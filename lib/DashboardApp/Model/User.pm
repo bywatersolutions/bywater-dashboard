@@ -1,32 +1,28 @@
 package DashboardApp::Model::User;
 
-use Mojo::Base -strict;
-use YAML qw/LoadFile/;
-use Data::Dumper;
-
-sub check {
-    my ( $login, $password ) = @_;
-    my $users = LoadFile("users.yaml");
-    return $users->{ $login }->{roles} if ( defined $users->{ $login } and $users->{ $login }->{password} eq $password );
-}
-
-sub get_rt_creds {
-    my ( $login ) = @_;
-    my $users = LoadFile("users.yaml");
-    return $users->{ $login }->{rt};
-}
+use Mojo::Base 'MojoX::Model';
 
 sub get_all_users {
-    my $users = LoadFile("users.yaml");
+    my ( $self ) = @_;
+
+    my $users = {};
+    foreach my $user ( $self->app->schema->resultset('User')->search({})->all ) {
+        my $hashref = { $user->get_columns };
+        $hashref->{roles} = [ map { $_->role }  $user->user_roles->all ];
+        $users->{ $user->rt_username } = $hashref;
+    }
+
     return $users;
 }
 
 sub get_rt_users {
-    my $users = get_all_users();
+    my ( $self ) = @_;
+
+    my $users = $self->get_all_users();
     my $result = {};
-    foreach my $user ( values %$users ) {
-        next unless ( $user->{rt_user_id} );
-        $result->{ $user->{rt_user_id} } = ( $user->{first_name} || "" ) . " " . ( $user->{last_name} || "" );
+    foreach my $user_id ( keys %$users ) {
+        my $user = $users->{ $user_id };
+        $result->{ $user_id } = ( $user->{first_name} || "" ) . " " . ( $user->{last_name} || "" );
     }
 
     $result->{Nobody} = 'Nobody';

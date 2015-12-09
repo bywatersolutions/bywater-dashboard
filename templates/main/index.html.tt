@@ -2,7 +2,7 @@
     WRAPPER 'layouts/default.html.tt'
     title = 'Dashboard'
 %]
-<div id="dashboard-app" ng-app="dashboardApp" ng-controller="dashboardCtrl">
+<div id="dashboard-app" ng-controller="dashboardCtrl">
     <div ng-include src="'partials/toolbar.html'"></div>
 
     <div ng-view>
@@ -12,22 +12,9 @@
 [% BLOCK javascript %]
 <meta name="viewport" content="initial-scale=1, user-scalable=yes, width=device-width" />
 
-[% script('/vendor/jquery/dist/jquery') %]
-[% script('/vendor/angular/angular') %]
-
-[% script('/vendor/angular-route/angular-route') %]
-[% script('/vendor/angular-aria/angular-aria') %]
-[% script('/vendor/angular-animate/angular-animate') %]
-[% script('/vendor/angular-material/angular-material') %]
-<link rel="stylesheet" href="/vendor/angular-material/angular-material.css">
-
-[% script('/vendor/sortable.js/Sortable') %]
-<script src="/vendor/sortable.js/ng-sortable.js"></script>
-
-[%# Not rendered with script() as it will never be minimized %]
-<script src="/custom/js/dashboard-app.js"></script>
-<link rel="stylesheet" href="/vendor/fontawesome/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="/custom/css/dashboard.css">
+<script src="/custom/js/vendor.js"></script>
+<script src="/custom/js/dashboard-app.js"></script>
 
 [% END %]
 

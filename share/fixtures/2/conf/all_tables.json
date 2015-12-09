@@ -1,0 +1,29 @@
+{
+   "sets" : [
+      {
+         "class" : "UserRole",
+         "quantity" : "all"
+      },
+      {
+         "class" : "Column",
+         "quantity" : "all"
+      },
+      {
+         "quantity" : "all",
+         "class" : "View"
+      },
+      {
+         "quantity" : "all",
+         "class" : "User"
+      }
+   ],
+   "has_many" : {
+      "fetch" : 0
+   },
+   "might_have" : {
+      "fetch" : 0
+   },
+   "belongs_to" : {
+      "fetch" : 0
+   }
+}

@@ -1,0 +1,105 @@
+.tickets-history {
+    padding: 0 0 20px !important;
+}
+
+.ticket-history {
+    padding-top: 16px !important;
+    padding-bottom: 20px !important;
+    position: relative;
+}
+.ticket-history:hover {
+    background: #fff;
+}
+
+.ticket-history__title {
+    align-items: center;
+    margin-bottom: 15px;
+    justify-content: space-between;
+}
+
+.ticket-history__description {
+    margin-right: 30px;
+}
+
+.ticket-history__show-btn,
+.ticket-history__hide-btn {
+    color: #66bb6a;
+    display: block;
+    position: absolute;
+    bottom: 2px;
+    left: 15px;
+}
+.ticket-history__show-btn:hover,
+.ticket-history__hide-btn:hover,
+.ticket-history__show-btn:active,
+.ticket-history__hide-btn:active {
+    color: #43a047;
+    cursor: pointer;
+}
+
+.ticket-history__message {
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.ticket-history__more {
+    padding-top: 10px;
+}
+.ticket-history__more ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.ticket-history__more li {
+    margin-bottom: 10px;
+}
+
+.ticket-history__more li > ul {
+    border-left: 3px solid #616161;
+    margin-left: 10px;
+    padding-left: 10px;
+}
+
+.ticket-history__more > ul > li > ul {
+    border-color: #5e35b1;
+}
+.ticket-history__more > ul > li > ul > li > ul {
+    border-color: #1565c0;
+}
+.ticket-history__more > ul > li > ul > li > ul > li > ul {
+    border-color: #546e7a;
+}
+
+.ticket-histories > md-list {
+    padding: 0;
+}
+
+.ticket-history__client {
+    background: #f2f2f2;
+    margin: 32px 10px 15px;
+}
+.ticket-history__client md-list-item {
+    min-height: 24px;
+}
+.ticket-history__client-value {
+    color: #1E88E5;
+}
+
+.ticket-history__show-correspondence {
+    padding: 15px 0;
+}
+.ticket-history__correspondence.ng-hide-add,
+.ticket-history__correspondence.ng-hide-remove {
+    transition: all ease 0.25s;
+}
+.ticket-history__correspondence {
+    opacity: 1;
+    transform: scaleY(1);
+    transform-origin: center top;
+    padding-bottom: 15px;
+}
+.ticket-history__correspondence.ng-hide {
+    line-height: 0;
+    opacity: 0;
+    transform: scaleY(0);
+}

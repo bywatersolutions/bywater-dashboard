@@ -1,0 +1,43 @@
+<md-content ng-switch on="history">
+    <div layout="row" layout-sm="column" layout-align="space-around" ng-switch-when="undefined">
+        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
+    <div ng-switch-otherwise>
+        <div class="ticket-history__show-correspondence" ng-show="!showCorrespondence" ng-init="showCorrespondence = false">
+            <md-button class="md-raised md-primary" ng-click="showCorrespondence = true">Add correspondence</md-button>
+        </div>
+        <div layout="row" class="ticket-history__correspondence ng-hide" ng-show="showCorrespondence">
+            <div flex="75">
+                <md-content layout-padding>
+                    <md-input-container>
+                        <label for="corr_ta">Text</label>
+                        <textarea id="corr_ta" ng-model="$parent.message" md-no-autogrow class="correspondence-textarea"></textarea>
+                    </md-input-container>
+                    <div layout="row">
+                        <md-radio-group ng-model="$parent.privacy" layout="row">
+                            <md-radio-button value="private">Private</md-radio-button>
+                            <md-radio-button value="public">Public</md-radio-button>
+                        </md-radio-group>
+                        <div flex></div>
+                        <md-button class="md-raised md-primary" ng-click="add_correspondence()">Save correspondence</md-button>
+                        <md-button ng-click="showCorrespondence = false">Cancel</md-button>
+                    </div>
+                </md-content>
+            </div>
+            <div flex>
+                <md-list class="ticket-history__client md-whiteframe-1dp">
+                    <md-list-item ng-repeat="data in popup_config.history_column" ng-if="this[data[1]][data[2]]">
+                        <small>{{data[0]}}: <span class="ticket-history__client-value">{{ this[data[1]][data[2]] }}</span></small>
+                    </md-list-item>
+                </md-list>
+            </div>
+        </div>
+    </div>
+    <div class="ticket-histories">
+        <md-divider></md-divider>
+        <md-list>
+            <md-list-item ng-repeat="item in history" class="ticket-history" ticket-history="item" >
+            </md-list-item>
+        </md-list>
+    </div>
+</md-content>

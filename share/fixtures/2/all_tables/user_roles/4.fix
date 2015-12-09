@@ -1,0 +1,5 @@
+$HASH1 = {
+           role    => 'employee',
+           role_id => 4,
+           user_id => 3
+         };
