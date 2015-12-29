@@ -84,14 +84,26 @@
 
         $scope.show_popup = function(ticket_id) {
             $mdDialog.show({
-                templateUrl: 'partials/ticket-popup.html',
+                controller: 'TicketPopupController',
+                controllerAs: 'ticketPopup',
+                scope: $scope.$new(),
                 locals: {
                     ticket_id: ticket_id,
-                    ticket: $scope.tickets[ticket_id]
+                    ticket: angular.merge({}, $scope.tickets[ticket_id])
                 },
-                controller: 'ticketPopupCtrl',
-                scope: $scope.$new()
+                parent: 'body',
+                templateUrl: 'partials/ticket-popup.html'
             });
-        }
+        };
+
+        $scope.$on("openViewSettingsEvent", function() {
+            $mdDialog.show({
+                controller: 'viewSettingsCtrl',
+                //scope: $child_scope,
+                parent: 'body',
+                templateUrl: 'partials/view-settings-popup.html'
+            }).then(function(){
+            });
+        });
     });
 })(angular);

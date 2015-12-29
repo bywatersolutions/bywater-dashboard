@@ -1,57 +1,80 @@
 (function(angular) {
     'use strict';
 
-    angular.module('dashboardApp').controller('ticketPopupCtrl', function($scope, $http, $mdDialog, ticket, ticket_id, $log) {
-        $scope.ticket_id = ticket_id;
-        $scope.ticket = ticket;
-        $scope.message = "";
-        $scope.selected_tab_index = 0;
-        $scope.privacy = "private";
-        $scope.showContact = {};
-        $scope.contacts_count = 0;
+    angular.module('dashboardApp').controller('TicketPopupController', function($scope, $http, $mdDialog, ticket, ticket_id, $log) {
+        var vm = {
+            ticket_id: ticket_id,
+            ticket: ticket,
+            message: "",
+            selected_tab_index: 0,
+            privacy: "private",
+            showContact: {},
+            contacts_count: 0,
+            update_ticket: update_ticket,
+            close_dialog: close_dialog,
+            add_correspondence: add_correspondence,
+            popup_config: $scope.popup_config,
+            statuses: $scope.statuses,
+            queues: $scope.queues,
+            rt_users: $scope.rt_users,
+            showCorrespondence: false,
+            is_history_data: is_history_data,
+            get_history_data: get_history_data,
+            history_progress: true
+        };
 
-        $scope.update_ticket = function() {
-            var postData = angular.merge({}, $scope.ticket);
-            postData.ticket_id = $scope.ticket_id;
+        function update_ticket() {
+            var postData = angular.merge({}, vm.ticket);
+            postData.ticket_id = vm.ticket_id;
             $http.post('/json/update_ticket', postData).then(
                 function(response) {
                     $log.debug( response.data );
                     $mdDialog.hide();
                 }
             );
-        };
+        }
 
-        $scope.close_dialog = function () {
+        function close_dialog() {
             $mdDialog.hide();
-        };
+        }
 
-        $scope.add_correspondence = function () {
-            $http.post('/json/ticket/add_correspondence', { ticket_id: ticket_id, message: $scope.message, privacy: $scope.privacy } )
+        function add_correspondence() {
+            $http.post('/json/ticket/add_correspondence', {ticket_id: ticket_id, message: vm.message, privacy: vm.privacy} )
                 .then(function() {
-                    $scope.history = undefined;
+                    vm.history = undefined;
                     get_history();
                 })
                 .catch(function() {
-                    $scope.history = undefined;
+                    vm.history = undefined;
                     get_history();
+                })
+                .finally(function() {
+                    vm.showCorrespondence = false;
                 });
-        };
+        }
+
+        function is_history_data(data) {
+            return angular.isDefined(vm[data[1]]) && angular.isDefined(vm[data[1]][data[2]]);
+        }
+
+        function get_history_data(data) {
+            return vm[data[1]][data[2]];
+        }
 
         function get_sugar_crm_data () {
             $http.post( '/json/sugarcrm/get_contact', { email: ticket["Creator"] } )
-            //$http.get( '/custom/get_contact.json' )
                 .then(function( response ) {
-                    $scope.sugar_crm_data = null;
-                    $scope.sugar_crm_data_parsed = {};
+                    vm.sugar_crm_data = null;
+                    vm.sugar_crm_data_parsed = {};
                     if (response.data.contacts.length == 0) {
                         return;
                     }
 
-                    $scope.sugar_crm_data = response.data;
-                    $scope.contact = response.data.contacts[0]; // for easy configuration of pop-up window read-only data
-                    $scope.contacts_count = response.data.contacts.length;
-                    $scope.system = response.data.system;
-                    $scope.sugar_crm_data.contacts.forEach(function(contact) {
+                    vm.sugar_crm_data = response.data;
+                    vm.contact = response.data.contacts[0]; // for easy configuration of pop-up window read-only data
+                    vm.contacts_count = response.data.contacts.length;
+                    vm.system = response.data.system;
+                    vm.sugar_crm_data.contacts.forEach(function(contact) {
                         var rows = [],
                             row = [],
                             contactKey;
@@ -75,17 +98,17 @@
                                 }
 
                                 row.push({
-                                    key: $scope.sugar_crm_data.labels['Contacts'][key],
+                                    key: vm.sugar_crm_data.labels['Contacts'][key],
                                     value: contact[key]
                                 });
                             }
                         }
 
-                        $scope.sugar_crm_data_parsed[contactKey] = rows;
+                        vm.sugar_crm_data_parsed[contactKey] = rows;
                     });
                 })
                 .catch( function() {
-                    $scope.sugar_crm_data = 'error';
+                    vm.sugar_crm_data = 'error';
                 });
         }
         get_sugar_crm_data();
@@ -95,7 +118,7 @@
                 function(response) {
                     var data = response.data;
 
-                    $scope.history = data.filter(function(history_entry) {
+                    vm.history = data.filter(function(history_entry) {
                         // Filter out unhelpful entries
 
                         // While we should incorporate email success/failure at some point, for now it's
@@ -120,5 +143,7 @@
             );
         }
         get_history();
+
+        return vm;
     });
 })(angular);

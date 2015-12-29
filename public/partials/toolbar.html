@@ -4,7 +4,7 @@
             <span>ByWater Dashboard</span>
         </h2>
 
-        <md-button ng-if="roles.length > 1" ng-repeat="role in roles" href="/#/{{role}}">
+        <md-button ng-repeat="role in app.roles" href="/#/{{role}}">
             <span ng-switch on="role">
                 <md-icon ng-switch-when="employee" class="fa-user"></md-icon>
                 <md-icon ng-switch-when="lead" class="fa-users"></md-icon>
@@ -14,12 +14,12 @@
 
         <span flex=""></span>
 
-        <md-button ng-if="roles && roles.length" ng-click="show_settings()">
+        <md-button ng-if="app.roles.length > 0" ng-click="app.show_settings()">
             <md-icon class="fa-cog"></md-icon>
             Settings
         </md-button>
 
-        <md-button href="/logout" ng-if="roles && roles.length">
+        <md-button href="/logout" ng-if="app.roles.length > 0">
             <md-icon class="fa-sign-out"></md-icon>
             Sign Out
         </md-button>

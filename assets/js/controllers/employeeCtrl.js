@@ -7,7 +7,6 @@
                 function(response) {
                     var data = response.data;
 
-                    $scope.veiw_id = data.view_id;
                     $scope.updater_promise = undefined;
 
                     data.columns = $.map(data.columns, function(column, id){
@@ -80,7 +79,7 @@
                     dragTicketProgress = false;
                 },
 
-                onAdd: function(evt) {
+                onAdd: function() {
                     var columns = {};
 
                     $http.post('/json/employee/save_columns', columns).then(
@@ -88,6 +87,10 @@
                             $log.debug(response.data);
                         }
                     );
+                },
+
+                onMove: function(evt) {
+                    $log.debug(evt, angular.element(evt.to).scope());
                 }
             };
         }
@@ -103,15 +106,14 @@
 
         $scope.show_popup = function(ticket_id) {
             $mdDialog.show({
-                controller: 'ticketPopupCtrl',
+                controller: 'TicketPopupController',
+                controllerAs: 'ticketPopup',
+                scope: $scope.$new(),
                 locals: {
                     ticket_id: ticket_id,
                     ticket: angular.merge({}, $scope.tickets[ticket_id])
                 },
-                //parent: angular.element(document.body),
-                scope: $scope.$new(),
                 parent: 'body',
-                //targetEvent: $event,
                 templateUrl: 'partials/ticket-popup.html'
             });
         };
@@ -130,6 +132,11 @@
                 $log.debug("View settings dialog promise resolved");
                 $scope.update_tickets();
             });
+        });
+
+        // Updated columns settings
+        $scope.$on('settingsUpdated', function() {
+            $scope.update_tickets();
         });
     });
 })(angular);

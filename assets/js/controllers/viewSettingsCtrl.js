@@ -1,58 +1,71 @@
 (function(angular) {
     'use strict';
 
-    angular.module('dashboardApp').controller('viewSettingsCtrl', function($scope, $http, $mdDialog, $log, columns, view_id) {
-        $scope.columns = columns;
-        $scope.view_id = view_id;
-        $scope.showFlags = {};
-
-        $scope.close_dialog = function () {
-            $mdDialog.cancel();
+    angular.module('dashboardApp').controller('ViewSettingsController', function($http, $mdDialog, $log) {
+        var vm = {
+            sortable: {
+                animation: 50,
+                group: 'settings-columns',
+                sort: true,
+                handle: '.db-settings__drag-handle'
+            },
+            columns: [],
+            view_id: null,
+            showFlags: {},
+            progress: true,
+            error: null,
+            close_dialog: close_dialog,
+            save_settings: save_settings,
+            delete_column: delete_column,
+            add: add
         };
 
-        $scope.save_settings = function() {
-            var columns = $scope.columns;
-            $http.post('/json/view/save_settings', { columns: columns, view_id: $scope.view_id }).then(
+        $http.get('/json/employee/tickets')
+            .then(function(response) {
+                var data = response.data;
+
+                data.columns = $.map(data.columns, function(column, id){
+                    column.column_id = id;
+                    column.tickets = column.tickets || [];
+
+                    return column;
+                }).sort(function(a,b){ return a.column_order - b.column_order; });
+
+                vm.columns = data.columns;
+                vm.view_id = data.view_id;
+                vm.progress = false;
+            })
+            .catch(function(response) {
+                $log.error(response);
+                vm.error = 'Error get settings from server';
+                vm.progress = false;
+            });
+
+        function close_dialog() {
+            $mdDialog.cancel();
+        }
+
+        function save_settings() {
+            $http.post('/json/view/save_settings', { columns: vm.columns, view_id: vm.view_id }).then(
                function(response) {
                    $log.debug( response.data );
                    $mdDialog.hide();
                }
             );
-        };
+        }
 
-        $scope.sortable = {
-            animation: 50,
-            group: 'settings-columns',
-            sort: true,
-            handle: '.db-settings__drag-handle'
-        };
-
-        /*
-        $scope.move = function( is_move_up, index ) {
-            var new_index = is_move_up ? index + 1 : index - 1;
-            if (
-                (is_move_up && new_index >= $scope.columns.length) ||
-                (!is_move_up && new_index < 0)
-            ) {
-                return;
-            }
-
-            $log.debug('down', new_index);
-
-            $scope.columns.splice(new_index, 0, $scope.columns.splice(index, 1)[0]);
-        };
-        */
-
-        $scope.delete = function( index, $event ) {
+        function delete_column(index, $event) {
             $event.stopPropagation();
 
-            if (confirm("Delete column '" + $scope.columns[index].name + "'")) {
-                $scope.columns.splice(index, 1);
+            if (confirm("Delete column '" + vm.columns[index].name + "'")) {
+                vm.columns.splice(index, 1);
             }
-        };
+        }
 
-        $scope.add = function () {
-          $scope.columns.push({ name: 'New column' });
-        };
+        function add() {
+            vm.columns.push({ name: 'New column' });
+        }
+
+        return vm;
     });
 })(angular);

@@ -3,20 +3,26 @@
 		<div class="md-toolbar-tools">
 			<h2>View settings</h2>
 			<span flex></span>
-			<md-button class="md-icon-button" ng-click="close_dialog()" aria-label="Close">
+			<md-button class="md-icon-button" ng-click="settings.close_dialog()" aria-label="Close">
 				<md-icon class="fa-close"></md-icon>
 			</md-button>
 		</div>
 	</md-toolbar>
 	<md-dialog-content layout="row" layout-sm="column">
 			<md-content flex layout-fill layout-padding>
-				<md-list flex="100" ng-sortable="sortable">
-					<md-list-item class="db-settings__column" ng-repeat="column in columns" layout-padded layout="column" ng-class-odd="'db-settings__column--odd'" ng-init="showFlags[$index] = false">
-						<div class="db-settings__column--header db-settings__column--fullwidth" layout="row" layout-sm="column" layout-align="space-between center" ng-click="showFlags[$index] = !showFlags[$index]" flex="none">
+				<div layout="row" layout-sm="column" layout-align="space-around" ng-if="settings.progress" class="db-view-settings-popup__progress">
+					<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+				</div>
+
+				<div layout="row" layout-sm="column" layout-align="space-around" ng-if="!settings.progress && settings.error" class="db-view-settings-popup__error">{{ settings.error }}</div>
+
+				<md-list flex="100" ng-sortable="settings.sortable" ng-if="!settings.progress && !settings.error">
+					<md-list-item class="db-settings__column" ng-repeat="column in settings.columns" layout-padded layout="column" ng-class-odd="'db-settings__column--odd'" ng-init="settings.showFlags[$index] = false">
+						<div class="db-settings__column--header db-settings__column--fullwidth" layout="row" layout-sm="column" layout-align="space-between center" ng-click="settings.showFlags[$index] = !settings.showFlags[$index]" flex="none">
 							<div><span class="db-settings__drag-handle"><i class="fa fa-bars fa-lg"></i></span> {{ column.name }}</div>
-							<div><md-button class="md-warn db-settings__column-delete" ng-click="delete($index, $event)">Delete</md-button></div>
+							<div><md-button class="md-warn db-settings__column-delete" ng-click="settings.delete_column($index, $event)">Delete</md-button></div>
 						</div>
-						<div class="db-settings__column-more db-settings__column--fullwidth ng-hide" ng-show="showFlags[$index]" flex="none" layout-padding>
+						<div class="db-settings__column-more db-settings__column--fullwidth ng-hide" ng-show="settings.showFlags[$index]" flex="none" layout-padding>
 							<div layout="row">
 								<md-input-container flex="50">
 									<label>Column name:</label>
@@ -49,9 +55,9 @@
 					</md-list-item>
 				</md-list>
 
-				<div layout="row" layout-align="end center">
-					<md-button class="md-raised md-primary md-green" ng-click="add()">Add column</md-button>
-					<md-button class="md-raised md-primary" ng-click="save_settings()">Save</md-button>
+				<div layout="row" layout-align="end center" ng-if="!settings.progress && !settings.error">
+					<md-button class="md-raised md-primary md-green" ng-click="settings.add()">Add column</md-button>
+					<md-button class="md-raised md-primary" ng-click="settings.save_settings()">Save</md-button>
 				</div>
 			</md-content>
 	</md-dialog-content>

@@ -3,11 +3,11 @@
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <div>
-                    <h2>#{{ticket_id}} -- {{ticket.Subject}}</h2>
-                        <span ng-repeat="data in popup_config.header_row" ng-if="this[data[1]][data[2]]" class="db-ticket-popup__header-item">{{data[0]}}: <b>{{ this[data[1]][data[2]] }}</b></span>
+                    <h2>#{{ticketPopup.ticket_id}} -- {{ticketPopup.ticket.Subject}}</h2>
+                        <span ng-repeat="data in ticketPopup.popup_config.header_row" ng-if="ticketPopup[data[1]][data[2]]" class="db-ticket-popup__header-item">{{data[0]}}: <b>{{ ticketPopup[data[1]][data[2]] }}</b></span>
                 </div>
                 <span flex></span>
-                <md-button class="md-icon-button" ng-click="close_dialog()" aria-label="Close">
+                <md-button class="md-icon-button" ng-click="ticketPopup.close_dialog()" aria-label="Close">
                     <md-icon class="fa-close"></md-icon>
                 </md-button>
             </div>
@@ -16,7 +16,10 @@
             <md-content flex>
                 <md-tabs md-selected="selected_tab_index">
                     <md-tab label="History">
-                        <div ng-include="'/partials/ticket-popup/history.html'"></div>
+                        <div ng-include="'/partials/ticket-popup/history.html'" onload="ticketPopup.history_progress = false"></div>
+                        <div layout="row" layout-sm="column" layout-align="space-around" ng-if="ticketPopup.history_progress">
+                            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                        </div>
                     </md-tab>
 
                     <md-tab label="RT details">
@@ -25,8 +28,8 @@
                                 <div class="md-list-item-text flex-sm-100 flex-25">
                                     <md-input-container>
                                         <label>Status:</label>
-                                        <md-select ng-model="ticket.Status">
-                                            <md-option ng-value="status" ng-repeat="status in statuses">{{ status }}</md-option>
+                                        <md-select ng-model="ticketPopup.ticket.Status">
+                                            <md-option ng-value="status" ng-repeat="status in ticketPopup.statuses">{{ status }}</md-option>
                                         </md-select>
                                     </md-input-container>
                                 </div>
@@ -34,8 +37,8 @@
                                 <div class="md-list-item-text flex-sm-100 flex-25">
                                     <md-input-container>
                                         <label>Queue:</label>
-                                        <md-select ng-model="ticket.Queue">
-                                            <md-option ng-value="queue.name" ng-repeat="queue in queues">{{ queue.name }}</md-option>
+                                        <md-select ng-model="ticketPopup.ticket.Queue">
+                                            <md-option ng-value="queue.name" ng-repeat="queue in ticketPopup.queues">{{ queue.name }}</md-option>
                                         </md-select>
                                     </md-input-container>
                                 </div>
@@ -43,8 +46,8 @@
                                 <div class="md-list-item-text flex-sm-100 flex-25">
                                     <md-input-container>
                                         <label>Owner:</label>
-                                        <md-select ng-model="ticket.Owner">
-                                            <md-option ng-value="login" ng-repeat="(login, name) in rt_users">{{ name }}</md-option>
+                                        <md-select ng-model="ticketPopup.ticket.Owner">
+                                            <md-option ng-value="login" ng-repeat="(login, name) in ticketPopup.rt_users">{{ name }}</md-option>
                                         </md-select>
                                     </md-input-container>
                                 </div>
@@ -52,19 +55,19 @@
                                 <div class="md-list-item-text flex-sm-100 flex-25">
                                     <md-input-container>
                                         <label>Requestors:</label>
-                                        <input type="text" value="{{ ticket.Requestors }}" readonly disabled>
+                                        <input type="text" value="{{ ticketPopup.ticket.Requestors }}" readonly disabled>
                                     </md-input-container>
                                 </div>
                             </div>
                             <div layout="row" layout-align="end center" layout-sm="column">
-                                <md-button class="md-raised md-primary" ng-click="update_ticket()">Update ticket</md-button>
-                                <md-button class="md-raised" href="{{ticket.link}}" target="_blank">Go to RT</md-button>
+                                <md-button class="md-raised md-primary" ng-click="ticketPopup.update_ticket()">Update ticket</md-button>
+                                <md-button class="md-raised" href="{{ticketPopup.ticket.link}}" target="_blank">Go to RT</md-button>
                             </div>
                         </md-content>
                     </md-tab>
 
                     <md-tab label="SugarCRM">
-                        <div ng-switch on="sugar_crm_data">
+                        <div ng-switch on="ticketPopup.sugar_crm_data">
                             <div layout="row" layout-sm="column" layout-align="space-around" ng-switch-when="undefined">
                                 <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                             </div>
@@ -72,9 +75,9 @@
                             <div ng-switch-when="null" class="sugar-contacts__empty">No contact information was found.</div>
                             <div ng-switch-otherwise>
                                 <h3 layout-padding>Contacts</h3>
-                                <section ng-repeat="(contactKey, contact) in sugar_crm_data_parsed track by $index" class="sugar-contact" ng-init="showContact[$index] = contacts_count > 1 ? false : true">
-                                    <div class="sugar-contact__label" ng-class-odd="'sugar-contact__label--odd'" ng-click="showContact[$index] = !showContact[$index]">{{ contactKey }}</div>
-                                    <div class="sugar-contact__more-info ng-hide" ng-show="showContact[$index]">
+                                <section ng-repeat="(contactKey, contact) in ticketPopup.sugar_crm_data_parsed track by $index" class="sugar-contact" ng-init="ticketPopup.showContact[$index] = contacts_count > 1 ? false : true">
+                                    <div class="sugar-contact__label" ng-class-odd="'sugar-contact__label--odd'" ng-click="ticketPopup.showContact[$index] = !ticketPopup.showContact[$index]">{{ contactKey }}</div>
+                                    <div class="sugar-contact__more-info ng-hide" ng-show="ticketPopup.showContact[$index]">
                                         <md-list-item class="sugar-contact__row" layout="row" layout-sm="column" ng-repeat="row in contact" ng-class="{'sugar-contact__row--odd': $odd}">
                                             <div class="sugar-contact__column" layout="row" layout-sm="column" layout-align="space-between center">
                                                 <div class="sugar-contact__key md-caption"><b>{{ row[0].key }}:</b></div>
