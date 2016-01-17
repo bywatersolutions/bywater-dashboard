@@ -15,7 +15,6 @@
 
 		$scope.update_data = function () {
 			$http.post('/json/reports/get_data', { query: $scope.query, department: $scope.department } ).then( function(response) {
-				console.log( response.data );
 				var tickets = response.data.tickets;
 
 				var keys = {};
@@ -66,7 +65,7 @@
 				$scope.series = groups;
 				$scope.data = chart_data;
 			} );
-		}
+		};
 
 		$scope.onClick = function (points, evt) {
 			console.log(points, evt);

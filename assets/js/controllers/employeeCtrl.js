@@ -69,7 +69,7 @@
                         name: 'employee-tickets-rt',
                         put: columnsFromPut,
                     },
-                sort: column.type == 'rt' ? true : false,
+                sort: false,
 
                 onStart: function() {
                     dragTicketProgress = true;
