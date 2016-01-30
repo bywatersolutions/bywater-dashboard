@@ -9,6 +9,7 @@ rt:
   host: "https://rt-test.bywatersolutions.com"
   statuses: [ "new", "open", "stalled", "resolved", "rejected", "deleted", "needsinfo" ]
   ignore_ssl_errors: 0
+  bugzilla_field_name: "CF.{Community Bug}"
 
 sugar_crm:
   login: "changeme"
@@ -43,6 +44,11 @@ sugar_crm:
       - system_koha_version
       - system_local_koha_branch
       - database_name_c
+
+bugzilla:
+    url: "https://bugs.koha-community.org/bugzilla3/"
+    api_key: "changeme"
+    rt_field: "CF.{Community Bug}"
 
 card_popup:
   header_row:
@@ -133,4 +139,3 @@ employee_default_columns:
     name: Closed Tickets Updated
     type: rt
     search_query: 'Owner = "__CurrentUser__" AND LastUpdatedBy != "__CurrentUser__" AND LastUpdated > "1 day ago" AND (  Queue != "Development" AND Queue != "Migrations" AND Queue != "Bugs" ) AND Status != "new" AND Status != "open" AND Status != "onhold" AND Status != "needsinfo"'
-

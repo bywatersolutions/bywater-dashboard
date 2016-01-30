@@ -16,3 +16,6 @@ requires 'Text::Quoted', '>= 2.08';
 requires 'DBIx::Class', '>= 0.082';
 requires 'DBIx::Class::Migration', '>= 0.057';
 requires 'DBIx::Class::ResultSet::HashRef', '>= 1.002';
+
+requires 'BZ::Client', '>= 1.072';
+requires 'Try::Tiny', '>= 0.24';

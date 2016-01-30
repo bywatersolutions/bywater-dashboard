@@ -73,6 +73,8 @@ sub startup {
     $auth->post("/json/ticket/add_correspondence")->to("main#ticket_add_correspondence");
 
     $auth->post("/json/sugarcrm/get_contact")->to("main#sugarcrm_get_contact");
+    $auth->post("/json/bugzilla/get_bug")->to("main#bugzilla_get_bug");
+    
     $auth->post("/json/view/save_settings")->to("main#view_save_settings");
 
     $auth->post("/json/reports/get")->to("reports#get");

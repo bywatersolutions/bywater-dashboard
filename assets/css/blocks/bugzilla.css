@@ -1,0 +1,10 @@
+.bugzilla {
+    padding: 0 !important;
+}
+
+.bugzilla__error,
+.bugzilla__empty {
+    font-size: 1.2857rem;
+    margin-top: 30px;
+    text-align: center;
+}

@@ -4,6 +4,7 @@ use Mojo::Base 'Mojolicious::Controller';
 use DashboardApp::Model::User;
 use DashboardApp::Model::Ticket;
 use DashboardApp::Model::SugarCRM;
+use DashboardApp::Model::Bugzilla;
 use Text::Quoted;
 use Try::Tiny;
 use Mojo::Exception;
@@ -143,6 +144,20 @@ sub sugarcrm_get_contact {
 
     my $data = $sugar->get_contact( $json->{email} );
 
+    $c->render( json => $data );
+}
+
+sub bugzilla_get_bug {
+    my $c = shift;
+    
+    my $json = $c->req->json;
+    my $data;
+    try {
+        $data = DashboardApp::Model::Bugzilla->new()->get_bugs( $json->{bug_ids} );
+    } catch {
+        $data = { error => $_->message() }
+    };
+    
     $c->render( json => $data );
 }
 

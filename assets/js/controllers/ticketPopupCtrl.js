@@ -113,6 +113,23 @@
         }
         get_sugar_crm_data();
 
+        function get_bugzilla_data() {
+            if ( !vm.ticket.bugzilla_ids ) return;
+            
+            $http.post( '/json/bugzilla/get_bug', { bug_ids: vm.ticket.bugzilla_ids } )
+                .then(function( response ) {
+                    vm.bugzilla_data = response.data;
+                    if ( response.data.error ) {
+                        $log.warn( response.data.error );
+                        vm.bugzilla_data = 'error';
+                    }
+                })
+                .catch( function() {
+                    vm.bugzilla_data = 'error';
+                });
+        }
+        get_bugzilla_data();
+
         function get_history() {
             $http.post('/json/ticket_history', {ticket_id: ticket_id}).then(
                 function(response) {

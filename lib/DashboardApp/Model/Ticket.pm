@@ -61,11 +61,14 @@ sub search_tickets {
 
 sub get_tickets {
     my ( $self, $ids ) = @_;
-
+    
     my $result = {};
     foreach my $id ( @$ids ) {
         $result->{$id} = $self->rt->show(type => 'ticket', id => $id);
         $result->{$id}->{link} = $config->{rt}->{host} . "/Ticket/Display.html?id=" . $id;
+        
+        my @bug_ids = split( ",", $result->{$id}->{ $config->{rt}->{bugzilla_field_name} } || "" );
+        $result->{$id}->{bugzilla_ids} = @bug_ids ? \@bug_ids : undef;
     }
 
     return $result;
@@ -112,4 +115,3 @@ sub get_history {
 }
 
 1;
-
