@@ -59,6 +59,16 @@
                                     </md-input-container>
                                 </div>
                             </div>
+                            
+                            <div layout="row" layout-sm="column">
+                                <div class="md-list-item-text flex-sm-100 flex-25">
+                                        Related tickets:
+                                        <span ng-repeat="id in ticketPopup.ticket.related_ids">
+                                            <a href="" ng-click="show_popup(id)">#{{id}}</a>{{$last ? '' : ', '}}
+                                        </span>
+                                </div>
+                            </div>
+                            
                             <div layout="row" layout-align="end center" layout-sm="column">
                                 <md-button class="md-raised md-primary" ng-click="ticketPopup.update_ticket()">Update ticket</md-button>
                                 <md-button class="md-raised" href="{{ticketPopup.ticket.link}}" target="_blank">Go to RT</md-button>

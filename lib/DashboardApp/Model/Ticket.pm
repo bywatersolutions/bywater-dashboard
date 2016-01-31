@@ -69,6 +69,18 @@ sub get_tickets {
         
         my @bug_ids = split( ",", $result->{$id}->{ $config->{rt}->{bugzilla_field_name} } || "" );
         $result->{$id}->{bugzilla_ids} = @bug_ids ? \@bug_ids : undef;
+        $result->{$id}->{related_ids} = [];
+        
+        # Getting related RT tickets (related to same Bugzilla tickets)
+        next unless ( scalar( @bug_ids ) );
+        
+        my @query;
+        foreach my $bug_id ( @bug_ids ) {
+            push( @query, "'CF.{Community Bug}' = '$bug_id'" );
+        }
+        
+        my @related_ids = $self->rt->search( type => 'ticket', query => "(" . join( " OR ", @query ) . ") AND Id != '$id'" );
+        $result->{$id}->{related_ids} = \@related_ids;
     }
 
     return $result;

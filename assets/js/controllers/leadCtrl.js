@@ -82,18 +82,36 @@
             );
         };*/
 
+        /* FIXME duplicated in both employee and lead controllers */
         $scope.show_popup = function(ticket_id) {
-            $mdDialog.show({
-                controller: 'TicketPopupController',
-                controllerAs: 'ticketPopup',
-                scope: $scope.$new(),
-                locals: {
-                    ticket_id: ticket_id,
-                    ticket: angular.merge({}, $scope.tickets[ticket_id])
-                },
-                parent: 'body',
-                templateUrl: 'partials/ticket-popup.html'
-            });
+            if ( $scope.tickets[ticket_id] ) {
+                $mdDialog.show({
+                    controller: 'TicketPopupController',
+                    controllerAs: 'ticketPopup',
+                    scope: $scope.$new(),
+                    locals: {
+                        ticket_id: ticket_id,
+                        ticket: angular.merge({}, $scope.tickets[ticket_id])
+                    },
+                    parent: 'body',
+                    templateUrl: 'partials/ticket-popup.html'
+                });
+            } else {
+                $http.post( '/json/ticket_details', {'ids': [ ticket_id ]} ).then( function(response) {
+                    var data = response.data;
+                    $mdDialog.show({
+                        controller: 'TicketPopupController',
+                        controllerAs: 'ticketPopup',
+                        scope: $scope.$new(),
+                        locals: {
+                            ticket_id: ticket_id,
+                            ticket: response.data[ticket_id]
+                        },
+                        parent: 'body',
+                        templateUrl: 'partials/ticket-popup.html'
+                    });
+                } );
+            }
         };
 
         $scope.$on("openViewSettingsEvent", function() {
