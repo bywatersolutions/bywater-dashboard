@@ -7,29 +7,11 @@
             error: null,
             close_dialog: close_dialog,
             save_settings: save_settings,
-            query: ""
+            query: "Id = ''",
+            search: search,
+            open_ticket: open_ticket,
+            tickets: {}
         };
-
-        /*$http.get('/json/employee/tickets')
-            .then(function(response) {
-                var data = response.data;
-
-                data.columns = $.map(data.columns, function(column, id){
-                    column.column_id = id;
-                    column.tickets = column.tickets || [];
-
-                    return column;
-                }).sort(function(a,b){ return a.column_order - b.column_order; });
-
-                vm.columns = data.columns;
-                vm.view_id = data.view_id;
-                vm.progress = false;
-            })
-            .catch(function(response) {
-                $log.error(response);
-                vm.error = 'Error get settings from server';
-                vm.progress = false;
-            });*/
 
         function close_dialog() {
             $mdDialog.cancel();
@@ -42,6 +24,24 @@
                    $mdDialog.hide();
                }
             );
+        }
+        
+        function open_ticket( id ) {
+            $mdDialog.hide( id );
+        }
+        
+        function search() {
+            vm.progress = true;
+            $http.post('/json/ticket/search', { query: vm.query })
+                .then(function(response) {
+                    vm.tickets = response.data;
+                    vm.progress = false;
+                })
+                .catch(function(response) {
+                    $log.error(response);
+                    vm.error = 'Error get settings from server';
+                    vm.progress = false;
+                });
         }
 
         return vm;

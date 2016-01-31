@@ -71,6 +71,7 @@ sub startup {
     $auth->post("/json/ticket_details")->to("main#ticket_details"); # FIXME change to json/ticket/details
     $auth->post("/json/ticket_history")->to("main#ticket_history"); # FIXME change to json/ticket/history
     $auth->post("/json/ticket/add_correspondence")->to("main#ticket_add_correspondence");
+    $auth->post("/json/ticket/search")->to("main#ticket_search");
 
     $auth->post("/json/sugarcrm/get_contact")->to("main#sugarcrm_get_contact");
     $auth->post("/json/bugzilla/get_bug")->to("main#bugzilla_get_bug");

@@ -10,6 +10,15 @@
 	</md-toolbar>
 	<md-dialog-content layout="row" layout-sm="column">
 			<md-content flex layout-fill layout-padding>
+				<div flex="100">
+					<md-input-container flex="100">
+						<label>RT query:</label>
+						<input ng-model="search.query" flex="100">
+					</md-input-container>
+					
+					<md-button ng-click="search.search()">Search</md-button>
+				</div>
+				
 				<div layout="row" layout-sm="column" layout-align="space-around" ng-if="search.progress" class="db-view-search-popup__progress">
 					<md-progress-circular md-mode="indeterminate"></md-progress-circular>
 				</div>
@@ -17,20 +26,12 @@
 				<div layout="row" layout-sm="column" layout-align="space-around" ng-if="!search.progress && search.error" class="db-view-search-popup__error">{{ search.error }}</div>
 				
 				<md-content ng-if="!search.progress && !search.error">
-					<md-input-container flex="100">
-						<label>RT query:</label>
-						<input ng-model="search.query" flex="100">
-					</md-input-container>
-					
-					<md-list flex="100" >
-						<md-list-item ng-repeat="column in search.columns" layout-padded layout="column">
-						</md-list-item>
+					<md-list>
+						<div ng-repeat="(id, ticket) in search.tickets" layout-padded layout="column">
+							<a href="" ng-click="search.open_ticket(id)">#{{id}} -- {{ticket.Subject}}</a>
+						</div>
 					</md-list>
 				</md-content>
-
-				<div layout="row" layout-align="end center" ng-if="!search.progress && !search.error">
-					<md-button class="md-raised md-primary" ng-click="search.save_search()">Save</md-button>
-				</div>
 			</md-content>
 	</md-dialog-content>
 </md-dialog>

@@ -136,25 +136,14 @@
             }
         };
 
-        $scope.$on("openViewSettingsEvent", function() {
-            $mdDialog.show({
-                controller: 'viewSettingsCtrl',
-                locals: {
-                    columns: $scope.columns.slice(),
-                    view_id: $scope.view_id
-                },
-                //scope: $child_scope,
-                parent: 'body',
-                templateUrl: 'partials/view-settings-popup.html'
-            }).then(function(){
-                $log.debug("View settings dialog promise resolved");
-                $scope.update_tickets();
-            });
-        });
-
         // Updated columns settings
         $scope.$on('settingsUpdated', function() {
             $scope.update_tickets();
+        });
+        
+        // Search dialog ticket selection
+        $scope.$on('searchTicketOpen', function( event, id ) {
+            $scope.show_popup( id );
         });
     });
 })(angular);

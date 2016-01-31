@@ -42,9 +42,9 @@
                 controllerAs: 'search',
                 parent: 'body',
                 templateUrl: 'partials/search-popup.html'
-            }).then(function(){
+            }).then(function( id ){
                 $log.debug("Search dialog promise resolved");
-                //$scope.$broadcast("settingsUpdated", {});
+                $scope.$broadcast("searchTicketOpen", id );
             });
         }
 

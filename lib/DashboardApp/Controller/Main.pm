@@ -136,6 +136,17 @@ sub ticket_add_correspondence {
     $c->render( json => { status => "ok" } );
 }
 
+sub ticket_search {
+    my $c = shift;
+
+    my $json = $c->req->json;
+    
+    my $ids = $c->tickets_model->search_tickets( $json->{query} );
+    my $result = $c->tickets_model->get_tickets( $ids );
+
+    $c->render( json => $result );
+}
+
 sub sugarcrm_get_contact {
     my $c = shift;
 
