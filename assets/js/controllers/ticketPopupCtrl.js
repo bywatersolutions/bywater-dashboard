@@ -20,7 +20,8 @@
             showCorrespondence: false,
             is_history_data: is_history_data,
             get_history_data: get_history_data,
-            history_progress: true
+            history_progress: true,
+            bugzilla_progress: true
         };
 
         function update_ticket() {

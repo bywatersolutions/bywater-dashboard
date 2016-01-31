@@ -1,0 +1,34 @@
+<h3 layout-padding>Bugs</h3>
+<section ng-repeat="(bug_id, bug) in ticketPopup.bugzilla_data track by $index" class="bugzilla-bug" ng-init="ticketPopup.showBug[$index] = false">
+    <div class="bugzilla-bug__label" ng-click="ticketPopup.showBug[$index] = !ticketPopup.showBug[$index]" layout="row" layout-xs="column" layout-align="space-between center">
+        <div><small>{{ bug_id }}</small> &#8212; {{ bug.summary }}</div>
+        <div><md-button class="md-fab md-primary md-mini" href="#" target="_blank"><i class="fa fa-link fa-lg"></i></md-button></div>
+    </div>
+    <div class="bugzilla-bug__more-info ng-hide" ng-show="ticketPopup.showBug[$index]">
+        <div class="bugzilla-bug__description">
+            <div layout="row" layout-xs="column">
+                <div flex="50">Creator: <b>{{ bug.assigned_to }}</b></div>
+                <div flex="50">Creation time: <b>{{ bug.creation_time }}</b></div>
+            </div>
+            <div layout="row" layout-xs="column">
+                <div flex="50">Last change time: {{ bug.last_change_time }}</div>
+                <div flex="50">Priority: {{ bug.priority }}</div>
+            </div>
+            <div layout="row" layout-xs="column">
+                <div>Severity: {{ bug.severity }}</div>
+            </div>
+        </div>
+        <md-divider></md-divider>
+        <div class="bugzilla-bug__comments">
+            <section class="bugzilla-bug__comment" ng-repeat="comment in bug.comments" ng-class="{'bugzilla-bug__row--odd': $odd}">
+                <div class="bugzilla-bug__comment-header" layout="row" layout-xs="column" layout-align="space-between center">
+                    <div class="bugzilla-bug__comment-count">#{{comment.count}} &#8212; {{ comment.creator }}</div>
+                    <div class="bugzilla-bug__comment-creation-time">{{ comment.creation_time }}</div>
+                </div>
+                <md-divider></md-divider>
+                <div class="bugzilla-bug__comment-text" layout="row" layout-xs="column">{{ comment.text }}</div>
+                <md-divider></md-divider>
+            </section>
+        </div>
+    </div>
+</section>
