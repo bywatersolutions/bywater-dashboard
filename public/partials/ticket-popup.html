@@ -103,29 +103,7 @@
                             <div ng-switch-when="error" class="bugzilla__error">Unknown server error ocurred, please try again.</div>
                             <div ng-switch-when="null" class="bugzilla__empty">No contact information was found.</div>
                             <div ng-switch-default>
-                                <md-list-item ng-repeat="(bug_id, bug) in ticketPopup.bugzilla_data">
-                                    <div>
-                                        <div>{{bug_id}} -- {{bug.summary}}</div>
-                                        <div layout="row">
-                                                <div>Creator: {{bug.assigned_to}}</div>
-                                                <div>Creation time: {{bug.creation_time}}</div>
-                                                <div>Last change time: {{bug.last_change_time}}</div>
-                                                <div>Priority: {{bug.priority}}</div>
-                                                <div>Severity: {{bug.severity}}</div>
-                                        </div>
-                                        <div ng-repeat="comment in bug.comments">
-                                            <div layout="row">
-                                                <div><a href="#">#{{comment.count}}</a></div>
-                                                <div>Creator: {{comment.creator}}</div>
-                                                <div>Creation time: {{comment.creation_time}}</div>
-                                            </div>
-                                            <div>
-                                                <pre>{{comment.text}}</pre>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                </md-list-item>
+                                <div ng-include="'/partials/ticket-popup/bugzilla.html'" onload="ticketPopup.bugzilla_progress = false"></div>
                             </div>
                         </div>
                     </md-tab>
