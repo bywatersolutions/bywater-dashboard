@@ -18,7 +18,7 @@ sub _api {
 		my $config = DashboardApp::Model::Config::get_config();
 		die "Bugzilla configuration not found." unless ( $config->{bugzilla} );
 		
-		$api = BZ::Client->new( url => $config->{bugzilla}->{url}, api_key => $config->{bugzilla}->{api_key}, autologin => 0 );
+		$api = BZ::Client->new( url => $config->{bugzilla}->{url}, api_key => "HE4ljlZQHKLPkHqGroBXhTYMJJLcbCd0etDf9KFF", autologin => 0 ); # FIXME $config->{bugzilla}->{api_key}
 	}
 
 	return $api;
@@ -26,6 +26,8 @@ sub _api {
 
 sub get_bugs {
 	my ( $self, $bug_ids ) = @_;
+	
+	$bug_ids = [ 6979, 6978 ]; # FIXME
 	
 	die "Arrayref expected." unless ( ref( $bug_ids ) eq "ARRAY" );
 	die "Empty bug_ids array." unless ( scalar( @$bug_ids ) );
