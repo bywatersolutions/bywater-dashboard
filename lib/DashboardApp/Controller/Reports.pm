@@ -15,7 +15,7 @@ sub get_data {
 	my $config = DashboardApp::Model::Config::get_config()->{reports};
 
 	my $query = $config->{queries}->[ $json->{query} ]->{query};
-	if ( defined $json->{department} ) {
+	if ( length( $json->{department} ) ) {
 		$query .= " AND " . $config->{departments}->[ $json->{department} ]->{query};
 	}
 
