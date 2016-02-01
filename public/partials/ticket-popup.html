@@ -60,6 +60,15 @@
                                 </div>
                             </div>
                             
+                            <div layout="row" layout-sm="column">
+                                <div class="md-list-item-text flex" ng-repeat="custom_field in custom_fields">
+                                    <md-input-container>
+                                        <label>{{custom_field[0]}}:</label>
+                                        <input type="text" value="{{ ticketPopup.ticket[ custom_field[1] ] }}" readonly disabled>
+                                    </md-input-container>
+                                </div>
+                            </div>
+                            
                             <div layout="row" layout-sm="column" ng-if="ticketPopup.ticket.related_ids.length > 0">
                                 <div class="md-list-item-text flex-sm-100 flex-25">
                                         Related tickets:

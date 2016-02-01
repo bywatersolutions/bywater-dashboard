@@ -16,6 +16,7 @@ sub show_dashboard {
         users => $users,
         rt_users => $c->app->model('user')->get_rt_users(),
         queues => $c->tickets_model->get_queues(),
+        custom_fields => $config->{rt}->{custom_fields} || [],
         statuses => DashboardApp::Model::Config::get_rt_statuses(),
         popup_config => $config->{card_popup},
     } );

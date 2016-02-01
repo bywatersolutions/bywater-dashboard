@@ -16,6 +16,7 @@
             popup_config: $scope.popup_config,
             statuses: $scope.statuses,
             queues: $scope.queues,
+            custom_fields: $scope.custom_fields,
             rt_users: $scope.rt_users,
             showCorrespondence: false,
             is_history_data: is_history_data,

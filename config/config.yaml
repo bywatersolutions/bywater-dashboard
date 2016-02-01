@@ -10,6 +10,9 @@ rt:
   statuses: [ "new", "open", "stalled", "resolved", "rejected", "deleted", "needsinfo" ]
   ignore_ssl_errors: 0
   bugzilla_field_name: "CF.{Community Bug}"
+  custom_fields:
+      - [ "ToDo", "CF.{ToDo}" ]
+      - [ "Community Bug", "CF.{Community Bug}" ]
 
 sugar_crm:
   login: "changeme"
