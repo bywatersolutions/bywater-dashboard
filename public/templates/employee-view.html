@@ -8,7 +8,7 @@
             </md-toolbar>
 
             <div class="db-column-content" ng-model="column.tickets" ng-sortable="column_sortable(column)">
-                <md-card class="db-ticket-card" ng-repeat="ticket_id in column.tickets" ng-class="{'db-ticket-card--odd': $odd}" ng-model="column.tickets" ng-click="show_popup(ticket_id, $event)">
+                <md-card class="db-ticket-card" ng-repeat="ticket_id in column.tickets | unique" ng-class="{'db-ticket-card--odd': $odd}" ng-model="column.tickets" ng-click="show_popup(ticket_id, $event)">
                     <md-card-content ng-include="'/partials/ticket-card.html'">
                     </md-card-content>
                 </md-card>

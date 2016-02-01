@@ -65,7 +65,8 @@ sub update_ticket {
     my $params = {};
 
     if ( my $user_id = $json->{user_id} ) {
-        my $user = $c->schema->search({ rt_username => $user_id })->first;
+        # Checking that user exists
+        my $user = $c->schema->resultset('User')->search({ rt_username => $user_id })->first;
         if ( $user ) {
             $params->{owner} = $user_id;
         } else {

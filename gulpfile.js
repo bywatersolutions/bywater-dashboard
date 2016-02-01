@@ -23,6 +23,7 @@ var jsVendorFiles = [
     'assets/vendor/Chart.js/Chart.js',
     'assets/vendor/angular-chart.js/dist/angular-chart.js',
     'assets/vendor/angular-material-data-table/dist/md-data-table.min.js',
+    'assets/vendor/angular-filter/dist/angular-filter.min.js'
 ];
 var jsFiles = [
     'assets/js/dashboard-app.js',

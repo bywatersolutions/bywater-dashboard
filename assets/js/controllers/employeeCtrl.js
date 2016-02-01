@@ -64,7 +64,7 @@
             return {
                 animation: 50,
                 group: column.type == 'rt' ?
-                    'employee-tickets' + column.column_id :
+                    { name: 'employee-tickets' + column.column_id, pull: "clone" } :
                     {
                         name: 'employee-tickets-rt',
                         put: columnsFromPut,
@@ -79,8 +79,10 @@
                     dragTicketProgress = false;
                 },
 
-                onAdd: function() {
+                onAdd: function( params ) {
                     var columns = {};
+                    
+                    columns[ column.column_id ] = [ params.model ];
 
                     $http.post('/json/employee/save_columns', columns).then(
                         function(response) {
