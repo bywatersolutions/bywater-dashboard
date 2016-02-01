@@ -2,7 +2,7 @@
 <section ng-repeat="(bug_id, bug) in ticketPopup.bugzilla_data track by $index" class="bugzilla-bug" ng-init="ticketPopup.showBug[$index] = false">
     <div class="bugzilla-bug__label" ng-click="ticketPopup.showBug[$index] = !ticketPopup.showBug[$index]" layout="row" layout-xs="column" layout-align="space-between center">
         <div><i class="fa fa-plus-square" ng-if="!ticketPopup.showBug[$index]"></i><i class="fa fa-minus-square" ng-if="ticketPopup.showBug[$index]"></i> <small>{{ bug_id }}</small> &#8212; {{ bug.summary }}</div>
-        <div><md-button class="md-fab md-primary md-mini" href="#" target="_blank"><i class="fa fa-link fa-lg"></i></md-button></div>
+        <div><md-button class="md-fab md-primary md-mini" href="{{bug.link}}" target="_blank"><i class="fa fa-link fa-lg"></i></md-button></div>
     </div>
     <div class="bugzilla-bug__more-info ng-hide" ng-show="ticketPopup.showBug[$index]">
         <div class="bugzilla-bug__description">
@@ -22,7 +22,7 @@
         <div class="bugzilla-bug__comments">
             <section class="bugzilla-bug__comment" ng-repeat="comment in bug.comments" ng-class="{'bugzilla-bug__row--odd': $odd}">
                 <div class="bugzilla-bug__comment-header" layout="row" layout-xs="column" layout-align="space-between center">
-                    <div class="bugzilla-bug__comment-count">#{{comment.count}} &#8212; {{ comment.creator }}</div>
+                    <div class="bugzilla-bug__comment-count"><a href="{{bug.link}}#c{{comment.count}}" target="_blank">#{{comment.count}}</a> &#8212; {{ comment.creator }}</div>
                     <div class="bugzilla-bug__comment-creation-time">{{ comment.creation_time }}</div>
                 </div>
                 <md-divider></md-divider>

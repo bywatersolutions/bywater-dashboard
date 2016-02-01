@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                             
-                            <div layout="row" layout-sm="column">
+                            <div layout="row" layout-sm="column" ng-if="ticketPopup.ticket.related_ids.length > 0">
                                 <div class="md-list-item-text flex-sm-100 flex-25">
                                         Related tickets:
                                         <span ng-repeat="id in ticketPopup.ticket.related_ids">

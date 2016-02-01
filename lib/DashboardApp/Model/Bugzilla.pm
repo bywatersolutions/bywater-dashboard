@@ -30,6 +30,7 @@ sub get_bugs {
 	die "Arrayref expected." unless ( ref( $bug_ids ) eq "ARRAY" );
 	die "Empty bug_ids array." unless ( scalar( @$bug_ids ) );
 
+	my $config = DashboardApp::Model::Config::get_config();
 	my $bugs = BZ::Client::Bug->get( $self->_api(), $bug_ids );
 	
 	my $result = {};
@@ -42,6 +43,8 @@ sub get_bugs {
 				$item->{$field} = $item->{$field}->strftime('%Y-%m-%d %H:%M:%S')
 			}
 		}
+		
+		$item->{link} = $config->{bugzilla}->{url} . "show_bug.cgi?id=" . $bug->id();
 		
 		$result->{ $bug->id() } = $item;
 	}
