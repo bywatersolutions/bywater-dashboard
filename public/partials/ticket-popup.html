@@ -105,7 +105,7 @@
                         </div>
                     </md-tab>
                     
-                    <md-tab label="Bugzilla">
+                    <md-tab label="Bugzilla" ng-if="ticketPopup.ticket.bugzilla_ids">
                         <div ng-switch on="ticketPopup.bugzilla_data">
                             <div layout="row" layout-sm="column" layout-align="space-around" ng-switch-when="undefined">
                                 <md-progress-circular md-mode="indeterminate"></md-progress-circular>

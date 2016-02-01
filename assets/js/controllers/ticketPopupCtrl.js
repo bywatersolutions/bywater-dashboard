@@ -115,8 +115,6 @@
         get_sugar_crm_data();
 
         function get_bugzilla_data() {
-            vm.ticket.bugzilla_ids = [ 6979, 6978 ];
-            console.log( vm.ticket.bugzilla_ids );
             if ( !vm.ticket.bugzilla_ids ) return;
             
             $http.post( '/json/bugzilla/get_bug', { bug_ids: vm.ticket.bugzilla_ids } )
