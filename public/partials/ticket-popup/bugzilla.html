@@ -1,7 +1,7 @@
 <h3 layout-padding>Bugs</h3>
 <section ng-repeat="(bug_id, bug) in ticketPopup.bugzilla_data track by $index" class="bugzilla-bug" ng-init="ticketPopup.showBug[$index] = false">
     <div class="bugzilla-bug__label" ng-click="ticketPopup.showBug[$index] = !ticketPopup.showBug[$index]" layout="row" layout-xs="column" layout-align="space-between center">
-        <div><small>{{ bug_id }}</small> &#8212; {{ bug.summary }}</div>
+        <div><i class="fa fa-plus-square" ng-if="!ticketPopup.showBug[$index]"></i><i class="fa fa-minus-square" ng-if="ticketPopup.showBug[$index]"></i> <small>{{ bug_id }}</small> &#8212; {{ bug.summary }}</div>
         <div><md-button class="md-fab md-primary md-mini" href="#" target="_blank"><i class="fa fa-link fa-lg"></i></md-button></div>
     </div>
     <div class="bugzilla-bug__more-info ng-hide" ng-show="ticketPopup.showBug[$index]">
