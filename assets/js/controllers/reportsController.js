@@ -15,6 +15,7 @@
 		} );
 
 		$scope.update_data = function () {
+			$scope.is_loaded = false;
 			$http.post('/json/reports/get_data', { query: $scope.query, department: $scope.department } ).then( function(response) {
 				var tickets = response.data.tickets;
 				$scope.is_loaded = true;
