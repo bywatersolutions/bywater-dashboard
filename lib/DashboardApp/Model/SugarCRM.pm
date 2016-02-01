@@ -73,7 +73,7 @@ sub get_one_entry {
 }
 
 sub get_contact {
-	my ( $self, $email ) = @_;
+	my ( $self, $email, $skip_systems ) = @_;
 	my $contacts = $self->_api()->get_contacts_from_mail( $email );
 
 	my $config = DashboardApp::Model::Config::get_config();
@@ -94,7 +94,7 @@ sub get_contact {
 	}
 
 	my $system = {};
-	if ( $account_id ) {
+	if ( $account_id && !$skip_systems ) {
 		my @system_ids = @{ $self->_api()->get_module_link_ids("Accounts", "sys_systems_accounts", $account_id ) };
 
 		if ( @system_ids ) {

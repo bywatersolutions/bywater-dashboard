@@ -22,7 +22,9 @@
             is_history_data: is_history_data,
             get_history_data: get_history_data,
             history_progress: true,
-            bugzilla_progress: true
+            bugzilla_progress: true,
+            sugar_crm_data_parsed: {},
+            sugar_crm_data: null
         };
 
         function update_ticket() {
@@ -63,20 +65,22 @@
             return vm[data[1]][data[2]];
         }
 
-        function get_sugar_crm_data () {
-            $http.post( '/json/sugarcrm/get_contact', { email: ticket["Creator"] } )
+        function get_sugar_crm_data( email, is_primary_contact ) {
+            $http.post( '/json/sugarcrm/get_contact', { email: email } )
                 .then(function( response ) {
-                    vm.sugar_crm_data = null;
-                    vm.sugar_crm_data_parsed = {};
                     if (response.data.contacts.length == 0) {
                         return;
                     }
 
-                    vm.sugar_crm_data = response.data;
-                    vm.contact = response.data.contacts[0]; // for easy configuration of pop-up window read-only data
-                    vm.contacts_count = response.data.contacts.length;
-                    vm.system = response.data.system;
-                    vm.sugar_crm_data.contacts.forEach(function(contact) {
+                    vm.sugar_crm_data = true;
+                    vm.contacts_count = vm.contacts_count + response.data.contacts.length;
+                    
+                    if ( is_primary_contact ){
+                        vm.contact = response.data.contacts[0]; // for easy configuration of pop-up window read-only data
+                        vm.system = response.data.system;
+                    }
+                    
+                    response.data.contacts.forEach(function(contact) {
                         var rows = [],
                             row = [],
                             contactKey;
@@ -100,7 +104,7 @@
                                 }
 
                                 row.push({
-                                    key: vm.sugar_crm_data.labels['Contacts'][key],
+                                    key: response.data.labels['Contacts'][key],
                                     value: contact[key]
                                 });
                             }
@@ -113,8 +117,13 @@
                     vm.sugar_crm_data = 'error';
                 });
         }
-        get_sugar_crm_data();
-
+        
+        var requestors = ticket["Requestors"].split(/,\s*/);
+        get_sugar_crm_data( requestors[0], true );
+        for ( var i = 1; i < requestors.length; i++ ) {
+            get_sugar_crm_data( requestors[i], false );
+        }
+        
         function get_bugzilla_data() {
             if ( !vm.ticket.bugzilla_ids ) return;
             
