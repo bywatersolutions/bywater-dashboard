@@ -7,6 +7,7 @@
 		$scope.query = 0;
 		$scope.department = "";
 		$scope.grouping = "";
+		$scope.is_loaded = false;
 
 		$http.post('/json/reports/get', {}).then( function(response) {
 			$scope.config = response.data.config;
@@ -14,10 +15,9 @@
 		} );
 
 		$scope.update_data = function () {
-			console.log( $scope.chart_data );
-			
 			$http.post('/json/reports/get_data', { query: $scope.query, department: $scope.department } ).then( function(response) {
 				var tickets = response.data.tickets;
+				$scope.is_loaded = true;
 
 				var keys = {};
 				var groups = {};

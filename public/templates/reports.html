@@ -33,37 +33,44 @@
 				<md-radio-button value="DateCreated">Date Created</md-radio-button>
 			</md-radio-group>
 		</div>
-		<div>
-			<canvas ng-if="chart_data.length > 0" id="line" class="chart chart-line" chart-data="chart_data" chart-labels="labels" chart-legend="true" chart-series="series" chart-click="onClick" >
-			</canvas>
-		</div>
-
-		<div>
-			<h3>Series:</h3>
-			<div ng-repeat="(group,value) in groups">
-				<md-checkbox ng-model="groups[group]" ng-change="checkbox_change()">{{group}}</md-checkbox>
+        
+        <div layout="row" layout-sm="column" layout-align="space-around" ng-if="!is_loaded" layout-margin>
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
+		
+		<div ng-if="is_loaded">
+			<div>
+				<canvas ng-if="chart_data.length > 0" id="line" class="chart chart-line" chart-data="chart_data" chart-labels="labels" chart-legend="true" chart-series="series" chart-click="onClick" >
+				</canvas>
 			</div>
-		</div>
 
-		<div>
-			<h3>Data:</h3>
-			<md-data-table-container>
-				<table md-data-table>
-					<thead ng-repeat-start="group in series">
+			<div>
+				<h3>Series:</h3>
+				<div ng-repeat="(group,value) in groups">
+					<md-checkbox ng-model="groups[group]" ng-change="checkbox_change()">{{group}}</md-checkbox>
+				</div>
+			</div>
+
+			<div>
+				<h3>Data:</h3>
+				<md-data-table-container>
+					<table md-data-table>
+						<thead ng-repeat-start="group in series">
+							<tr>
+								<th colspan="4"><h4>{{group}}</h4></th>
+							</tr>
 						<tr>
-							<th colspan="4"><h4>{{group}}</h4></th>
+							<th>ID</th><th>Subject</th><th>Owner</th><th>Creator</th>
 						</tr>
-					<tr>
-						<th>ID</th><th>Subject</th><th>Owner</th><th>Creator</th>
-					</tr>
-				</thead>
-					<tbody ng-repeat="(key, array) in data[ group ]" ng-repeat-end>
-					<tr ng-repeat="item in array">
-						<td>{{item.id}}</td><td>{{item.Subject}}</td><td>{{item.Owner}}</td><td>{{item.Creator}}</td>
-					</td>
-				</tbody>
-				</table>
-			</md-data-table-container>
+					</thead>
+						<tbody ng-repeat="(key, array) in data[ group ]" ng-repeat-end>
+						<tr ng-repeat="item in array">
+							<td>{{item.id}}</td><td>{{item.Subject}}</td><td>{{item.Owner}}</td><td>{{item.Creator}}</td>
+						</td>
+					</tbody>
+					</table>
+				</md-data-table-container>
+			</div>
 		</div>
 	</div>
 </div>
