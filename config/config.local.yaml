@@ -1,0 +1,37 @@
+db:
+  dsn: "dbi:mysql:database=bywater_dashboard"
+  username: bws_dashboard
+  password: kaes8Iuyaevai7v
+rt:
+  login: "T&M Development"
+  password: "12345"
+  host: "http://ticket.bywatersolutions.com"
+  statuses: [ "new", "open", "stalled", "resolved", "rejected", "deleted", "needsinfo" ]
+  ignore_ssl_errors: 1
+reports:
+  queries:
+    -
+      descr: "Tickets created in the past 30 days"
+      query: "Created >= '30 days ago' AND Status != 'Spam'"
+    -
+      descr: "Tickets created in the past 60 days"
+      query: "Created >= '60 days ago' AND Status != 'Spam'"
+    -
+      descr: "Ticket updates in the past 30 days"
+      query: "Updated > '30 days ago' AND Status != 'Spam'"
+    -
+      descr: "Ticket updates in the past 60 days"
+      query: "Updated > '60 days ago' AND Status != 'Spam'"
+    -
+      descr: "Ticket resolved in the past 30 days ago"
+      query: "Resolved > '30 days ago'"
+    -
+      descr: "Tickets resolved in the past 60 days"
+      query: "Resolved > '60 days ago'"
+sugar_crm:
+  login: "T&M"
+  password: "12345"
+  api_url: "https://sugarcrm.bywatersolutions.com/service/v4/rest.php"
+  ignore_ssl_errors: 1
+bugzilla:
+    api_key: "HE4ljlZQHKLPkHqGroBXhTYMJJLcbCd0etDf9KFF"
