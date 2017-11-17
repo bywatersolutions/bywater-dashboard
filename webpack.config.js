@@ -3,7 +3,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
 	entry: [
-		'./ui/js/supportal.js',
+		'./ui/supportal.js',
 	],
 
 	module: {
@@ -16,11 +16,10 @@ module.exports = {
 				exclude: /node_modules/,
 			},
 			{
-				test: /\.scss$/,
+				test: /\.css$/,
 				use: [
 					'style-loader',
 					'css-loader',
-					'sass-loader',
 				],
 			},
 			{
@@ -35,6 +34,10 @@ module.exports = {
 	},
 
 	devtool: 'source-map',
+	devServer: {
+		contentBase: path.join(__dirname, 'ui', 'static'),
+		port: 2970,
+	},
 
 	output: {
 		path: path.resolve(__dirname, 'build'),
