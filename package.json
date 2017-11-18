@@ -1,5 +1,36 @@
 {
+  "name": "bywater-dashboard",
+  "version": "2.0.0",
+  "description": "ByWater Dashboard",
+  "license": "AGPL-1.0",
+  "main": "index.html",
+  "homepage": "https://github.com/bywatersolutions/bywater-dashboard#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bywatersolutions/bywater-dashboard"
+  },
+  "bugs": {
+    "url": "https://github.com/bywatersolutions/bywater-dashboard/issues"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "browsers": [
+              "last 2 Chrome versions",
+              "last 2 Firefox versions"
+            ]
+          }
+        }
+      ],
+      "react"
+    ]
+  },
   "dependencies": {
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
     "material-design-icons": "^3.0.1",
     "react": "^16.1.1",
     "react-material-design": "^0.3.5",

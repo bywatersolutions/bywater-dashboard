@@ -1,1 +1,1 @@
-require('./supportal.css');
+import './supportal.css';
