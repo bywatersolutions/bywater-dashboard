@@ -40,7 +40,7 @@ module.exports = {
 	},
 
 	output: {
-		path: path.resolve(__dirname, 'build'),
+		path: path.resolve(__dirname, 'ui/build'),
 		filename: 'bundle.js',
 	},
 
