@@ -32,10 +32,12 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "material-design-icons": "^3.0.1",
+    "material-ui": "^1.0.0-beta.21",
     "react": "^16.1.1",
-    "react-material-design": "^0.3.5",
+    "react-dom": "^16.1.1",
     "react-redux": "^5.0.6",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "typeface-roboto": "^0.0.45"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

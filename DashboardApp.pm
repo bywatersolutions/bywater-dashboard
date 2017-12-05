@@ -15,7 +15,7 @@ sub startup {
 
     $self->secrets(['eeQu6ighiegh6zaizoh6eithuiphoo']);
 
-    $self->plugin( 'Config' );
+    #$self->plugin( 'Config' );
     $self->plugin( 'Model' );
     $self->plugin( 'tt_renderer' );
     $self->plugin( 'DashboardApp::Plugin::Memcached' => {
@@ -24,6 +24,7 @@ sub startup {
             servers => [ 'localhost:11211' ],
         },
     } );
+    push @{$self->static->paths}, $self->home->child('ui/build')->to_string;
 
     $self->helper( tickets_model => sub {
         my ( $c ) = @_;

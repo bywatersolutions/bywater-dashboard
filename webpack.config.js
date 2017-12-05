@@ -35,7 +35,7 @@ module.exports = {
 
 	devtool: 'source-map',
 	devServer: {
-		contentBase: path.join(__dirname, 'ui', 'static'),
+		contentBase: path.join(__dirname, 'templates', 'main'),
 		port: 2970,
 	},
 
@@ -46,7 +46,7 @@ module.exports = {
 
 	plugins: [
 		new CopyWebpackPlugin([
-			{ from: 'ui/static/', to: '' }
+			{ from: 'templates/main/', to: '' }
 		])
 	]
 };

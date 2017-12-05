@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>BWS Supportal</title>
+        <meta name="viewport" content="initial-scale=1, user-scalable=yes, width=device-width" />
+        <style>
+#pre-react-loading {
+    color: #888;
+    font: 24px sans-serif;
+    height: 100vh;
+    line-height: 100vh;
+    text-align: center;
+    width: 100%;
+}
+        </style>
+    </head>
+    <body>
+        <div id="react-root"><div id="pre-react-loading">Loading...</div></div>
+        <script src="/bundle.js"></script>
+    </body>
+</html>
