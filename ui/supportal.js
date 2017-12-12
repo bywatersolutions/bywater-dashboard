@@ -7,7 +7,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 // Much of this file is spent gluing together react, redux and react-router.
 import { Provider } from 'react-redux';
 import createBrowserHistory from 'history/createBrowserHistory';
-import { Route } from 'react-router';
+import { Route, Redirect } from 'react-router';
 import * as ReactRouterRedux from 'react-router-redux';
 
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -35,7 +35,8 @@ ReactDOM.render(
   <Provider store={store}>
     <ReactRouterRedux.ConnectedRouter history={history}>
       <ToplevelContainer>
-        <Route exact path="/" component={LoginPage}/>
+        <Route exact path="/" render={ () =>  <Redirect to={{ pathname: '/login' }} /> }/>
+        <Route path="/login" component={LoginPage}/>
       </ToplevelContainer>
     </ReactRouterRedux.ConnectedRouter>
   </Provider>,

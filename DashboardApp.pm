@@ -107,6 +107,9 @@ sub startup {
             $self->res->headers->cache_control('must-revalidate, no-store, no-cache, private');
         } );
     }
+
+    # Let the frontend handle any other routing.
+    $r->any( '/*fallback*', { fallback => '' } )->to( 'main#index' );
 }
 
 1;
