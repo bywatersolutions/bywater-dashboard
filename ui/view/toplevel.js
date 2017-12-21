@@ -7,9 +7,11 @@ import { Route, Redirect } from 'react-router';
 import { AppBar, Icon, Toolbar, Typography } from 'material-ui';
 import { MuiThemeProvider, withStyles } from 'material-ui/styles';
 
-import { styles, theme } from './common';
+import { styles, theme } from '../common';
 import LoginPage from './login';
 
+import './supportal.css';
+import 'typeface-roboto';
 import logoSrc from './images/bywater-logo.png';
 
 const ToplevelToolbar = withStyles( styles )( ( { classes, username } ) => (

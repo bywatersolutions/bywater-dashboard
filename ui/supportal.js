@@ -11,11 +11,8 @@ import * as ReactRouterRedux from 'react-router-redux';
 
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-import './supportal.css';
-import 'typeface-roboto';
-
-import ToplevelContainer from './toplevel';
-import * as reducers from './reducers';
+import ToplevelContainer from './view/toplevel';
+import * as reducers from './control/reducers';
 
 const history = createBrowserHistory();
 const routerMiddleware = ReactRouterRedux.routerMiddleware(history);

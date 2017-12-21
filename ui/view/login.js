@@ -13,8 +13,8 @@ import {
 import React from 'react';
 import { connect } from 'react-redux';
 
-import * as actions from './actions';
-import { styles } from './common';
+import * as actions from '../control/actions';
+import { styles } from '../common';
 
 class LoginPage extends React.Component {
     onLoginClick() {
