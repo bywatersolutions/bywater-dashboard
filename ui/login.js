@@ -11,10 +11,22 @@ import {
     TextField
 } from 'material-ui';
 import React from 'react';
+import { connect } from 'react-redux';
 
+import * as actions from './actions';
 import { styles } from './common';
 
-export default class LoginPage extends React.Component {
+class LoginPage extends React.Component {
+    onLoginClick() {
+        if ( !this.usernameInput || !this.usernameInput.value ) {
+            return;
+        }
+
+        this.props.dispatch( actions.loggedIn( this.usernameInput.value ) );
+
+        return false;
+    }
+
     render() {
         return <div style={{
                 boxSizing: "border-box",
@@ -28,13 +40,13 @@ export default class LoginPage extends React.Component {
                 <Grid item xs={12} sm={8} lg={4}>
                     <Card>
                         <CardContent>
-                            <form>
-                                <FormGroup><TextField label="Username" /></FormGroup>
-                                <FormGroup><TextField label="Password" /></FormGroup>
+                            <form onSubmit={ () => this.onLoginClick() }>
+                                <FormGroup><TextField inputRef={ el => this.usernameInput = el } label="Username" /></FormGroup>
+                                <FormGroup><TextField inputRef={ el => this.passwordInput = el } label="Password" /></FormGroup>
                             </form>
                         </CardContent>
                         <CardActions>
-                            <Button raised color="primary">Log In</Button>
+                            <Button onClick={ () => this.onLoginClick() } raised color="primary">Log In</Button>
                         </CardActions>
                     </Card>
                 </Grid>
@@ -42,3 +54,5 @@ export default class LoginPage extends React.Component {
         </div>;
     }
 }
+
+export default connect()( LoginPage );

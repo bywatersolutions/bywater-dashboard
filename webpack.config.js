@@ -29,7 +29,15 @@ module.exports = {
 			{
 				test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
 				loader: "file-loader"
-			}
+			},
+            {
+                test: /\.(gif|png|jpe?g|svg)$/i,
+                loaders: [
+                    'file-loader', {
+                        loader: 'image-webpack-loader',
+                    }
+                ]
+            }
 		],
 	},
 

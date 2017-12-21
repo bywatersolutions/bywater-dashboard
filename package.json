@@ -26,6 +26,9 @@
         }
       ],
       "react"
+    ],
+    "plugins": [
+      "transform-object-rest-spread"
     ]
   },
   "dependencies": {
@@ -42,10 +45,12 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "copy-webpack-plugin": "^4.2.0",
     "css-loader": "^0.28.7",
     "file-loader": "^1.1.5",
     "history": "^4.7.2",
+    "image-webpack-loader": "^3.4.2",
     "react-router": "^4.2.0",
     "react-router-redux": "^5.0.0-alpha",
     "redux-devtools-extension": "^2.13.2",

@@ -12,6 +12,7 @@ export const theme = createMuiTheme({
 
 export const styles = theme => ( {
     flex: { flex: 1 },
-    fullPage: { flexGrow: 1, height: "100vh" },
+    fullPage: { flexGrow: 1, height: '100vh' },
     textField: { minWidth: 200 },
+    iconAdornment: { paddingRight: theme.spacing.unit * 1, verticalAlign: 'bottom' },
 } );
