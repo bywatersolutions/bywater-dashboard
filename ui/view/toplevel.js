@@ -16,7 +16,7 @@ import 'typeface-roboto';
 import logoSrc from './images/bywater-logo.png';
 
 const ToplevelToolbar = connectWithStyles( store => ( { username: store.user && store.user.username } ) )( ( { classes, username } ) => (
-    <AppBar>
+    <AppBar position="static">
         <Toolbar>
             <Typography type="title" className={classes.iconAdornment}><img src={logoSrc} /></Typography>
             <Typography type="title" color="inherit" className={classes.flex}>BYWATER SUPPORTAL</Typography>

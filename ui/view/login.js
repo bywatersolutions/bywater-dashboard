@@ -39,15 +39,15 @@ class LoginPage extends React.Component {
             <Grid container justify="center" alignItems="center">
                 <Grid item xs={12} sm={8} lg={4}>
                     <Card>
-                        <CardContent>
-                            <form onSubmit={ () => this.onLoginClick() }>
-                                <FormGroup><TextField inputRef={ el => this.usernameInput = el } label="Username" /></FormGroup>
+                        <form onSubmit={this.onLoginClick}>
+                            <CardContent>
+                                <FormGroup><TextField inputRef={ el => this.usernameInput = el } label="Username" autoFocus required /></FormGroup>
                                 <FormGroup><TextField inputRef={ el => this.passwordInput = el } label="Password" /></FormGroup>
-                            </form>
-                        </CardContent>
-                        <CardActions>
-                            <Button onClick={ () => this.onLoginClick() } raised color="primary">Log In</Button>
-                        </CardActions>
+                            </CardContent>
+                            <CardActions>
+                                <Button onClick={ () => this.onLoginClick() } raised color="primary" type="submit">Log In</Button>
+                            </CardActions>
+                        </form>
                     </Card>
                 </Grid>
             </Grid>
