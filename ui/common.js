@@ -1,4 +1,6 @@
-import { createMuiTheme } from 'material-ui/styles';
+import { createMuiTheme, withStyles } from 'material-ui/styles';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { blue } from 'material-ui/colors';
 
 export const theme = createMuiTheme({
@@ -16,3 +18,7 @@ export const styles = theme => ( {
     textField: { minWidth: 200 },
     iconAdornment: { paddingRight: theme.spacing.unit * 1, verticalAlign: 'bottom' },
 } );
+
+export function connectWithStyles( ...rest ) {
+    return compose( withStyles( styles ), connect( ...rest ) );
+}

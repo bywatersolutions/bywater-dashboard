@@ -55,4 +55,4 @@ class LoginPage extends React.Component {
     }
 }
 
-export default connect()( LoginPage );
+export default connect( ( { user } ) => ( { user } ) )( LoginPage );
