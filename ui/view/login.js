@@ -17,17 +17,19 @@ import * as actions from '../control/actions';
 import { styles } from '../common';
 
 class LoginPage extends React.Component {
-    onLoginClick() {
+    onLoginClick( e ) {
         if ( !this.usernameInput || !this.usernameInput.value ) {
             return;
         }
 
-        this.props.dispatch( actions.loggedIn( this.usernameInput.value ) );
+        this.props.dispatch( actions.login( this.usernameInput.value, this.passwordInput.value ) );
 
-        return false;
+        e.preventDefault();
     }
 
     render() {
+        const { loggingIn, loginError } = this.props;
+
         return <div style={{
                 boxSizing: "border-box",
                 display: "flex",
@@ -39,13 +41,32 @@ class LoginPage extends React.Component {
             <Grid container justify="center" alignItems="center">
                 <Grid item xs={12} sm={8} lg={4}>
                     <Card>
-                        <form onSubmit={this.onLoginClick}>
+                        <form onSubmit={ e => this.onLoginClick(e) }>
                             <CardContent>
-                                <FormGroup><TextField inputRef={ el => this.usernameInput = el } label="Username" autoFocus required /></FormGroup>
-                                <FormGroup><TextField inputRef={ el => this.passwordInput = el } label="Password" /></FormGroup>
+                                <FormGroup>
+                                    <TextField
+                                        inputRef={ el => this.usernameInput = el }
+                                        label="Username"
+                                        autoFocus
+                                        required
+                                        error={loginError}
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <TextField
+                                        inputRef={ el => this.passwordInput = el }
+                                        label="Password"
+                                        type="password"
+                                        error={loginError}
+                                        helperText={ loginError ? 'Invalid username or password' : null }
+                                    />
+                                </FormGroup>
                             </CardContent>
                             <CardActions>
-                                <Button onClick={ () => this.onLoginClick() } raised color="primary" type="submit">Log In</Button>
+                                { loggingIn ?
+                                    <Button disabled>Logging In...</Button> :
+                                    <Button raised color="primary" type="submit">Log In</Button>
+                                }
                             </CardActions>
                         </form>
                     </Card>
@@ -55,4 +76,4 @@ class LoginPage extends React.Component {
     }
 }
 
-export default connect( ( { user } ) => ( { user } ) )( LoginPage );
+export default connect( ( { user, errors: { LOGIN: loginError }, inProgress: { LOGIN: loggingIn } } ) => ( { user, loginError, loggingIn } ) )( LoginPage );

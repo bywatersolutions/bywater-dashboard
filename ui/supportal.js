@@ -8,6 +8,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import createBrowserHistory from 'history/createBrowserHistory';
 import * as ReactRouterRedux from 'react-router-redux';
+import thunkMiddleware from 'redux-thunk';
 
 import { composeWithDevTools } from 'redux-devtools-extension';
 
@@ -21,7 +22,7 @@ const store = createStore(
         router: ReactRouterRedux.routerReducer,
         ...reducers,
     }),
-    composeWithDevTools( applyMiddleware(routerMiddleware) )
+    composeWithDevTools( applyMiddleware( routerMiddleware, thunkMiddleware ) )
 );
 
 ReactDOM.render(
