@@ -33,11 +33,7 @@ sub login {
 
     return $c->render(json => { error => "No roles defined." }) unless ( @roles );
 
-    my $rt = DashboardApp::Model::Ticket->new->rt;
-    $rt->login( username => $json->{login}, password => $json->{password} );
-
-    my $rt_cookie = JSON->new->encode( { COOKIES => $rt->_cookie->{COOKIES} } );
-    $c->session({ user_id => $user->user_id, roles => \@roles, rt_cookie => $rt_cookie });
+    $c->session({ user_id => $user->user_id, roles => \@roles });
 
     # Default view for a user will be the first role defined
     $c->render(json => { role => $roles[0] });
