@@ -8,8 +8,6 @@ export function login( username, password ) {
     return async dispatch => {
         dispatch( { type: 'IN_PROGRESS', payload: 'LOGIN' } );
 
-        await sleep( 3000 );
-
         let result = await fetch( '/json/login', {
             method: 'POST',
             body: JSON.stringify( { login: username } ),

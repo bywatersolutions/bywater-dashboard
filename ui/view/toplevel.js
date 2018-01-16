@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Route, Redirect } from 'react-router';
+import { Route, Redirect, withRouter } from 'react-router';
 
-import { AppBar, Icon, Toolbar, Typography } from 'material-ui';
+import { AppBar, Icon, Tab, Tabs, Toolbar, Typography } from 'material-ui';
 import { MuiThemeProvider } from 'material-ui/styles';
 
 import { connectWithStyles, theme } from '../common';
@@ -15,15 +15,21 @@ import './supportal.css';
 import 'typeface-roboto';
 import logoSrc from './images/bywater-logo.png';
 
-const ToplevelToolbar = connectWithStyles( store => ( { username: store.user && store.user.username } ) )( ( { classes, username } ) => (
+const ToplevelToolbar = connectWithStyles( store => ( { username: store.user && store.user.username } ) )( withRouter( ( { classes, username, location } ) => (
     <AppBar position="static">
         <Toolbar>
             <Typography type="title" className={classes.iconAdornment}><img src={logoSrc} /></Typography>
-            <Typography type="title" color="inherit" className={classes.flex}>BYWATER SUPPORTAL</Typography>
+            <Typography type="title" color="inherit">BYWATER SUPPORTAL</Typography>
+            { username && <Tabs
+                    className={classes.topTabs}
+                    value={location.pathname}
+                    indicatorColor="white">
+                <Tab value="/" label="MY TICKETS" />
+            </Tabs> }
             { username && <Typography type="subheading" color="inherit"><Icon className={classes.iconAdornment}>account_circle</Icon>{username}</Typography> }
         </Toolbar>
     </AppBar>
-) );
+) ) );
 
 let PrivateRoute = connect( ( { user } ) => ( { user } ) )( ( { component: Component, user, ...rest } ) => (
     <Route {...rest} render={ props => (
