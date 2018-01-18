@@ -2434,6 +2434,10 @@ imagemin@^5.2.2:
     pify "^2.3.0"
     replace-ext "^1.0.0"
 
+immer@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-0.8.1.tgz#44d7d0779947da32eb34314addaac5a82c9ec5ad"
+
 indent-string@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/indent-string/-/indent-string-2.1.0.tgz#8e2d48348742121b4a8218b7a137e9a52049dc80"

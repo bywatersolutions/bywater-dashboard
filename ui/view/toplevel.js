@@ -19,7 +19,7 @@ const ToplevelToolbar = connectWithStyles( store => ( { username: store.user && 
     <AppBar position="static">
         <Toolbar>
             <Typography type="title" className={classes.iconAdornment}><img src={logoSrc} /></Typography>
-            <Typography type="title" color="inherit">BYWATER SUPPORTAL</Typography>
+            <Typography type="title" color="inherit">PALANTIR</Typography>
             { username && <Tabs
                     className={classes.topTabs}
                     value={location.pathname}
