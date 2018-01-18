@@ -39,8 +39,6 @@ sub rt {
 sub get_queues {
     my ( $self ) = @_;
 
-    return [];
-
     if ( !@queues ) {
         my @ids = $self->rt->search( type => 'queue', query => "" );
         foreach my $id ( @ids ) {
