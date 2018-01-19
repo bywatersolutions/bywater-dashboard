@@ -1,54 +1,64 @@
 "use strict";
 
-function extended( state, keys ) {
-    return Object.assign( {}, state, keys );
+import produce from 'immer';
+
+export function user( state = {}, action ) {
+    return produce( state, draft => {
+        switch ( action.type ) {
+            case 'LOGGED_IN':
+                draft.username = action.payload.request.login;
+                break;
+        }
+    } );
 }
 
-function without( state, key ) {
-    let { [key]: _, ...result } = state;
+export function employee( state = {}, action ) {
+    return produce( state, draft => {
+        switch ( action.type ) {
+            case 'DASHBOARD_FETCHED':
+                let response = JSON.parse( action.payload.response );
 
-    return result;
+                for ( let key of [ 'columns', 'custom_fields', 'popup_config', 'queues', 'rt_users', 'statuses' ] ) {
+                    draft[key] = response[key];
+                }
+                break;
+        }
+    } );
 }
 
-export function user( state = null, action ) {
-    switch ( action.type ) {
-        case 'LOGGED_IN':
-            return extended( state, {
-                username: action.username,
-            } );
-
-        default:
-            return state;
-    }
+export function tickets( state = {}, action ) {
+    return state;
 }
 
 export function errors( state = {}, action ) {
-    switch ( action.type ) {
-        case 'ERROR':
-            return extended( state, {
-                [action.payload]: true
-            } );
+    return produce( state, draft => {
+        switch ( action.type ) {
+            case 'ERROR':
+                draft[action.payload.type] = true;
+                break;
 
-        case 'IN_PROGRESS':
-            return without( state, action.payload );
-
-        default:
-            return state;
-    }
+            case 'IN_PROGRESS':
+                delete draft[action.payload.type];
+                break;
+        }
+    } );
 }
 
 export function inProgress( state = {}, action ) {
-    switch ( action.type ) {
-        case 'IN_PROGRESS':
-            return extended( state, {
-                [action.payload]: true
-            } );
+    return produce( state, draft => {
+        switch ( action.type ) {
+            case 'IN_PROGRESS':
+                draft[action.payload.type] = true;
+                break;
 
-        default:
-            if ( state[action.payload] ) {
-                return without( state, action.payload );
-            } else {
-                return state;
-            }
-    }
+            case 'ERROR':
+                delete draft[action.payload.type];
+                break;
+
+            default:
+                if ( action.payload && action.payload.originalType ) {
+                    delete draft[action.payload.originalType];
+                }
+        }
+    } );
 }

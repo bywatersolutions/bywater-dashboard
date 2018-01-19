@@ -15,7 +15,7 @@ import './supportal.css';
 import 'typeface-roboto';
 import logoSrc from './images/bywater-logo.png';
 
-const ToplevelToolbar = connectWithStyles( store => ( { username: store.user && store.user.username } ) )( withRouter( ( { classes, username, location } ) => (
+const ToplevelToolbar = connectWithStyles( store => ( { username: store.user.username } ) )( withRouter( ( { classes, username, location } ) => (
     <AppBar position="static">
         <Toolbar>
             <Typography type="title" className={classes.iconAdornment}><img src={logoSrc} /></Typography>
@@ -33,7 +33,7 @@ const ToplevelToolbar = connectWithStyles( store => ( { username: store.user && 
 
 let PrivateRoute = connect( ( { user } ) => ( { user } ) )( ( { component: Component, user, ...rest } ) => (
     <Route {...rest} render={ props => (
-        user ? <Component {...props} /> : <LoginPage />
+        user.username ? <Component {...props} /> : <LoginPage />
     ) } />
 ) );
 

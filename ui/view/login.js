@@ -22,7 +22,7 @@ class LoginPage extends React.Component {
             return;
         }
 
-        this.props.dispatch( actions.login( this.usernameInput.value, this.passwordInput.value ) );
+        this.props.dispatch( actions.login( { login: this.usernameInput.value, password: this.passwordInput.value } ) );
 
         e.preventDefault();
     }
