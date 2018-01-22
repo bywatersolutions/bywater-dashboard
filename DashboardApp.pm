@@ -68,9 +68,9 @@ sub startup {
     $auth->post("/json/employee/save_columns")->to("employee#save_columns");
 
     $auth->get("/json/get_roles")->to("main#get_roles");
-    $auth->post("/json/update_ticket")->to("main#update_ticket");   # FIXME change to json/ticket/update for consistency
-    $auth->post("/json/ticket_details")->to("main#ticket_details"); # FIXME change to json/ticket/details
-    $auth->post("/json/ticket_history")->to("main#ticket_history"); # FIXME change to json/ticket/history
+    $auth->post("/json/ticket/update")->to("main#update_ticket");
+    $auth->post("/json/ticket/details")->to("main#ticket_details");
+    $auth->post("/json/ticket/history")->to("main#ticket_history");
     $auth->post("/json/ticket/add_correspondence")->to("main#ticket_add_correspondence");
     $auth->post("/json/ticket/search")->to("main#ticket_search");
 
@@ -107,6 +107,13 @@ sub startup {
             $self->res->headers->cache_control('must-revalidate, no-store, no-cache, private');
         } );
     }
+
+    # Catch any incorrect API routes
+    $r->any( '/json/*fallback*', { fallback => '' }, sub {
+        my $c = shift;
+
+        $c->render( status => 404, json => { error => "/json/${ \$c->param('fallback') } not found" } );
+    } );
 
     # Let the frontend handle any other routing.
     $r->any( '/*fallback*', { fallback => '' } )->to( 'main#index' );

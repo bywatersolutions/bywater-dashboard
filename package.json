@@ -52,6 +52,7 @@
     "history": "^4.7.2",
     "image-webpack-loader": "^3.4.2",
     "immer": "^0.8.1",
+    "lodash": "^4.17.4",
     "react-router": "^4.2.0",
     "react-router-redux": "^5.0.0-alpha",
     "redux-devtools-extension": "^2.13.2",

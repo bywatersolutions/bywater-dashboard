@@ -21,8 +21,8 @@ import { connectWithStyles } from '../common';
 import * as actions from '../control/actions';
 
 const TicketItem = connect( ( { tickets }, { ticketID } ) => ( { ticket: tickets[ticketID] } ) )( ( { ticket, ticketID } ) => {
-    return <ListItem>
-        <ListItemText primary={ "#" + ticketID } secondary={ ticket ? "Got it!" : "Loading..." } />
+    return <ListItem button>
+        <ListItemText primary={ "#" + ticketID } secondary={ ticket ? ticket.Subject : "Loading..." } />
     </ListItem>;
 } );
 

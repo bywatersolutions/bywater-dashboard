@@ -16,10 +16,10 @@ export function employee( state = {}, action ) {
     return produce( state, draft => {
         switch ( action.type ) {
             case 'DASHBOARD_FETCHED':
-                let response = JSON.parse( action.payload.response );
+                let result = action.payload.result;
 
                 for ( let key of [ 'columns', 'custom_fields', 'popup_config', 'queues', 'rt_users', 'statuses' ] ) {
-                    draft[key] = response[key];
+                    draft[key] = result[key];
                 }
                 break;
         }
@@ -27,7 +27,17 @@ export function employee( state = {}, action ) {
 }
 
 export function tickets( state = {}, action ) {
-    return state;
+    return produce( state, draft => {
+        switch ( action.type ) {
+            case 'TICKETS_FETCHED':
+                let result = action.payload.result;
+
+                for ( let ticketID in result ) {
+                    draft[ticketID] = result[ticketID];
+                }
+                break;
+        }
+    } );
 }
 
 export function errors( state = {}, action ) {
