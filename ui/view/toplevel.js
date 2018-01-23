@@ -25,6 +25,8 @@ const ToplevelToolbar = connectWithStyles( store => ( { username: store.user.use
                     value={location.pathname}
                     indicatorColor="white">
                 <Tab value="/" label="MY TICKETS" />
+                <Tab value="/assign" label="ASSIGN TICKETS" />
+                <Tab value="/reports" label="REPORTS" />
             </Tabs> }
             { username && <Typography type="subheading" color="inherit"><Icon className={classes.iconAdornment}>account_circle</Icon>{username}</Typography> }
         </Toolbar>
