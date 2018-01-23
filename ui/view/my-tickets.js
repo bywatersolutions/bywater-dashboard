@@ -1,35 +1,23 @@
 "use strict";
 
 import {
-    Card,
-    CardContent,
-    CardHeader,
-    Divider,
     Grid,
     Typography,
 } from 'material-ui';
-
-import List, {
-    ListItem,
-    ListItemText,
-} from 'material-ui/List';
 
 import {
     LinearProgress
 } from 'material-ui/Progress';
 
 import React from 'react';
-import { connect } from 'react-redux';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 import { connectWithStyles } from '../common';
 import * as actions from '../control/actions';
+import { TicketList } from './components/tickets';
 
-const TicketItem = connect( ( { tickets }, { ticketID } ) => ( { ticket: tickets[ticketID] } ) )( ( { ticket, ticketID } ) => {
-    return <ListItem button>
-        <ListItemText primary={ "#" + ticketID } secondary={ ticket ? ticket.Subject : "Loading..." } />
-    </ListItem>;
-} );
-
+@DragDropContext( HTML5Backend )
 class MyTickets extends React.Component {
     componentWillMount() {
         this.props.dispatch( actions.getDashboard() );
@@ -45,15 +33,7 @@ class MyTickets extends React.Component {
             { loading ? <LinearProgress /> :
                 <Grid container spacing={24}>
                     { orderedColumns.map( column => <Grid item xs={12} sm={4} md={2} key={column.name}>
-                        <Card>
-                            <CardHeader title={column.name} />
-                            <CardContent>
-                                <Divider />
-                                <List>
-                                    { column.tickets.map( ticketID => <TicketItem key={ticketID} ticketID={ticketID} /> ) }
-                                </List>
-                            </CardContent>
-                        </Card>
+                        <TicketList title={column.name} tickets={column.tickets} />
                     </Grid> ) }
                 </Grid>
             }
