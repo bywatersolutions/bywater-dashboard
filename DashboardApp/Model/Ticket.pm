@@ -22,7 +22,7 @@ sub rt {
     my ( $self ) = @_;
 
     unless ( $self->{rt} ) {
-        my $rt = RT::Client::REST->new( server => $config->{rt}->{host}, timeout => 3 );
+        my $rt = RT::Client::REST->new( server => $config->{rt}->{host}, timeout => 15 );
 
         if ( $config->{rt}->{ignore_ssl_errors} ) {
             IO::Socket::SSL::set_ctx_defaults( verify_mode => Net::SSLeay->VERIFY_NONE() );
