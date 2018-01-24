@@ -25,6 +25,13 @@ const ticketSource = {
 };
 
 const ticketTarget = {
+    canDrop( props, monitor ) {
+        let item = monitor.getItem();
+
+        if ( props.ticketID == item.ticketID ) {
+            return false;
+        }
+    },
     drop( props ) {
         console.debug( 'drop!', props );
     },
@@ -85,14 +92,13 @@ export class TicketList extends React.Component {
         console.log( 'TL', title, isOver );
 
         return <Card
+                className={ isOver ? classes.dragOver : null }
                 component={ decoratedNativeComponent( 'div', connectDropTarget ) }
             >
             <CardHeader title={title} />
             <CardContent>
                 <Divider />
-                <List
-                    className={ isOver ? classes.dragOver : null }
-                >
+                <List>
                     { tickets.map( ticketID => <TicketItem key={ticketID} ticketID={ticketID} /> ) }
                 </List>
             </CardContent>

@@ -49,6 +49,8 @@
     "lodash": "^4.17.4",
     "material-design-icons": "^3.0.1",
     "material-ui": "^1.0.0-beta.21",
+    "patch-package": "^5.0.0",
+    "postinstall-prepare": "^1.0.1",
     "react": "^16.1.1",
     "react-dnd": "^2.5.4",
     "react-dnd-html5-backend": "^2.5.4",
@@ -60,11 +62,12 @@
     "redux-devtools-extension": "^2.13.2",
     "redux-thunk": "^2.2.0",
     "style-loader": "^0.19.0",
-    "typeface-roboto": "^0.0.45",
+    "typeface-roboto": "^0.0.50",
     "url-loader": "^0.6.2",
     "webpack": "^3.8.1"
   },
   "scripts": {
-    "build": "node_modules/.bin/webpack"
+    "build": "node_modules/.bin/webpack",
+    "prepare": "patch-package"
   }
 }

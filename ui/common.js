@@ -14,7 +14,7 @@ export const theme = createMuiTheme({
 
 export const styles = theme => ( {
     dragging: { opacity: .5 },
-    dragOver: { backgroundColor: theme.palette.hover },
+    dragOver: { backgroundColor: theme.palette.action.hover },
     flex: { flex: 1 },
     fullPage: { flexGrow: 1, height: '100vh' },
     iconAdornment: { paddingRight: theme.spacing.unit * 1, verticalAlign: 'bottom' },
