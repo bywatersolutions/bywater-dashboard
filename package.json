@@ -32,7 +32,8 @@
       "transform-object-rest-spread"
     ]
   },
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
@@ -51,10 +52,9 @@
     "material-ui": "^1.0.0-beta.21",
     "patch-package": "^5.0.0",
     "postinstall-prepare": "^1.0.1",
-    "react": "^16.1.1",
-    "react-dnd": "^2.5.4",
-    "react-dnd-html5-backend": "^2.5.4",
-    "react-dom": "^16.1.1",
+    "react": "^16.2.0",
+    "react-beautiful-dnd": "^4.0.1",
+    "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
     "react-router": "^4.2.0",
     "react-router-redux": "^5.0.0-alpha",

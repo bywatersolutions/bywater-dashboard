@@ -13,50 +13,13 @@ import List, {
 } from 'material-ui/List';
 
 import React from 'react';
-import { DragSource, DropTarget } from 'react-dnd';
+import ReactDOM from 'react-dom';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
 
 import { connectWithStyles, withOurStyles } from '../../common';
 
-const ticketSource = {
-    beginDrag( props ) {
-        return { ticketID: props.ticketID };
-    },
-};
-
-const ticketTarget = {
-    canDrop( props, monitor ) {
-        let item = monitor.getItem();
-
-        if ( props.ticketID == item.ticketID ) {
-            return false;
-        }
-    },
-    drop( props ) {
-        console.debug( 'drop!', props );
-    },
-};
-
-function decoratedNativeComponent( type, ...decorators ) {
-    return ( { children, ...props } ) => (
-        _.flow( decorators )(
-            React.createElement(
-                type,
-                props,
-                children
-            )
-        )
-    );
-}
-
 @connectWithStyles( ( { tickets }, { ticketID } ) => ( { ticket: tickets[ticketID] } ) )
-@DropTarget( 'TICKET', ticketTarget, connect => ( {
-	connectDropTarget: connect.dropTarget(),
-} ) )
-@DragSource( 'TICKET', ticketSource, ( connect, monitor ) => ( {
-	connectDragSource: connect.dragSource(),
-	isDragging: monitor.isDragging(),
-} ) )
 class TicketItem extends React.Component {
     render() {
         const {
@@ -68,40 +31,50 @@ class TicketItem extends React.Component {
             ticketID,
         } = this.props;
 
-        return <ListItem
-                button
-                component={ decoratedNativeComponent( 'li', connectDragSource, connectDropTarget ) }
-            >
-            <ListItemText
-                className={ isDragging ? classes.dragging : null }
-                primary={ "#" + ticketID }
-                secondary={ ticket ? ticket.Subject : "Loading..." }
-            />
-        </ListItem>;
+        return <Draggable draggableId={ticketID}>
+            { ( provided, snapshot ) => 
+                <React.Fragment>
+                    <ListItem
+                            button
+                            ref={ ( node ) => provided.innerRef( node && ReactDOM.findDOMNode(node) ) }
+                            { ...provided.draggableProps }
+                            { ...provided.dragHandleProps }
+                        >
+                        <ListItemText
+                            className={ isDragging ? classes.dragging : null }
+                            primary={ "#" + ticketID }
+                            secondary={ ticket ? ticket.Subject : "Loading..." }
+                        />
+                    </ListItem>
+                    { provided.placeholder }
+                </React.Fragment>
+            }
+        </Draggable>;
     }
 }
 
 @withOurStyles
-@DropTarget( 'TICKET', ticketTarget, ( connect, monitor ) => ( {
-    connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver(),
-} ) )
 export class TicketList extends React.Component {
     render() {
-        const { classes, connectDropTarget, isOver, tickets, title } = this.props;
-        console.log( 'TL', title, isOver );
+        const { classes, tickets, title } = this.props;
 
-        return <Card
-                className={ isOver ? classes.dragOver : null }
-                component={ decoratedNativeComponent( 'div', connectDropTarget ) }
-            >
-            <CardHeader title={title} />
-            <CardContent>
-                <Divider />
-                <List>
-                    { tickets.map( ticketID => <TicketItem key={ticketID} ticketID={ticketID} /> ) }
-                </List>
-            </CardContent>
-        </Card>;
+        return <Droppable droppableId={title}>
+            { ( provided, snapshot ) => 
+                <div ref={ provided.innerRef }>
+                    <Card
+                        className={ snapshot.isDraggingOver ? classes.dragOver : null }
+                    >
+                        <CardHeader title={title} />
+                        <CardContent>
+                            <Divider />
+                            <List>
+                                { tickets.map( ticketID => <TicketItem key={ticketID} ticketID={ticketID} /> ) }
+                                { provided.placeholder }
+                            </List>
+                        </CardContent>
+                    </Card>
+                </div>
+            }
+        </Droppable>;
     }
 }
