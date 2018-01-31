@@ -14,7 +14,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 
 import { connectWithStyles } from '../common';
 import * as actions from '../control/actions';
-import { TicketList } from './components/tickets';
+import TicketList from './components/ticket-list';
 
 class MyTickets extends React.Component {
     componentWillMount() {

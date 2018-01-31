@@ -1,17 +1,20 @@
+"use strict";
+
+// Miscellaneous utilities and definitions.
+
 import { createMuiTheme, withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { blue, white } from 'material-ui/colors';
 
+// Customizations to MUI's built-in palette.
 export const theme = createMuiTheme({
     palette: {
         primary: blue,
     },
-    status: {
-        danger: 'orange',
-    },
 });
 
+// CSS "classes" for our own widgets.
 export const styles = theme => ( {
     placeholder: { opacity: .3 },
     dragOver: { backgroundColor: theme.palette.action.hover },
@@ -23,6 +26,8 @@ export const styles = theme => ( {
     topTabs: { color: 'white', flex: 1, marginLeft: theme.spacing.unit * 3 },
 } );
 
+// Two convenient decorators; the first passes the "classes" prop to the decorated component, and
+// the second does that and connects the component to Redux.
 export const withOurStyles = withStyles( styles );
 
 export function connectWithStyles( ...rest ) {
