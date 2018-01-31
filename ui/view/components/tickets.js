@@ -20,13 +20,28 @@ import { connect } from 'react-redux';
 import { connectWithStyles, withOurStyles } from '../../common';
 
 @connectWithStyles( ( { tickets }, { ticketID } ) => ( { ticket: tickets[ticketID] } ) )
+class TicketPlaceholder extends React.Component {
+    render() {
+        const {
+            classes,
+            ticket,
+            ticketID,
+        } = this.props;
+
+        return <ListItem>
+            <ListItemText
+                className={ classes.placeholder }
+                primary={ "No tickets" }
+            />
+        </ListItem>;
+    }
+}
+
+@connectWithStyles( ( { tickets }, { ticketID } ) => ( { ticket: tickets[ticketID] } ) )
 class TicketItem extends React.Component {
     render() {
         const {
             classes,
-            connectDragSource,
-            connectDropTarget,
-            isDragging,
             ticket,
             ticketID,
         } = this.props;
@@ -41,7 +56,6 @@ class TicketItem extends React.Component {
                             { ...provided.dragHandleProps }
                         >
                         <ListItemText
-                            className={ isDragging ? classes.dragging : null }
                             primary={ "#" + ticketID }
                             secondary={ ticket ? ticket.Subject : "Loading..." }
                         />
@@ -60,20 +74,20 @@ export class TicketList extends React.Component {
 
         return <Droppable droppableId={title}>
             { ( provided, snapshot ) => 
-                <div ref={ provided.innerRef }>
-                    <Card
-                        className={ snapshot.isDraggingOver ? classes.dragOver : null }
-                    >
-                        <CardHeader title={title} />
-                        <CardContent>
-                            <Divider />
+                <Card
+                    className={ snapshot.isDraggingOver ? classes.dragOver : null }
+                >
+                    <CardHeader title={title} />
+                    <CardContent>
+                        <Divider />
+                        <div ref={ provided.innerRef }>
                             <List>
                                 { tickets.map( ticketID => <TicketItem key={ticketID} ticketID={ticketID} /> ) }
-                                { provided.placeholder }
+                                { provided.placeholder || ( !tickets.length ? <TicketPlaceholder /> : null ) }
                             </List>
-                        </CardContent>
-                    </Card>
-                </div>
+                        </div>
+                    </CardContent>
+                </Card>
             }
         </Droppable>;
     }
