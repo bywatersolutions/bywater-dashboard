@@ -58,3 +58,10 @@ export const getDashboard = _apiAction( {
         return result;
     },
 } );
+
+export const getHistory = _apiAction( {
+    type: 'GET_HISTORY',
+    successfulType: 'HISTORY_FETCHED',
+    method: 'POST',
+    path: '/json/ticket/history',
+} );

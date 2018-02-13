@@ -102,6 +102,9 @@ export default class TicketList extends React.Component {
     render() {
         const { classes, tickets, title } = this.props;
 
+        // We do a fair amount of work here to avoid keeping the dialogs inside the Droppable, to
+        // avoid unnecessary rerenders.
+
         return <React.Fragment>
             { tickets.map( ticketID =>
                 <TicketDialog
@@ -113,9 +116,7 @@ export default class TicketList extends React.Component {
             ) }
             <Droppable droppableId={title}>
                 { ( provided, snapshot ) => 
-                    <Card
-                        className={ snapshot.isDraggingOver ? classes.dragOver : null }
-                    >
+                    <Card className={ snapshot.isDraggingOver ? classes.dragOver : null }>
                         <CardContent>
                             <Typography type="headline">{title}</Typography>
                             <div ref={ provided.innerRef }>

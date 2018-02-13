@@ -12,30 +12,29 @@ export function user( state = {}, action ) {
     } );
 }
 
-export function employee( state = {}, action ) {
+export function employee( state = {}, { type, payload } ) {
     return produce( state, draft => {
-        switch ( action.type ) {
+        switch ( type ) {
             case 'DASHBOARD_FETCHED':
-                let result = action.payload.result;
-
                 for ( let key of [ 'columns', 'custom_fields', 'popup_config', 'queues', 'rt_users', 'statuses' ] ) {
-                    draft[key] = result[key];
+                    draft[key] = payload.result[key];
                 }
                 break;
         }
     } );
 }
 
-export function tickets( state = {}, action ) {
+export function tickets( state = {}, { type, payload } ) {
     return produce( state, draft => {
-        switch ( action.type ) {
+        switch ( type ) {
             case 'TICKETS_FETCHED':
-                let result = action.payload.result;
-
-                for ( let ticketID in result ) {
-                    draft[ticketID] = result[ticketID];
+                for ( let ticketID in payload.result ) {
+                    draft[ticketID] = payload.result[ticketID];
                 }
                 break;
+
+            case 'HISTORY_FETCHED':
+                draft[ payload.request.ticket_id ].history = payload.result;
         }
     } );
 }
