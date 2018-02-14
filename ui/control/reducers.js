@@ -24,6 +24,18 @@ export function employee( state = {}, { type, payload } ) {
     } );
 }
 
+export function lead( state = {}, { type, payload } ) {
+    return produce( state, draft => {
+        switch ( type ) {
+            case 'LEAD_DASHBOARD_FETCHED':
+                for ( let key of [ 'columns', 'users' ] ) {
+                    draft[key] = payload.result[key];
+                }
+                break;
+        }
+    } );
+}
+
 export function tickets( state = {}, { type, payload } ) {
     return produce( state, draft => {
         switch ( type ) {

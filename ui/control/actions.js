@@ -42,21 +42,32 @@ export const getTickets = _apiAction( {
     path: '/json/ticket/details',
 } );
 
+async function _postGetTickets( response, dispatch ) {
+    let result = await response.json();
+
+    let ticketIDs = _.flatMap( result.columns, column => column.tickets );
+
+    dispatch( getTickets( { ids: ticketIDs } ) );
+
+    return result;
+}
+
 export const getDashboard = _apiAction( {
     type: 'GET_DASHBOARD',
     successfulType: 'DASHBOARD_FETCHED',
     method: 'GET',
     path: '/json/employee/tickets',
 
-    post: async ( response, dispatch ) => {
-        let result = await response.json();
+    post: _postGetTickets,
+} );
 
-        let ticketIDs = _.flatMap( result.columns, column => column.tickets );
+export const getLeadDashboard = _apiAction( {
+    type: 'GET_LEAD_DASHBOARD',
+    successfulType: 'LEAD_DASHBOARD_FETCHED',
+    method: 'GET',
+    path: '/json/lead/tickets',
 
-        dispatch( getTickets( { ids: ticketIDs } ) );
-
-        return result;
-    },
+    post: _postGetTickets,
 } );
 
 export const getHistory = _apiAction( {
