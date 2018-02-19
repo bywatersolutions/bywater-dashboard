@@ -60,7 +60,16 @@ class TicketHistoryList extends React.Component {
     render() {
         const { history } = this.props;
 
-        return <div style={{ marginLeft: 4, marginTop: 32, marginRight: 4, marginBottom: 4, overflow: 'auto' }}>
+        return <div
+                style={{
+                    height: '100%',
+                    paddingLeft: 4,
+                    paddingTop: 32,
+                    paddingRight: 4,
+                    paddingBottom: 4,
+                    overflowY: 'auto'
+                }}
+            >
             { history.filter( ( { Type } ) => Type != 'EmailRecord' ).map( ( entry, i ) => {
                 const created = moment.utc( entry.Created );
                 created.local();
@@ -99,6 +108,7 @@ export default class TicketDialog extends React.Component {
 
     render() {
         const {
+            classes,
             popup_config,
             open,
             onClose,
@@ -109,10 +119,11 @@ export default class TicketDialog extends React.Component {
         if ( !ticket ) return null;
 
         return <MobileDialog
+                classes={{ paper: classes.fixedDialogPaper }}
+                maxWidth={false}
                 open={open}
                 onClose={onClose}
                 aria-labelledby="ticket-dialog-title"
-                maxWidth="md"
             >
             <AppBar color="default" position="static">
                 <Toolbar disableGutters={true}>
@@ -155,7 +166,8 @@ export default class TicketDialog extends React.Component {
                     disableLazyLoading={true}
                     index={this.state.tab}
                     onChangeIndex={ tab => this.setState( { tab } ) }
-                    style={{ height: "75vh" }}
+                    style={{ height: "100%" }}
+                    containerStyle={{ height: "100%" }}
                 >
                     <Table>
                         <TableHead>

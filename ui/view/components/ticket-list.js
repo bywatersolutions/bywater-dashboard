@@ -43,11 +43,13 @@ class TicketItem extends React.Component {
         const {
             classes,
             onClick,
+            index,
             ticket,
+            column_id,
             ticketID,
         } = this.props;
 
-        return <Draggable draggableId={ticketID}>
+        return <Draggable draggableId={ 'ticket:' + column_id + ':' + ticketID } index={index}>
             { ( provided, snapshot ) => {
                 const interceptOnClick = ( event ) => {
                     if ( provided.dragHandleProps ) {
@@ -59,6 +61,14 @@ class TicketItem extends React.Component {
                     onClick( event );
                 };
 
+                // Makes dragged tickets look better
+                const style = {
+                    backgroundColor: snapshot.isDragging ? 'rgba( 255, 255, 255, 0.7 )' : 'white',
+                    ...( provided.draggableProps.style ),
+                    // Currently unneedded, but good future-proofing
+                    ...( provided.dragHandleProps.style ),
+                };
+
                 return <React.Fragment>
                     <ListItem
                             button
@@ -66,10 +76,11 @@ class TicketItem extends React.Component {
                             { ...provided.draggableProps }
                             { ...provided.dragHandleProps }
                             onClick={interceptOnClick}
+                            style={style}
                         >
                         <ListItemText
-                            primary={ "#" + ticketID }
-                            secondary={ ticket ? ticket.Subject : "Loading..." }
+                            primary={ ticket ? ticket.Subject : "Loading..." }
+                            secondary={ "#" + ticketID }
                         />
                     </ListItem>
                     { provided.placeholder }
@@ -100,7 +111,7 @@ export default class TicketList extends React.Component {
     }
 
     render() {
-        const { classes, tickets, title } = this.props;
+        const { classes, column: { column_id, tickets, name }, canDrop = false } = this.props;
 
         // We do a fair amount of work here to avoid keeping the dialogs inside the Droppable, to
         // avoid unnecessary rerenders.
@@ -114,14 +125,22 @@ export default class TicketList extends React.Component {
                     onClose={ () => this.closeTicketDialog( ticketID ) }
                 />
             ) }
-            <Droppable droppableId={title}>
+            <Droppable droppableId={ 'column:' + column_id.toString() } isDropDisabled={!canDrop}>
                 { ( provided, snapshot ) => 
                     <Card className={ snapshot.isDraggingOver ? classes.dragOver : null }>
                         <CardContent>
-                            <Typography type="headline">{title}</Typography>
+                            <Typography type="headline">{name}</Typography>
                             <div ref={ provided.innerRef }>
                                 <List>
-                                    { tickets.map( ticketID => <TicketItem key={ticketID} ticketID={ticketID} onClick={ () => this.openTicketDialog( ticketID ) } /> ) }
+                                    { tickets.map( ( ticketID, index ) =>
+                                        <TicketItem
+                                            key={ticketID}
+                                            index={index}
+                                            column_id={column_id}
+                                            ticketID={ticketID}
+                                            onClick={ () => this.openTicketDialog( ticketID ) }
+                                        />
+                                    ) }
                                     { provided.placeholder || ( !tickets.length ? <TicketPlaceholder /> : null ) }
                                 </List>
                             </div>

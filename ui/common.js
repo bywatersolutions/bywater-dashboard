@@ -18,6 +18,11 @@ export const theme = createMuiTheme({
 export const styles = theme => ( {
     placeholder: { opacity: .3 },
     dragOver: { backgroundColor: theme.palette.action.hover },
+    fixedDialogPaper: { 
+        height: '90vh',
+        maxHeight: null,
+        width: theme.breakpoints.values.md,
+    },
     flex: { flex: 1 },
     fullPage: { flexGrow: 1, height: '100vh' },
     iconAdornment: { paddingRight: theme.spacing.unit * 1, verticalAlign: 'bottom' },

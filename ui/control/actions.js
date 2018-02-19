@@ -14,11 +14,22 @@ window._apiFetch = function _apiFetch( method, url, body ) {
     } );
 };
 
-function _apiAction( { type, successfulType, method, path, pre = body => body, post = response => response.json() } ) {
-    return ( body ) => ( async dispatch => {
+function _apiAction( {
+    type,
+    successfulType,
+    method,
+    path,
+    pre = ( body, getState ) => body,
+    post = response => response.json(),
+} ) {
+    return ( body ) => ( async ( dispatch, getState ) => {
+        let filteredBody = pre( body, getState );
+
+        if ( filteredBody === false ) return;
+
         dispatch( { type: 'IN_PROGRESS', payload: { request: body, type } } );
 
-        let response = await _apiFetch( method, path, pre( body ) );
+        let response = await _apiFetch( method, path, filteredBody );
 
         if ( response.ok ) {
             dispatch( { type: successfulType, payload: { originalType: type, request: body, response, result: await post( response, dispatch ) } } );
@@ -75,4 +86,36 @@ export const getHistory = _apiAction( {
     successfulType: 'HISTORY_FETCHED',
     method: 'POST',
     path: '/json/ticket/history',
+} );
+
+export const ticketMoveOwner = _apiAction( {
+    type: 'TICKET_MOVE',
+    successfulType: 'TICKET_UPDATED',
+    method: 'POST',
+    path: '/json/ticket/update',
+
+    pre: ( body, getState ) => ( {
+        ticket_id: body.ticket_id,
+        Owner: body.rt_username,
+    } ),
+} );
+
+export const ticketMoveColumn = _apiAction( {
+    type: 'TICKET_MOVE',
+    successfulType: 'TICKET_UPDATED',
+    method: 'POST',
+    path: '/json/ticket/update',
+
+    pre: ( body, getState ) => {
+        let { employee: { columns = {} }, lead: { columns: lead_columns = {} } } = getState();
+
+        let column = Object.values( columns ).find( ( { column_id } ) => column_id == body.destinationColumnID ) ||
+            Object.values( columns ).find( ( { column_id } ) => column_id == body.destinationColumnID );
+        if ( !column || !column.drag_action ) return false;
+
+        return {
+            ticket_id: body.ticket_id,
+            ...column.drag_action
+        };
+    },
 } );

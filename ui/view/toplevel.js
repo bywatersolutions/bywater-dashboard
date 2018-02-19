@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect, Switch, withRouter } from 'react-router';
 
-import { AppBar, Icon, Tab, Tabs, Toolbar, Typography } from 'material-ui';
+import { AppBar, Icon, Reboot, Tab, Tabs, Toolbar, Typography } from 'material-ui';
 import { MuiThemeProvider } from 'material-ui/styles';
 
 import { connectWithStyles, theme } from '../common';
@@ -51,6 +51,7 @@ let PrivateRoute = connect( ( { user } ) => ( { user } ) )( ( { component: Compo
 export default class ToplevelContainer extends React.Component {
     render() {
         return <MuiThemeProvider theme={theme}>
+            <Reboot />
             <div id="toplevel" style={{ height: "100vh" }}>
                 <ToplevelToolbar />
                 <Switch>
