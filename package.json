@@ -51,6 +51,7 @@
     "lodash": "^4.17.4",
     "material-design-icons": "^3.0.1",
     "material-ui": "^1.0.0-beta.21",
+    "moment": "^2.20.1",
     "patch-package": "^5.0.0",
     "postinstall-prepare": "^1.0.1",
     "react": "^16.2.0",
