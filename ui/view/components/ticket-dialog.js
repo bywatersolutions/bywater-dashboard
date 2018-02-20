@@ -90,8 +90,8 @@ class TicketHistoryList extends React.Component {
 }
 
 @connectWithStyles(
-    ( { employee, inProgress, tickets }, { ticketID } ) => ( {
-        popup_config: employee.popup_config,
+    ( { user, inProgress, tickets }, { ticketID } ) => ( {
+        popup_config: user.popup_config,
         ticket: tickets[ticketID],
     } )
 )

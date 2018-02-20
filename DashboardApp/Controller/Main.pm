@@ -8,12 +8,38 @@ use DashboardApp::Model::Bugzilla;
 use Text::Quoted;
 use Try::Tiny;
 use Mojo::Exception;
+use Mojo::JSON qw( encode_json );
+
+sub _get_user_info {
+    my $c = shift;
+    my $config = DashboardApp::Model::Config::get_config();
+
+    return undef unless ( $c->session && $c->session->{user_id} );
+
+    return {
+        user_id => $c->session->{user_id},
+        username => $c->session->{rt_username},
+        first_name => $c->session->{first_name},
+        last_name => $c->session->{last_name},
+        queues => $c->tickets_model->get_queues(),
+        custom_fields => $config->{rt}->{custom_fields} || [],
+        statuses => DashboardApp::Model::Config::get_rt_statuses(),
+        rt_users => $c->app->model('user')->get_rt_users(),
+        popup_config => $config->{card_popup},
+    };
+}
 
 sub index {
     my $c = shift;
     my $config = DashboardApp::Model::Config::get_config();
 
-    $c->stash( debug_frontend => $config->{debug_frontend} );
+    my $user_info = _get_user_info( $c );
+
+    if ( $user_info && !$c->tickets_model->ping() ) {
+        $user_info = undef;
+    }
+
+    $c->stash( debug_frontend => $config->{debug_frontend}, user_info => encode_json( $user_info ) );
 }
 
 sub login {
@@ -37,10 +63,20 @@ sub login {
     $rt->login( username => $json->{login}, password => $json->{password} );
 
     my $rt_cookie = JSON->new->encode( { COOKIES => $rt->_cookie->{COOKIES} } );
-    $c->session({ user_id => $user->user_id, roles => \@roles, rt_cookie => $rt_cookie });
+    $c->session({
+        user_id => $user->user_id,
+        first_name => $user->first_name,
+        last_name => $user->last_name,
+        roles => \@roles,
+        rt_username => $json->{login},
+        rt_cookie => $rt_cookie,
+    });
 
     # Default view for a user will be the first role defined
-    $c->render(json => { role => $roles[0] });
+    $c->render(json => {
+        role => $roles[0],
+        user_info => _get_user_info( $c ),
+    });
 }
 
 sub logout {

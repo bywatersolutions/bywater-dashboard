@@ -7,6 +7,7 @@ use DashboardApp::Model::Config;
 use IO::Socket::SSL; # qw(debug3);
 use Net::SSLeay;
 use JSON qw/decode_json/;
+use Try::Tiny;
 
 my $config = DashboardApp::Model::Config::get_config();
 die "RT configuration not found." unless ( $config->{rt} );
@@ -34,6 +35,37 @@ sub rt {
     }
 
     return $self->{rt};
+}
+
+=head2 ping
+
+=over 4
+my $login_valid = $c->tickets_model->ping();
+=end
+
+Checks that we have a currently-valid RT cookie.
+
+=cut
+sub ping {
+    my ( $self ) = @_;
+    return try {
+        # If it takes longer than this, we might as well just have the user log in.
+        $self->rt->timeout( 3 );
+        # This is the same method that RT::Client::REST itself uses to log in.
+        $self->rt->_submit( "/ticket/1" );
+
+        1;
+    } catch {
+        if ( $_->isa('RT::Client::REST::AuthenticationFailureException') ) {
+            0;
+        } elsif ( $_->isa('RT::Client::REST::RequestTimedOutException') ) {
+            0;
+        } else {
+            $_->rethrow;
+        }
+	} finally {
+        $self->rt->timeout( 15 );
+    };
 }
 
 sub get_queues {

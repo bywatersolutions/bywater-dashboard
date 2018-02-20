@@ -17,16 +17,16 @@ import 'typeface-roboto';
 import logoSrc from './images/bywater-logo.png';
 
 @withRouter
-@connectWithStyles( store => ( { username: store.user.username } ) )
+@connectWithStyles( ( { user } ) => ( { user } ) )
 class ToplevelToolbar extends React.Component {
     render() {
-        const { classes, history, username, location } = this.props;
+        const { classes, history, user, location } = this.props;
 
         return <AppBar position="static">
             <Toolbar>
                 <Typography type="title" className={classes.iconAdornment}><img src={logoSrc} /></Typography>
                 <Typography type="title" color="inherit">PALANTIR</Typography>
-                { username && <Tabs
+                { user.username && <Tabs
                         className={classes.topTabs}
                         value={location.pathname}
                         onChange={ ( event, value ) => history.push( value ) }
@@ -36,7 +36,10 @@ class ToplevelToolbar extends React.Component {
                     <Tab value="/assign" label="ASSIGN TICKETS" />
                     <Tab value="/reports" label="REPORTS" />
                 </Tabs> }
-                { username && <Typography type="subheading" color="inherit"><Icon className={classes.iconAdornment}>account_circle</Icon>{username}</Typography> }
+                { user.username && <Typography type="subheading" color="inherit">
+                    <Icon className={classes.iconAdornment}>account_circle</Icon>
+                    {user.first_name} {user.last_name}
+                </Typography> }
             </Toolbar>
         </AppBar>;
     }

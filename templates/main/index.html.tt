@@ -16,6 +16,9 @@
     </head>
     <body>
         <div id="react-root"><div id="pre-react-loading">Loading...</div></div>
+        <script>
+window.EXISTING_USER_INFO = [% user_info %];
+        </script>
         <script src="/bundle.js"></script>
     </body>
 </html>

@@ -2,11 +2,24 @@
 
 import produce from 'immer';
 
-export function user( state = {}, action ) {
+let userInitialState = window.EXISTING_USER_INFO || {};
+
+export function user( state = userInitialState, { type, payload } ) {
     return produce( state, draft => {
-        switch ( action.type ) {
+        switch ( type ) {
             case 'LOGGED_IN':
-                draft.username = action.payload.request.login;
+                for ( let key of [
+                    'username',
+                    'first_name',
+                    'last_name',
+                    'custom_fields',
+                    'popup_config',
+                    'queues',
+                    'rt_users',
+                    'statuses',
+                ] ) {
+                    draft[key] = payload.result.user_info[key];
+                }
                 break;
         }
     } );
@@ -16,10 +29,7 @@ export function employee( state = {}, { type, payload } ) {
     return produce( state, draft => {
         switch ( type ) {
             case 'DASHBOARD_FETCHED':
-                for ( let key of [ 'columns', 'custom_fields', 'popup_config', 'queues', 'rt_users', 'statuses' ] ) {
-                    draft[key] = payload.result[key];
-                }
-                break;
+                draft.columns = payload.result.columns;
         }
     } );
 }

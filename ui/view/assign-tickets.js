@@ -88,7 +88,6 @@ class AssignUserGrid extends React.Component {
 @connectWithStyles( ( { inProgress, employee, lead } ) => ( { employee, lead, loading: !!inProgress.GET_DASHBOARD || !!inProgress.GET_LEAD_DASHBOARD } ) )
 export default class AssignTickets extends React.Component {
     componentWillMount() {
-        if ( !this.props.loading && !this.props.employee.popup_config ) this.props.dispatch( actions.getDashboard() );
         this.props.dispatch( actions.getLeadDashboard() );
     }
 
