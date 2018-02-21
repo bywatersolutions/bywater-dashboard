@@ -2,6 +2,8 @@
 
 import _ from 'lodash';
 
+import { lookupColumn } from '../common';
+
 function sleep( length ) {
     return new Promise( resolve => setTimeout( resolve, length ) );
 }
@@ -109,8 +111,8 @@ export const ticketMoveColumn = _apiAction( {
     pre: ( body, getState ) => {
         let { employee: { columns = {} }, lead: { columns: lead_columns = {} } } = getState();
 
-        let column = Object.values( columns ).find( ( { column_id } ) => column_id == body.destinationColumnID ) ||
-            Object.values( columns ).find( ( { column_id } ) => column_id == body.destinationColumnID );
+        let column = lookupColumn( columns, body.destinationColumnID ) ||
+            lookupColumn( lead_columns, body.destinationColumnID );
         if ( !column || !column.drag_action ) return false;
 
         return {

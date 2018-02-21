@@ -3,8 +3,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect, Switch, withRouter } from 'react-router';
+import { ConnectedRouter } from 'react-router-redux';
 
-import { AppBar, Icon, Reboot, Tab, Tabs, Toolbar, Typography } from 'material-ui';
+import {
+    AppBar,
+    Backdrop,
+    Icon,
+    Portal,
+    Reboot,
+    Snackbar,
+    Tab,
+    Tabs,
+    Toolbar,
+    Typography,
+} from 'material-ui';
 import { MuiThemeProvider } from 'material-ui/styles';
 
 import { connectWithStyles, theme } from '../common';
@@ -45,23 +57,37 @@ class ToplevelToolbar extends React.Component {
     }
 }
 
-let PrivateRoute = connect( ( { user } ) => ( { user } ) )( ( { component: Component, user, ...rest } ) => (
-    <Route {...rest} render={ props => (
-        user.username ? <Component {...props} /> : <LoginPage />
-    ) } />
-) );
+const handledErrors = [ 'LOGIN' ];
 
+@connectWithStyles( ( { user, errors } ) => ( { user, errors } ) )
 export default class ToplevelContainer extends React.Component {
+    renderPrivateRoute( path, Component ) {
+        return <Route exact path={path} render={ props => (
+            this.props.user.username ? <Component {...props} /> : <LoginPage />
+        ) } />;
+    }
+
     render() {
+        const { classes, errors, history, user } = this.props;
+        const isUnhandledError = Object.keys( errors ).some( error => !handledErrors.includes( error ) );
+
         return <MuiThemeProvider theme={theme}>
             <Reboot />
-            <div id="toplevel" style={{ height: "100vh" }}>
-                <ToplevelToolbar />
-                <Switch>
-                    <PrivateRoute exact path="/" component={MyTickets} />
-                    <PrivateRoute exact path="/assign" component={AssignTickets} />
-                </Switch>
-            </div>
+            <ConnectedRouter history={history}>
+                <div id="toplevel" style={{ height: "100vh" }}>
+                    <ToplevelToolbar />
+                    { user.username ? <Switch>
+                        <Route exact path="/" component={MyTickets} />
+                        <Route exact path="/assign" component={AssignTickets} />
+                    </Switch> : <LoginPage /> }
+                </div>
+            </ConnectedRouter>
+            <Snackbar
+                anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+                SnackbarContentProps={{ classes: { root: classes.errorSnackbarRoot } }}
+                open={ isUnhandledError }
+                message={ "An error has occurred, please reload the page to continue." }
+            />
         </MuiThemeProvider>;
     }
 }

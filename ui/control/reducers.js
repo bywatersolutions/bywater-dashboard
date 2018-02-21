@@ -2,6 +2,8 @@
 
 import produce from 'immer';
 
+import { lookupColumn } from '../common';
+
 let userInitialState = window.EXISTING_USER_INFO || {};
 
 export function user( state = userInitialState, { type, payload } ) {
@@ -40,6 +42,18 @@ export function lead( state = {}, { type, payload } ) {
             case 'LEAD_DASHBOARD_FETCHED':
                 for ( let key of [ 'columns', 'users' ] ) {
                     draft[key] = payload.result[key];
+                }
+                break;
+
+            // We optimistically remove the ticket from the column, for quick feedback.
+            // If we need to, we'll just refresh the page on error.
+            case 'IN_PROGRESS':
+                let column;
+                if (
+                    payload.type == 'TICKET_MOVE' &&
+                    ( column = lookupColumn( draft.columns, payload.request.sourceColumnID ) )
+                ) {
+                    column.tickets.splice( payload.request.sourceColumnIndex, 1 );
                 }
                 break;
         }

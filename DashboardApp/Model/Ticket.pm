@@ -1,7 +1,10 @@
 package DashboardApp::Model::Ticket;
 
 use Mojo::Base -strict;
+use Mojo::Exception;
+use Mojo::Log;
 use RT::Client::REST;
+use RT::Client::REST::Forms;
 use DashboardApp::Model::Config;
 
 use IO::Socket::SSL; # qw(debug3);
@@ -16,7 +19,11 @@ my @queues;
 
 sub new {
     my ( $class, $memcached, $rt_cookie ) = @_;
-    return bless( { memcached => $memcached, rt_cookie => $rt_cookie }, $class );
+    return bless( {
+        memcached => $memcached,
+        rt_cookie => $rt_cookie,
+        log => Mojo::Log->new(),
+    }, $class );
 }
 
 sub rt {
@@ -35,6 +42,14 @@ sub rt {
     }
 
     return $self->{rt};
+}
+
+sub _rt_call {
+    my ( $self, $url, $content ) = @_;
+
+    my $response = $self->rt->_submit( $url, $content )->decoded_content;
+
+    return form_parse( $response );
 }
 
 =head2 ping
@@ -93,12 +108,21 @@ sub search_tickets {
 
 sub get_tickets {
     my ( $self, $ids ) = @_;
-    
+
     my $result = {};
-    foreach my $id ( @$ids ) {
-        $result->{$id} = $self->rt->show(type => 'ticket', id => $id);
+    return $result unless scalar @$ids;
+
+    foreach my $form ( @{ $self->_rt_call( 'show', { id => 'ticket/' . join( ',', @$ids ) } ) } ) {
+        my ( $comments, $objects, $values, $errors ) = @$form;
+
+        next if $errors;
+
+        my $id = $values->{id};
+        $id =~ s,^ticket/,,g;
+        $result->{$id} = $values;
+
         $result->{$id}->{link} = $config->{rt}->{host} . "/Ticket/Display.html?id=" . $id;
-        
+
         my @bug_ids = split( ",", $result->{$id}->{ $config->{rt}->{bugzilla_field_name} } || "" );
         $result->{$id}->{bugzilla_ids} = @bug_ids ? \@bug_ids : undef;
         $result->{$id}->{related_ids} = [];
@@ -124,38 +148,57 @@ sub update_ticket {
     $self->rt->edit ( type => 'ticket', id => $ticket_id, set => $params );
 }
 
-sub get_history_entry {
-    my ( $self, $ticket_id, $history_id ) = @_;
+sub get_history_entries {
+    my ( $self, $ticket_id, $history_ids ) = @_;
 
-    my $cache_key = "history-entry-$history_id";
-    my $cached_entry = $self->{memcached}->get($cache_key);
-    return $cached_entry if ( $cached_entry );
+    my $results = $self->{memcached}->get_multi(
+        map { "history-entry-$_" } @$history_ids
+    );
 
-    my $response = $self->rt->_submit("ticket/$ticket_id/history/id/$history_id")->decoded_content;
-    my @matches = map { $_ =~ s/(?:^(\s+)|(\s+)$)//g; $_ } ( $response =~ /(.*?): (.*?)\n(?!\s)/sg );
-    my $history_entry = { splice( @matches, 2 ) };
+    my @uncached_history_ids = grep { !exists $results->{$_} } @$history_ids;
 
-    $self->{memcached}->set( $cache_key, $history_entry );
+    foreach my $form ( @{ $self->_rt_call( 'show', { id => "ticket/$ticket_id/history/id/" . join( ',', @uncached_history_ids ) } ) } ) {
+        my ( $comments, $order, $values, $errors ) = @$form;
 
-    return $history_entry;
+        if ( $errors ) {
+            Mojo::Exception->throw( "Error fetching 'ticket/$ticket_id/history' entries: $errors" );
+        }
+
+        $results->{ $values->{id} } = $values;
+        $self->{memcached}->set( "history-entry-" . $values->{id}, $values );
+    }
+
+    return [ map { $results->{$_} } @$history_ids ];
 }
 
 sub get_history {
     my ( $self, $ticket_id ) = @_;
 
-    my $response = $self->rt->_submit("ticket/$ticket_id/history")->decoded_content;
-
-    my @lines = split("\n", $response);
     my @items;
-    foreach my $line ( @lines ) {
-        if (my ( $id, $descr ) = ( $line =~ /(\d+): (.*)/ ) ) {
-            push( @items, { id => $id, descr => $descr } );# if ( $descr =~ /Ticket created/ or $descr =~ /Correspondence added/ );
+
+    try {
+        # form_parse doesn't work on these, so we have to parse it by hand.
+        my $response = $self->rt->_submit("ticket/$ticket_id/history")->decoded_content;
+
+        my @lines = split("\n", $response);
+        foreach my $line ( @lines ) {
+            if (my ( $id, $descr ) = ( $line =~ /(\d+): (.*)/ ) ) {
+                #push( @items, { id => $key, descr => $values->{$key} } );# if ( $descr =~ /Ticket created/ or $descr =~ /Correspondence added/ );
+                push( @items, $id );
+            }
         }
+    } catch {
+        die $_ if !ref $_;
+
+        if ( $_->isa( 'RT::Client::REST::Exception' ) ) {
+            $self->app->log->warn( "Error fetching ticket #$ticket_id history: " . $_ );
+        }
+        $_->rethrow();
     }
 
     return [] unless ( @items );
 
-    return [ map { $self->get_history_entry( $ticket_id, $_->{id} ) } @items ];
+    return $self->get_history_entries( $ticket_id, \@items );
 }
 
 1;

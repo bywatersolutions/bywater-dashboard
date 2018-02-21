@@ -26,10 +26,8 @@ const store = createStore(
 );
 
 ReactDOM.render(
-  <Provider store={store}>
-    <ReactRouterRedux.ConnectedRouter history={history}>
-      <ToplevelContainer />
-    </ReactRouterRedux.ConnectedRouter>
-  </Provider>,
-  document.getElementById('react-root')
+    <Provider store={store}>
+        <ToplevelContainer history={history} />
+    </Provider>,
+    document.getElementById('react-root')
 );

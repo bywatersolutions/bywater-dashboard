@@ -18,6 +18,9 @@ export const theme = createMuiTheme({
 export const styles = theme => ( {
     placeholder: { opacity: .3 },
     dragOver: { backgroundColor: theme.palette.action.hover },
+    errorSnackbarRoot: {
+        backgroundColor: theme.palette.error.main,
+    },
     fixedDialogPaper: { 
         height: '90vh',
         maxHeight: null,
@@ -37,4 +40,9 @@ export const withOurStyles = withStyles( styles );
 
 export function connectWithStyles( ...rest ) {
     return compose( withStyles( styles ), connect( ...rest ) );
+}
+
+// FIXME: move to '/actions/common' ?
+export function lookupColumn( columns, columnID ) {
+    return Object.values( columns ).find( ( { column_id } ) => column_id == columnID );
 }
