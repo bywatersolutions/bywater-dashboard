@@ -54,6 +54,10 @@ bugzilla:
     rt_field: "CF.{Community Bug}"
 
 card_popup:
+  history:
+    initial_old: 1
+    initial_new: 10
+    load_chunk: 10
   header_row:
     - [ "Requestor", "ticket", "Requestor" ]
     - [ "Owner", "ticket", "Owner" ]

@@ -50,7 +50,16 @@ export default class TicketDialog extends React.Component {
     };
 
     componentWillReceiveProps( { open, ticketID, ticket, dispatch } ) {
-        if ( open && !this.props.open && ticketID && !ticket.history ) {
+        if (
+            // We are open with a ticket, and either...
+            open && ticketID &&
+            (
+                // We were not previously open..
+                !this.props.open ||
+                // ... or we did not previously have a ticket
+                ( !this.props.ticket && ticket )
+            ) && !ticket.history
+        ) {
             dispatch( actions.getHistory( { ticket_id: ticketID } ) );
         }
     }

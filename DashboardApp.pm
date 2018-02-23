@@ -71,6 +71,7 @@ sub startup {
     $auth->post("/json/ticket/update")->to("main#update_ticket");
     $auth->post("/json/ticket/details")->to("main#ticket_details");
     $auth->post("/json/ticket/history")->to("main#ticket_history");
+    $auth->post("/json/ticket/history_entries")->to("main#ticket_history_entries");
     $auth->post("/json/ticket/add_correspondence")->to("main#ticket_add_correspondence");
     $auth->post("/json/ticket/search")->to("main#ticket_search");
 

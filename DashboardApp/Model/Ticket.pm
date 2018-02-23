@@ -157,18 +157,20 @@ sub get_history_entries {
 
     my @uncached_history_ids = grep { !exists $results->{$_} } @$history_ids;
 
-    foreach my $form ( @{ $self->_rt_call( 'show', { id => "ticket/$ticket_id/history/id/" . join( ',', @uncached_history_ids ) } ) } ) {
-        my ( $comments, $order, $values, $errors ) = @$form;
+    if ( scalar @uncached_history_ids ) {
+        foreach my $form ( @{ $self->_rt_call( 'show', { id => "ticket/$ticket_id/history/id/" . join( ',', @uncached_history_ids ) } ) } ) {
+            my ( $comments, $order, $values, $errors ) = @$form;
 
-        if ( $errors ) {
-            Mojo::Exception->throw( "Error fetching 'ticket/$ticket_id/history' entries: $errors" );
+            if ( $errors ) {
+                Mojo::Exception->throw( "Error fetching 'ticket/$ticket_id/history' entries: $errors" );
+            }
+
+            $results->{ 'history-entry-' . $values->{id} } = $values;
+            $self->{memcached}->set( "history-entry-" . $values->{id}, $values );
         }
-
-        $results->{ $values->{id} } = $values;
-        $self->{memcached}->set( "history-entry-" . $values->{id}, $values );
     }
 
-    return [ map { $results->{$_} } @$history_ids ];
+    return [ map { $results->{ "history-entry-$_" } } @$history_ids ];
 }
 
 sub get_history {
@@ -176,33 +178,46 @@ sub get_history {
 
     my @items;
 
-    try {
-        # form_parse doesn't work on these, so we have to parse it by hand.
-        $self->rt->timeout( 180 );
-        my $response = $self->rt->_submit("ticket/$ticket_id/history")->decoded_content;
+    # form_parse doesn't work on these, so we have to parse it by hand.
+    my $response = $self->rt->_submit("ticket/$ticket_id/history")->decoded_content;
 
-        my @lines = split("\n", $response);
-        foreach my $line ( @lines ) {
-            if (my ( $id, $descr ) = ( $line =~ /(\d+): (.*)/ ) ) {
-                #push( @items, { id => $key, descr => $values->{$key} } );# if ( $descr =~ /Ticket created/ or $descr =~ /Correspondence added/ );
-                push( @items, $id );
-            }
+    my @lines = split("\n", $response);
+    foreach my $line ( @lines ) {
+        if (my ( $id, $descr ) = ( $line =~ /(\d+): (.*)/ ) ) {
+            next if ( $descr =~ /^Outgoing email/ );
+            next if ( $descr =~ /^Sending the previous .?mail/ );
+            #push( @items, { id => $key, descr => $values->{$key} } );# if ( $descr =~ /Ticket created/ or $descr =~ /Correspondence added/ );
+            push( @items, $id );
         }
-    } catch {
-        die $_ if !ref $_;
-
-        $self->rt->timeout( 15 );
-        if ( $_->isa( 'RT::Client::REST::Exception' ) ) {
-            $self->{log}->warn( "Error fetching ticket #$ticket_id history: " . $_ );
-        }
-        $_->rethrow();
-    };
-
-    $self->rt->timeout( 15 );
+    }
 
     return [] unless ( @items );
 
-    return $self->get_history_entries( $ticket_id, \@items );
+    my $initial_old = $config->{card_popup}->{history}->{initial_old};
+    my $load_chunk = $config->{card_popup}->{history}->{load_chunk};
+    my $initial_new = $config->{card_popup}->{history}->{initial_new};
+
+    # We don't want to bother making the user load more entries unless there's at least another
+    # chunk to load.
+    if ( scalar @items <= ( $initial_old + $load_chunk + $initial_new ) ) {
+        return {
+            old => $self->get_history_entries( $ticket_id, \@items ),
+            unloaded => [],
+            new => [],
+        };
+    }
+
+    return {
+        old => $self->get_history_entries(
+            $ticket_id,
+            [ @items[ 0..( $initial_old - 1 ) ] ],
+        ),
+        unloaded => [ @items[ $initial_old..( $#items - $initial_new ) ] ],
+        new => $self->get_history_entries(
+            $ticket_id,
+            [ @items[ ( -$initial_new )..-1 ] ],
+        ),
+    };
 }
 
 1;

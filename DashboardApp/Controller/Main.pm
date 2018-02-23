@@ -137,6 +137,15 @@ sub ticket_history {
     $c->render( json => $result );
 }
 
+sub ticket_history_entries {
+    my $c = shift;
+
+    my $json = $c->req->json;
+    my $result = $c->tickets_model->get_history_entries( $json->{ticket_id}, $json->{history_ids} );
+
+    $c->render( json => $result );
+}
+
 sub ticket_add_correspondence {
     my $c = shift;
     my $json = $c->req->json;

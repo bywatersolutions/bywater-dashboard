@@ -121,3 +121,17 @@ export const ticketMoveColumn = _apiAction( {
         };
     },
 } );
+
+export const getOldHistoryEntries = _apiAction( {
+    type: 'GET_OLD_HISTORY_ENTRIES',
+    successfulType: 'OLD_HISTORY_ENTRIES_FETCHED',
+    method: 'POST',
+    path: '/json/ticket/history_entries',
+} );
+
+export const getNewHistoryEntries = _apiAction( {
+    type: 'GET_NEW_HISTORY_ENTRIES',
+    successfulType: 'NEW_HISTORY_ENTRIES_FETCHED',
+    method: 'POST',
+    path: '/json/ticket/history_entries',
+} );

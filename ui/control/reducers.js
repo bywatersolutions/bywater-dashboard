@@ -61,6 +61,8 @@ export function lead( state = {}, { type, payload } ) {
 }
 
 export function tickets( state = {}, { type, payload } ) {
+    let history;
+
     return produce( state, draft => {
         switch ( type ) {
             case 'TICKETS_FETCHED':
@@ -71,6 +73,19 @@ export function tickets( state = {}, { type, payload } ) {
 
             case 'HISTORY_FETCHED':
                 draft[ payload.request.ticket_id ].history = payload.result;
+                break;
+
+            case 'OLD_HISTORY_ENTRIES_FETCHED':
+                history = draft[ payload.request.ticket_id ].history;
+                history.unloaded.splice( 0, payload.result.length );
+                history.old.push( ...payload.result );
+                break;
+
+            case 'NEW_HISTORY_ENTRIES_FETCHED':
+                history = draft[ payload.request.ticket_id ].history;
+                history.unloaded.splice( -payload.result.length );
+                history.new.unshift( ...payload.result );
+                break;
         }
     } );
 }

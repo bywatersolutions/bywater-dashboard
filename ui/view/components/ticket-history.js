@@ -5,6 +5,7 @@
 import {
     AppBar,
     Divider,
+    Fade,
     Icon,
     IconButton,
     Tab,
@@ -32,6 +33,7 @@ import moment from 'moment';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { connectWithStyles } from '../../common';
 import * as actions from '../../control/actions';
 
 function _renderHistoryEntryContent( content ) {
@@ -44,9 +46,6 @@ const trimByRenderer = entry => [
 ];
 
 const historyEntryRenderers = {
-    AddLink: trimByRenderer,
-    AddReminder: trimByRenderer,
-    AddWatcher: trimByRenderer,
     Comment: entry => [
         'Private comment',
         entry.Content
@@ -60,40 +59,147 @@ const historyEntryRenderers = {
         'Ticket created',
         entry.Content
     ],
-    CustomField: null,
-    DeleteLink: null,
-    DelWatcher: null,
-    Disabled: null,
     EmailRecord: null,
-    Enabled: null,
-    "Forward Ticket": null,
-    "Forward Transaction": null,
-    OpenReminder: null,
-    ResolveReminder: null,
     // `Owner` changes will be handled by AddWatcher
     Set: entry => ( entry.Field == 'Owner' ? null : [
         `${entry.Field} changed to "${entry.NewValue}"`,
         `Old value: "${entry.OldValue}"`
     ] ),
-    SetWatcher: null,
     Status: entry => [
         `Status changed to ${entry.NewValue}`,
         `Old status: ${entry.OldValue}`
     ],
     SystemError: null,
-    Told: null,
 };
 
+@connectWithStyles(
+    ( { inProgress }, { kind } ) => ( {
+        inProgress: kind == "new" ?
+            inProgress.GET_NEW_HISTORY_ENTRIES :
+            inProgress.GET_OLD_HISTORY_ENTRIES,
+    } )
+)
+class LoadMorePanel extends React.Component {
+    onClick = () => {
+        const { dispatch, kind, ids, ticketID } = this.props;
+
+        this.props.dispatch(
+            actions[ kind == "new" ? 'getNewHistoryEntries' : 'getOldHistoryEntries' ]( {
+                ticket_id: ticketID,
+                history_ids: this.props.ids
+            } )
+        );
+    }
+
+    render() {
+        const { classes, inProgress, ids } = this.props;
+
+        return <ExpansionPanel expanded={false} onChange={ inProgress ? () => {} : this.onClick }>
+            <ExpansionPanelSummary>
+                <div className={ classes.centeredLoadMore }>
+                    { inProgress ? 'Loading...' : `Load ${ids.length} more...` }
+                </div>
+            </ExpansionPanelSummary>
+        </ExpansionPanel>;
+    }
+}
+
+class TicketHistoryEntry extends React.PureComponent {
+    render() {
+        const { entry } = this.props;
+
+        const result = historyEntryRenderers[ entry.Type ] ? historyEntryRenderers[ entry.Type ](entry) : trimByRenderer( entry );
+
+        if ( result == null ) return null;
+
+        let [ summary, contents ] = result;
+
+        const created = moment.utc( entry.Created );
+        created.local();
+
+        return <Fade in={true}>
+            <ExpansionPanel elevation={2}>
+                <ExpansionPanelSummary expandIcon={ <Icon>expand_more</Icon> }>
+                    <Typography type="body1" style={{
+                            alignSelf: "center",
+                            marginRight: 4,
+                            flexShrink: 1,
+                        }}>
+                        { summary }
+                    </Typography>
+                    <Typography type="body1" style={{
+                            alignSelf: "center",
+                            flexGrow: 1,
+                            textAlign: 'right',
+                        }}>
+                        { entry.Creator }
+                    </Typography>
+                    <Typography type="caption" style={{
+                            alignSelf: "center",
+                            flexShrink: 0,
+                            marginLeft: 8,
+                        }}
+                        title={ created.toString() }>
+                        { created.fromNow() }
+                    </Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <Divider />
+                    <Typography dangerouslySetInnerHTML={ _renderHistoryEntryContent( contents ) } />
+                </ExpansionPanelDetails>
+        </ExpansionPanel>
+        </Fade>;
+    }
+}
+
 @connect(
-    ( { tickets }, { ticketID } ) => ( {
+    ( { tickets, user }, { ticketID } ) => ( {
         history: tickets[ticketID] && tickets[ticketID].history,
+        popup_config: user.popup_config,
     } )
 )
 export default class TicketHistoryList extends React.Component {
+    renderPartialHistory( history ) {
+        const { popup_config: { history: historySettings }, ticketID } = this.props;
+
+        const remaining = history.unloaded.length;
+
+        return <React.Fragment>
+            { history.old.map( entry => <TicketHistoryEntry key={entry.id} entry={entry} /> ) }
+            { remaining == 0 ? null :
+                remaining <= historySettings.load_chunk * 2 ?
+                    <LoadMorePanel
+                        kind="old"
+                        ticketID={ticketID}
+                        ids={history.unloaded}
+                    /> :
+                    <React.Fragment>
+                        <LoadMorePanel
+                            kind="old"
+                            ticketID={ticketID}
+                            ids={ history.unloaded.slice( 0, historySettings.load_chunk ) }
+                        />
+                        <Typography
+                                type="caption"
+                                align="center"
+                                component="div"
+                                style={{ marginTop: 8, marginBottom: 8 }}
+                            >
+                            ⋮
+                        </Typography>
+                        <LoadMorePanel
+                            kind="new"
+                            ticketID={ticketID}
+                            ids={ history.unloaded.slice( -historySettings.load_chunk ) }
+                        />
+                    </React.Fragment>
+            }
+            { history.new.map( entry => <TicketHistoryEntry key={entry.id} entry={entry} /> ) }
+        </React.Fragment>;
+    }
+
     render() {
         const { history } = this.props;
-
-        if ( !history ) return <LinearProgress />;
 
         return <div
                 style={{
@@ -105,44 +211,8 @@ export default class TicketHistoryList extends React.Component {
                     overflowY: 'auto'
                 }}
             >
-            { history.map( ( entry, i ) => {
-                const result = historyEntryRenderers[ entry.Type ] ? historyEntryRenderers[ entry.Type ](entry) : null;
-
-                if ( result == null ) return null;
-                let [ summary, contents ] = result;
-
-                const created = moment.utc( entry.Created );
-                created.local();
-
-                return <ExpansionPanel key={i}>
-                    <ExpansionPanelSummary expandIcon={ <Icon>expand_more</Icon> }>
-                        <Typography type="subheading" style={{
-                                marginRight: 8,
-                                flexShrink: 1,
-                            }}>
-                            { summary }
-                        </Typography>
-                        <Typography type="caption" style={{
-                                alignSelf: "center",
-                                flexGrow: 1,
-                            }}>
-                            { entry.Creator }
-                        </Typography>
-                        <Typography type="caption" style={{
-                                alignSelf: "center",
-                                flexShrink: 0,
-                                marginLeft: 8,
-                            }}
-                            title={ created.toString() }>
-                            { created.fromNow() }
-                        </Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                        <Divider />
-                        <Typography dangerouslySetInnerHTML={ _renderHistoryEntryContent( contents ) } />
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>;
-            } ) }
+            { !history && <LinearProgress /> }
+            { history && this.renderPartialHistory( history ) }
         </div>;
     }
 }
