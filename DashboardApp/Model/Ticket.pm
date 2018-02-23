@@ -178,6 +178,7 @@ sub get_history {
 
     try {
         # form_parse doesn't work on these, so we have to parse it by hand.
+        $self->rt->timeout( 180 );
         my $response = $self->rt->_submit("ticket/$ticket_id/history")->decoded_content;
 
         my @lines = split("\n", $response);
@@ -190,11 +191,14 @@ sub get_history {
     } catch {
         die $_ if !ref $_;
 
+        $self->rt->timeout( 15 );
         if ( $_->isa( 'RT::Client::REST::Exception' ) ) {
-            $self->app->log->warn( "Error fetching ticket #$ticket_id history: " . $_ );
+            $self->{log}->warn( "Error fetching ticket #$ticket_id history: " . $_ );
         }
         $_->rethrow();
-    }
+    };
+
+    $self->rt->timeout( 15 );
 
     return [] unless ( @items );
 

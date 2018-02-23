@@ -134,29 +134,6 @@ sub ticket_history {
     my $json = $c->req->json;
     my $result = $c->tickets_model->get_history( $json->{ticket_id} );
 
-    Text::Quoted::set_quote_characters( undef );
-
-    my $sub;
-    $sub = sub {
-        my $data = $_[0];
-
-        my @result = ();
-        foreach my $item ( @$data ) {
-            if ( ref($item) eq "HASH" ) {
-                next if ( $item->{empty} );
-                push( @result, $item->{text} );
-            } else {
-                push( @result, &$sub( $item ) );
-            }
-        }
-
-        return \@result;
-    };
-
-    foreach my $item ( @$result ) {
-        $item->{Content} = &$sub( extract( $item->{Content} ) );
-    }
-
     $c->render( json => $result );
 }
 

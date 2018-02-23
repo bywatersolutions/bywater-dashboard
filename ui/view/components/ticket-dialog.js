@@ -21,21 +21,6 @@ import Dialog, {
     withMobileDialog,
 } from 'material-ui/Dialog';
 
-import ExpansionPanel, {
-    ExpansionPanelSummary,
-    ExpansionPanelDetails,
-} from 'material-ui/ExpansionPanel';
-
-import List, {
-    ListItem,
-    ListItemText,
-    ListSubheader,
-} from 'material-ui/List';
-
-import {
-    LinearProgress
-} from 'material-ui/Progress';
-
 import Table, {
     TableBody,
     TableCell,
@@ -45,49 +30,13 @@ import Table, {
 
 const MobileDialog = withMobileDialog( { breakpoint: "sm" } )( Dialog );
 
-import moment from 'moment';
 import React from 'react';
 import SwipeableViews from 'react-swipeable-views';
 
 import { connectWithStyles, withOurStyles } from '../../common';
 import * as actions from '../../control/actions';
 
-function _renderHistoryEntryContent( content ) {
-    return { __html: content.join("\n").replace( /\n/g, "<br />" ) };
-}
-
-class TicketHistoryList extends React.Component {
-    render() {
-        const { history } = this.props;
-
-        return <div
-                style={{
-                    height: '100%',
-                    paddingLeft: 4,
-                    paddingTop: 32,
-                    paddingRight: 4,
-                    paddingBottom: 4,
-                    overflowY: 'auto'
-                }}
-            >
-            { history.filter( ( { Type } ) => Type != 'EmailRecord' ).map( ( entry, i ) => {
-                const created = moment.utc( entry.Created );
-                created.local();
-
-                return <ExpansionPanel key={i}>
-                    <ExpansionPanelSummary expandIcon={ <Icon>expand_more</Icon> }>
-                        <Typography type="subheading" style={{ flex: 1 }}>{ entry.Creator } &mdash; { entry.Description }</Typography>
-                        <Typography type="caption" style={{ alignSelf: "center", marginLeft: 8 }} title={ created.toString() }>{ created.fromNow() }</Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                        <Divider />
-                        <Typography dangerouslySetInnerHTML={ _renderHistoryEntryContent( entry.Content ) } />
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>;
-            } ) }
-        </div>;
-    }
-}
+import TicketHistoryList from './ticket-history';
 
 @connectWithStyles(
     ( { user, inProgress, tickets }, { ticketID } ) => ( {
@@ -181,7 +130,7 @@ export default class TicketDialog extends React.Component {
                             </TableRow>
                         </TableBody>
                     </Table>
-                    { ticket.history ? <TicketHistoryList history={ticket.history} /> : <LinearProgress /> }
+                    <TicketHistoryList ticketID={ticketID} />
                 </SwipeableViews>
             </DialogContent>
         </MobileDialog>;
