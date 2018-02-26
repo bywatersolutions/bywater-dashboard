@@ -40,32 +40,50 @@ function _renderHistoryEntryContent( content ) {
     return { __html: content.replace( /\n/g, "<br />" ) };
 }
 
-const trimByRenderer = entry => [
+const trimByRenderer = ( entry, icon ) => [
+    icon || 'change_history',
     entry.Description.replace( new RegExp( `by ${entry.Creator}$` ), ''),
     '',
 ];
 
 const historyEntryRenderers = {
+    AddWatcher: entry => trimByRenderer( entry, 'account_box' ),
+    DelWatcher: entry => trimByRenderer( entry, 'account_box' ),
+    SetWatcher: entry => trimByRenderer( entry, 'account_box' ),
+
     Comment: entry => [
+        'announcement',
         'Private comment',
         entry.Content
     ],
     CommentEmailRecord: null,
     Correspond: entry => [
+        'comment',
         'Public reply',
         entry.Content
     ],
     Create: entry => [
+        'new_releases',
         'Ticket created',
         entry.Content
     ],
+    CustomField: entry => trimByRenderer( entry, 'label' ),
     EmailRecord: null,
-    // `Owner` changes will be handled by AddWatcher
-    Set: entry => ( entry.Field == 'Owner' ? null : [
-        `${entry.Field} changed to "${entry.NewValue}"`,
-        `Old value: "${entry.OldValue}"`
-    ] ),
+    Set: entry => {
+        // `Owner` changes will be handled by AddWatcher
+        if ( entry.Field == 'Owner' ) return null;
+        // `Queue` changes are better handled by RT itself; we'd have to match the queue IDs
+        // ourselves
+        if ( entry.Field == 'Queue' ) return trimByRenderer( entry, 'compare_arrows' );
+
+        return [
+            entry.Field == 'Subject' ? 'subject' : 'label',
+            `${entry.Field} changed to "${entry.NewValue}"`,
+            `Old value: "${entry.OldValue}"`
+        ];
+    },
     Status: entry => [
+        [ 'answered', 'resolved' ].includes( entry.NewValue ) ? 'check_circle' : 'swap_vertical_circle',
         `Status changed to ${entry.NewValue}`,
         `Old status: ${entry.OldValue}`
     ],
@@ -108,11 +126,13 @@ class TicketHistoryEntry extends React.PureComponent {
     render() {
         const { entry } = this.props;
 
+        if ( historyEntryRenderers[ entry.Type ] === null ) return null;
+
         const result = historyEntryRenderers[ entry.Type ] ? historyEntryRenderers[ entry.Type ](entry) : trimByRenderer( entry );
 
         if ( result == null ) return null;
 
-        let [ summary, contents ] = result;
+        let [ icon, summary, contents ] = result;
 
         const created = moment.utc( entry.Created );
         created.local();
@@ -120,6 +140,9 @@ class TicketHistoryEntry extends React.PureComponent {
         return <Fade in={true}>
             <ExpansionPanel elevation={2}>
                 <ExpansionPanelSummary expandIcon={ <Icon>expand_more</Icon> }>
+                    <Icon color="disabled" style={{ marginLeft: -8, marginRight: 8 }}>
+                        { icon }
+                    </Icon>
                     <Typography type="body1" style={{
                             alignSelf: "center",
                             marginRight: 4,
