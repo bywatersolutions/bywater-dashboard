@@ -1,9 +1,6 @@
 use utf8;
 package DashboardApp::Schema::Result::User;
 
-# Created by DBIx::Class::Schema::Loader
-# DO NOT MODIFY THE FIRST PART OF THIS FILE
-
 =head1 NAME
 
 DashboardApp::Schema::Result::User
@@ -75,6 +72,10 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "avatar_url",
   { data_type => "text", is_nullable => 1 },
+  "avatar_url",
+  { data_type => "text", is_nullable => 1 },
+  "role",
+  { data_type => "text", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -105,25 +106,20 @@ __PACKAGE__->add_unique_constraint("rt_username", ["rt_username"]);
 
 =head1 RELATIONS
 
-=head2 user_roles
+=head2 views
 
 Type: has_many
 
-Related object: L<DashboardApp::Schema::Result::UserRole>
+Related object: L<DashboardApp::Schema::Result::View>
 
 =cut
 
 __PACKAGE__->has_many(
-  "user_roles",
-  "DashboardApp::Schema::Result::UserRole",
+  "views",
+  "DashboardApp::Schema::Result::View",
   { "foreign.user_id" => "self.user_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+  { cascade_copy => 0, cascade_delete => 1 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2015-11-18 14:46:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UoJmR971JX+Ve62AYG9p/A
-
-
-# You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

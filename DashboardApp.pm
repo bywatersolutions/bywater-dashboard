@@ -64,10 +64,9 @@ sub startup {
         return 1;
     } );
 
-    $auth->get("/json/employee/tickets")->to("employee#show_dashboard");
-    $auth->post("/json/employee/save_columns")->to("employee#save_columns");
+    $auth->get("/json/view/*id*")->to("view#get");
+    $auth->post("/json/view/*id*")->to("view#update");
 
-    $auth->get("/json/get_roles")->to("main#get_roles");
     $auth->post("/json/ticket/update")->to("main#update_ticket");
     $auth->post("/json/ticket/details")->to("main#ticket_details");
     $auth->post("/json/ticket/history")->to("main#ticket_history");
@@ -77,27 +76,11 @@ sub startup {
 
     $auth->post("/json/sugarcrm/get_contact")->to("main#sugarcrm_get_contact");
     $auth->post("/json/bugzilla/get_bug")->to("main#bugzilla_get_bug");
-    
-    $auth->post("/json/view/save_settings")->to("main#view_save_settings");
 
     $auth->post("/json/reports/get")->to("reports#get");
     $auth->post("/json/reports/get_data")->to("reports#get_data");
 
     $auth->get("/test")->to("test#test") if ( $config->{debug_backend} );
-
-    my $lead = $auth->under( sub {
-        my ( $c ) = @_;
-
-        unless ( grep { $_ eq 'lead' } @{ $c->session->{roles} } ) {
-            $c->render( json => { error => "Operation not permitted." }, status => 403 );
-            return 0;
-        }
-
-        return 1;
-    } );
-
-    $lead->get("/json/lead/tickets")->to("lead#show_dashboard");
-    $lead->post("/json/lead/save_columns")->to("lead#save_columns");
 
     $r->get("/logout")->to("main#logout");
 

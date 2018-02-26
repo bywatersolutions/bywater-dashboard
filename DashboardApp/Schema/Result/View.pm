@@ -57,9 +57,11 @@ __PACKAGE__->table("views");
 __PACKAGE__->add_columns(
   "view_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "role_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "user_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "name",
+  { data_type => "text", is_nullable => 1 },
+  "extra",
   { data_type => "text", is_nullable => 1 },
 );
 
@@ -101,9 +103,9 @@ Related object: L<DashboardApp::Schema::Result::UserRole>
 =cut
 
 __PACKAGE__->belongs_to(
-  "role",
-  "DashboardApp::Schema::Result::UserRole",
-  { role_id => "role_id" },
+  "user",
+  "DashboardApp::Schema::Result::User",
+  { user_id => "user_id" },
   {
     is_deferrable => 1,
     join_type     => "LEFT",
@@ -112,10 +114,4 @@ __PACKAGE__->belongs_to(
   },
 );
 
-
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2015-11-17 18:20:26
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hBGl/CkZ0v1NnqNZ/0TpTA
-
-
-# You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

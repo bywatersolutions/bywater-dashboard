@@ -113,36 +113,43 @@ reports:
       descr: ByWater Systems Team
       query: OwnerGroup = 'ByWater Systems Team'
 
-lead_default_columns:
+employee_default_views:
   -
-    name: New tickets
-    type: rt
-    search_query: 'Owner = "Nobody" AND (  Status = "new" OR Status = "open" )'
-    sort: ticket_id_desc
+    name: MY TICKETS
+    columns:
+      -
+        name: Todays TODO
+        type: custom
+        search_query: 'Owner = "__CurrentUser__" AND CF.{ToDo} = "1" AND (  Status = "new" OR Status = "open" )'
 
-employee_default_columns:
-  -
-    name: Todays TODO
-    type: custom
-    search_query: 'Owner = "__CurrentUser__" AND CF.{ToDo} = "1" AND (  Status = "new" OR Status = "open" )'
+      -
+        name: New tickets
+        type: rt
+        search_query: 'Owner = "__CurrentUser__" AND (  Status = "new" OR Status = "open" ) AND LastUpdated > "7 days ago"'
+        sort: ticket_id_desc
+
+      -
+        name: My Stale Tickets
+        type: rt
+        search_query: 'Status != "resolved" AND Queue != "Bugs" AND Queue != "Development" AND LastUpdated < "- 15 days" AND Queue != "Systems" AND Status != "answered" AND Status != "onhold" AND Owner = "__CurrentUser__" AND Queue != "Training" AND Queue != "Migrations"'
+
+      -
+        name: Partner Updates Past 48hrs
+        type: rt
+        search_query: 'Owner = "__CurrentUser__" AND LastUpdatedBy != "__CurrentUser__" AND LastUpdated > "2 day ago" AND Status != "resolved" AND Status != "answered" AND (  Queue != "Development" AND Queue != "Migrations" AND Queue != "Bugs" )'
+
+      -
+        name: Closed Tickets Updated
+        type: rt
+        search_query: 'Owner = "__CurrentUser__" AND LastUpdatedBy != "__CurrentUser__" AND LastUpdated > "1 day ago" AND (  Queue != "Development" AND Queue != "Migrations" AND Queue != "Bugs" ) AND Status != "new" AND Status != "open" AND Status != "onhold" AND Status != "needsinfo"'
 
   -
-    name: New tickets
-    type: rt
-    search_query: 'Owner = "__CurrentUser__" AND (  Status = "new" OR Status = "open" ) AND LastUpdated > "7 days ago"'
-    sort: ticket_id_desc
-
-  -
-    name: My Stale Tickets
-    type: rt
-    search_query: 'Status != "resolved" AND Queue != "Bugs" AND Queue != "Development" AND LastUpdated < "- 15 days" AND Queue != "Systems" AND Status != "answered" AND Status != "onhold" AND Owner = "__CurrentUser__" AND Queue != "Training" AND Queue != "Migrations"'
-
-  -
-    name: Partner Updates Past 48hrs
-    type: rt
-    search_query: 'Owner = "__CurrentUser__" AND LastUpdatedBy != "__CurrentUser__" AND LastUpdated > "2 day ago" AND Status != "resolved" AND Status != "answered" AND (  Queue != "Development" AND Queue != "Migrations" AND Queue != "Bugs" )'
-
-  -
-    name: Closed Tickets Updated
-    type: rt
-    search_query: 'Owner = "__CurrentUser__" AND LastUpdatedBy != "__CurrentUser__" AND LastUpdated > "1 day ago" AND (  Queue != "Development" AND Queue != "Migrations" AND Queue != "Bugs" ) AND Status != "new" AND Status != "open" AND Status != "onhold" AND Status != "needsinfo"'
+    name: ASSIGN TICKETS
+    has:
+      - usergrid
+    columns: 
+      -
+        name: New tickets
+        type: rt
+        search_query: 'Owner = "Nobody" AND (  Status = "new" OR Status = "open" )'
+        sort: ticket_id_desc

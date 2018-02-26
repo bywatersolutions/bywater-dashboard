@@ -30,4 +30,30 @@ sub get_rt_users {
     return $result;
 }
 
+sub get_views {
+    my ( $self, $user_id ) = @_;
+
+    #FIXME this needs to be updated to insert the new views and return the result either way
+
+	unless ( $view ) {
+		$view = $self->app->schema->resultset('View')->create({ role_id => $role->role_id, name => "Default View" });
+		my $config = DashboardApp::Model::Config::get_config();
+
+		my $idx = 0;
+		foreach my $col ( @{ $config->{ $role->role . '_default_columns' } } ) {
+			my $params = {
+				view_id      => $view->view_id,
+				name         => $col->{name},
+				type         => $col->{type},
+				rt_query     => $col->{search_query},
+				column_order => $idx++,
+			};
+
+			$params->{column_sort} = $col->{sort} if ( $col->{sort} );
+
+			my $column = $self->app->schema->resultset('Column')->create( $params );
+		}
+	}
+}
+
 1;
