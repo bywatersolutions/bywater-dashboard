@@ -26,8 +26,8 @@ sub _get_user_info {
         popup_config => $config->{card_popup},
         queues => $c->tickets_model->get_queues(),
         statuses => DashboardApp::Model::Config::get_rt_statuses(),
-        users => $c->app->model('user')->get_all_users(),
-        views => $c->app->model('user')->get_views( $c->sessions->{user_id} ),
+        users => $c->app->model('User')->get_all_users(),
+        views => $c->app->model('User')->get_views( $c->session->{user_id} ),
     };
 }
 
@@ -54,13 +54,6 @@ sub login {
 
     return $c->render(json => { error => "Wrong login or password." }) unless ( $user );
 
-    my @roles;
-    foreach my $role ( $user->user_roles ) {
-        push( @roles, $role->role );
-    }
-
-    return $c->render(json => { error => "No roles defined." }) unless ( @roles );
-
     my $rt = DashboardApp::Model::Ticket->new->rt;
     $rt->login( username => $json->{login}, password => $json->{password} );
 
@@ -69,14 +62,12 @@ sub login {
         user_id => $user->user_id,
         first_name => $user->first_name,
         last_name => $user->last_name,
-        roles => \@roles,
         rt_username => $json->{login},
         rt_cookie => $rt_cookie,
     });
 
     # Default view for a user will be the first role defined
     $c->render(json => {
-        role => $roles[0],
         user_info => _get_user_info( $c ),
     });
 }

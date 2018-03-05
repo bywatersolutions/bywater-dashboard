@@ -60,7 +60,7 @@ __PACKAGE__->add_columns(
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "name",
-  { data_type => "text", is_nullable => 1 },
+  { data_type => "text", is_nullable => 0 },
   "extra",
   { data_type => "text", is_nullable => 1 },
 );
@@ -88,10 +88,10 @@ Related object: L<DashboardApp::Schema::Result::Column>
 =cut
 
 __PACKAGE__->has_many(
-  "columns_rel",
+  "columns",
   "DashboardApp::Schema::Result::Column",
   { "foreign.view_id" => "self.view_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+  { cascade_copy => 1, cascade_delete => 1 },
 );
 
 =head2 role

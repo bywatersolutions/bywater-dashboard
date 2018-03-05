@@ -1,5 +1,6 @@
 package DashboardApp::Model::User;
 
+use JSON qw/encode_json/;
 use Mojo::Base 'MojoX::Model';
 
 sub get_all_users {
@@ -8,7 +9,6 @@ sub get_all_users {
     my $users = {};
     foreach my $user ( $self->app->schema->resultset('User')->search({})->all ) {
         my $hashref = { $user->get_columns };
-        $hashref->{roles} = [ map { $_->role }  $user->user_roles->all ];
         $users->{ $user->rt_username } = $hashref;
     }
 
@@ -33,27 +33,40 @@ sub get_rt_users {
 sub get_views {
     my ( $self, $user_id ) = @_;
 
-    #FIXME this needs to be updated to insert the new views and return the result either way
+    my $role = $self->app->schema->resultset('User')->search({ user_id => $user_id })->get_column('role')->first;
 
-	unless ( $view ) {
-		$view = $self->app->schema->resultset('View')->create({ role_id => $role->role_id, name => "Default View" });
+    return [] unless $role;
+
+	unless ( $self->app->schema->resultset('View')->count( { user_id => $user_id } ) ) {
 		my $config = DashboardApp::Model::Config::get_config();
 
-		my $idx = 0;
-		foreach my $col ( @{ $config->{ $role->role . '_default_columns' } } ) {
-			my $params = {
-				view_id      => $view->view_id,
-				name         => $col->{name},
-				type         => $col->{type},
-				rt_query     => $col->{search_query},
-				column_order => $idx++,
-			};
+        foreach my $view ( @{ $config->{ $role . '_default_views' } } ) {
+        use Data::Dumper; warn Dumper( $view );
+            my $db_view = $self->app->schema->resultset('View')->create({
+                user_id => $user_id,
+                name => $view->{name},
+                extra => encode_json( { has => $view->{has} } ),
+            });
 
-			$params->{column_sort} = $col->{sort} if ( $col->{sort} );
-
-			my $column = $self->app->schema->resultset('Column')->create( $params );
-		}
+            my $idx = 0;
+            foreach my $column ( @{ $view->{columns} } ) {
+                $db_view->add_to_columns({
+                    name         => $column->{name},
+                    type         => $column->{type},
+                    rt_query     => $column->{rt_query},
+                    column_order => $idx++,
+                });
+            }
+        }
 	}
+
+    return [ map +{
+        $_->get_columns,
+        columns => [ map +{ $_->get_columns }, $_->columns->all ]
+    }, $self->app->schema->resultset('View')->search(
+        { user_id => $user_id },
+        { prefetch => 'columns' }
+    )->all ];
 }
 
 1;
