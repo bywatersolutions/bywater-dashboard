@@ -18,6 +18,7 @@ export function user( state = userInitialState, { type, payload } ) {
                     'popup_config',
                     'queues',
                     'rt_users',
+                    'views',
                     'statuses',
                 ] ) {
                     draft[key] = payload.result.user_info[key];

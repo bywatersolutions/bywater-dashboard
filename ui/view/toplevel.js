@@ -21,8 +21,7 @@ import { MuiThemeProvider } from 'material-ui/styles';
 
 import { connectWithStyles, theme } from '../common';
 import LoginPage from './login';
-import MyTickets from './my-tickets';
-import AssignTickets from './assign-tickets';
+import TicketsView from './tickets-view';
 
 import './supportal.css';
 import 'typeface-roboto';
@@ -32,7 +31,7 @@ import logoSrc from './images/bywater-logo.png';
 @connectWithStyles( ( { user } ) => ( { user } ) )
 class ToplevelToolbar extends React.Component {
     render() {
-        const { classes, history, user, location } = this.props;
+        const { classes, history, user, location, views, getSlug } = this.props;
 
         return <AppBar position="static">
             <Toolbar>
@@ -44,9 +43,13 @@ class ToplevelToolbar extends React.Component {
                         onChange={ ( event, value ) => history.push( value ) }
                         indicatorColor="white"
                     >
-                    <Tab value="/" label="MY TICKETS" />
-                    <Tab value="/assign" label="ASSIGN TICKETS" />
-                    <Tab value="/reports" label="REPORTS" />
+                    { views.map( view =>
+                        <Tab
+                            key={ getSlug(view.name) }
+                            value={ '/' + getSlug(view.name) }
+                            label={ view.name }
+                            />
+                    ) }
                 </Tabs> }
                 { user.username && <Typography type="subheading" color="inherit">
                     <Icon className={classes.iconAdornment}>account_circle</Icon>
@@ -61,10 +64,30 @@ const handledErrors = [ 'LOGIN' ];
 
 @connectWithStyles( ( { user, errors } ) => ( { user, errors } ) )
 export default class ToplevelContainer extends React.Component {
-    renderPrivateRoute( path, Component ) {
-        return <Route exact path={path} render={ props => (
-            this.props.user.username ? <Component {...props} /> : <LoginPage />
-        ) } />;
+    constructor( props ) {
+        super(props);
+
+        this.nameToSlug = {};
+        this.slugToName = {};
+    }
+
+    getSlug = ( name ) => {
+        if ( !this.nameToSlug[name] ) {
+            let baseSlug = name.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/, '').toLowerCase();
+            let slug = baseSlug;
+
+            let i = 1;
+
+            while ( this.slugToName[slug] ) {
+                slug = baseSlug + '-' + i;
+                i++;
+            }
+
+            this.nameToSlug[name] = slug;
+            this.slugToName[slug] = name;
+        }
+
+        return this.nameToSlug[name];
     }
 
     render() {
@@ -75,10 +98,19 @@ export default class ToplevelContainer extends React.Component {
             <Reboot />
             <ConnectedRouter history={history}>
                 <div id="toplevel" style={{ height: "100vh" }}>
-                    <ToplevelToolbar />
+                    <ToplevelToolbar views={user.views} getSlug={this.getSlug} />
                     { user.username ? <Switch>
-                        <Route exact path="/" component={MyTickets} />
-                        <Route exact path="/assign" component={AssignTickets} />
+                        <Redirect exact from="/" to={'/' + this.getSlug( user.views[0].name )} />
+                        { user.views.map( view => {
+                            let slug = this.getSlug( view.name );
+                            return <Route
+                                key={slug}
+                                exact
+                                path={ '/' + slug }
+                                component={TicketsView}
+                                viewInfo={view}
+                            />;
+                        } ) }
                     </Switch> : <LoginPage /> }
                 </div>
             </ConnectedRouter>
