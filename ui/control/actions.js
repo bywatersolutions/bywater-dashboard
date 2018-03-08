@@ -29,9 +29,12 @@ function _apiAction( {
 
         if ( filteredBody === false ) return;
 
+        let realPath = path;
+        if ( typeof path == "function" ) realPath = path( body, getState );
+
         dispatch( { type: 'IN_PROGRESS', payload: { request: body, type } } );
 
-        let response = await _apiFetch( method, path, filteredBody );
+        let response = await _apiFetch( method, realPath, filteredBody );
 
         if ( response.ok ) {
             dispatch( { type: successfulType, payload: { originalType: type, request: body, response, result: await post( response, dispatch ) } } );
@@ -65,20 +68,12 @@ async function _postGetTickets( response, dispatch ) {
     return result;
 }
 
-export const getDashboard = _apiAction( {
-    type: 'GET_DASHBOARD',
-    successfulType: 'DASHBOARD_FETCHED',
+export const getView = _apiAction( {
+    type: 'GET_VIEW',
+    successfulType: 'VIEW_FETCHED',
     method: 'GET',
-    path: '/json/employee/tickets',
-
-    post: _postGetTickets,
-} );
-
-export const getLeadDashboard = _apiAction( {
-    type: 'GET_LEAD_DASHBOARD',
-    successfulType: 'LEAD_DASHBOARD_FETCHED',
-    method: 'GET',
-    path: '/json/lead/tickets',
+    path: ({ viewID }) => `/json/view/${viewID}`,
+    pre: body => null,
 
     post: _postGetTickets,
 } );

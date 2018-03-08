@@ -4,10 +4,10 @@ use Mojo::Base 'MojoX::Model';
 sub get {
 	my ( $self, $user_id, $tickets_model, $view_id ) = @_;
 
-	my $view = $self->app->schema->find('View')->search({ user_id => $user_id, view_id => $view_id });
+	my $view = $self->app->schema->resultset('View')->find({ user_id => $user_id, view_id => $view_id });
 
 	my $columns = {};
-	foreach my $column ( $view->columns_rel()->all ) {
+	foreach my $column ( $view->columns->all ) {
 		next unless ( defined $column->rt_query );
 
 		my $tickets = $tickets_model->search_tickets( $column->rt_query );

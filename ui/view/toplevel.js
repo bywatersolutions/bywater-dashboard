@@ -39,7 +39,7 @@ class ToplevelToolbar extends React.Component {
                 <Typography type="title" color="inherit">PALANTIR</Typography>
                 { user.username && <Tabs
                         className={classes.topTabs}
-                        value={location.pathname}
+                        value={location.pathname == '/' ? false : location.pathname}
                         onChange={ ( event, value ) => history.push( value ) }
                         indicatorColor="white"
                     >
@@ -107,8 +107,7 @@ export default class ToplevelContainer extends React.Component {
                                 key={slug}
                                 exact
                                 path={ '/' + slug }
-                                component={TicketsView}
-                                viewInfo={view}
+                                render={() => <TicketsView viewInfo={view} />}
                             />;
                         } ) }
                     </Switch> : <LoginPage /> }

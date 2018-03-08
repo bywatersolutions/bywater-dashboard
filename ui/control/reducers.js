@@ -28,22 +28,11 @@ export function user( state = userInitialState, { type, payload } ) {
     } );
 }
 
-export function employee( state = {}, { type, payload } ) {
+export function views( state = {}, { type, payload } ) {
     return produce( state, draft => {
         switch ( type ) {
-            case 'DASHBOARD_FETCHED':
-                draft.columns = payload.result.columns;
-        }
-    } );
-}
-
-export function lead( state = {}, { type, payload } ) {
-    return produce( state, draft => {
-        switch ( type ) {
-            case 'LEAD_DASHBOARD_FETCHED':
-                for ( let key of [ 'columns', 'users' ] ) {
-                    draft[key] = payload.result[key];
-                }
+            case 'VIEW_FETCHED':
+                draft[payload.request.viewID] = { columns: payload.result.columns };
                 break;
 
             // We optimistically remove the ticket from the column, for quick feedback.

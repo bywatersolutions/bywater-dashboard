@@ -30,6 +30,9 @@ class AssignUserGrid extends React.Component {
     render() {
         const { numUsedColumns, users, width } = this.props;
 
+        let orderedUsers = Object.values( users );
+        orderedUsers.sort( ( a, b ) => a.last_name.localeCompare( b.last_name ) );
+
         if ( width == 'xs' ) return null;
 
         const smUserListWidth = 12 - 4 * numUsedColumns;
@@ -42,7 +45,7 @@ class AssignUserGrid extends React.Component {
                 md={mdUserListWidth}
             >
             <GridList cols={ gridCols }>
-                { users.map( user => 
+                { orderedUsers.map( user => 
                     <GridListTile key={user.rt_username}>
                         <img src={user.avatar_url} />
                         {
@@ -85,20 +88,31 @@ class AssignUserGrid extends React.Component {
     }
 }
 
-@connectWithStyles( ( { inProgress, employee, lead } ) => ( { employee, lead, loading: !!inProgress.GET_DASHBOARD || !!inProgress.GET_LEAD_DASHBOARD } ) )
-export default class AssignTickets extends React.Component {
+@connectWithStyles( ( { inProgress, views, user }, { viewInfo } ) => ( {
+    view: views[ viewInfo.view_id ],
+    loading: !!inProgress.GET_VIEW,
+    users: user && user.users,
+} ) )
+export default class TicketsView extends React.Component {
     componentWillMount() {
-        this.props.dispatch( actions.getLeadDashboard() );
+        this.props.dispatch( actions.getView( { viewID: this.props.viewInfo.view_id } ) );
     }
 
     render() {
-        const { classes, dispatch, lead: { columns = {}, users = {} }, loading } = this.props;
+        const {
+            classes,
+            dispatch,
+            loading,
+            users,
+            view: { columns = {} } = {},
+            viewInfo,
+        } = this.props;
+
+        let extra = JSON.parse( viewInfo.extra );
+        let hasAssign = ( extra.has || [] ).includes( 'usergrid' );
 
         let orderedColumns = Object.values( columns );
         orderedColumns.sort( ( a, b ) => a.column_order - b.column_order );
-
-        let orderedUsers = Object.values( users );
-        orderedUsers.sort( ( a, b ) => a.last_name.localeCompare( b.last_name ) );
 
         return <TicketDragContext>
             <div className={ classes.page }>
@@ -107,7 +121,7 @@ export default class AssignTickets extends React.Component {
                         { orderedColumns.map( column => <Grid item xs={12} sm={4} md={2} key={column.column_id}>
                             <TicketList column={column} />
                         </Grid> ) }
-                        <AssignUserGrid numUsedColumns={ orderedColumns.length } users={ orderedUsers } />
+                        { hasAssign && <AssignUserGrid numUsedColumns={ orderedColumns.length } users={ users } /> }
                     </Grid>
                 }
             </div>
