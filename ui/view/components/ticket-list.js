@@ -111,7 +111,12 @@ export default class TicketList extends React.Component {
     }
 
     render() {
-        const { classes, column: { column_id, tickets, name }, canDrop = false } = this.props;
+        const {
+            classes,
+            column: { column_id, tickets, name },
+            canDrop = false,
+            viewID,
+        } = this.props;
 
         // We do a fair amount of work here to avoid keeping the dialogs inside the Droppable, to
         // avoid unnecessary rerenders.
@@ -125,7 +130,7 @@ export default class TicketList extends React.Component {
                     onClose={ () => this.closeTicketDialog( ticketID ) }
                 />
             ) }
-            <Droppable droppableId={ 'column:' + column_id.toString() } isDropDisabled={!canDrop}>
+            <Droppable droppableId={ `column:${viewID}:${column_id}` } isDropDisabled={!canDrop}>
                 { ( provided, snapshot ) => 
                     <Card className={ snapshot.isDraggingOver ? classes.dragOver : null }>
                         <CardContent>

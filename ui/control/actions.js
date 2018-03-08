@@ -92,7 +92,7 @@ export const ticketMoveOwner = _apiAction( {
     path: '/json/ticket/update',
 
     pre: ( body, getState ) => ( {
-        ticket_id: body.ticket_id,
+        ticket_id: body.ticketID,
         Owner: body.rt_username,
     } ),
 } );
@@ -104,14 +104,15 @@ export const ticketMoveColumn = _apiAction( {
     path: '/json/ticket/update',
 
     pre: ( body, getState ) => {
-        let { employee: { columns = {} }, lead: { columns: lead_columns = {} } } = getState();
+        let { views } = getState();
 
-        let column = lookupColumn( columns, body.destinationColumnID ) ||
-            lookupColumn( lead_columns, body.destinationColumnID );
+        let [ destinationViewID, destinationColumnID ] = body.destinationID;
+
+        let column = lookupColumn( views[destinationViewID], destinationColumnID );
         if ( !column || !column.drag_action ) return false;
 
         return {
-            ticket_id: body.ticket_id,
+            ticket_id: body.ticketID,
             ...column.drag_action
         };
     },

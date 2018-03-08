@@ -109,7 +109,7 @@ export default class TicketsView extends React.Component {
         } = this.props;
 
         let extra = JSON.parse( viewInfo.extra );
-        let hasAssign = ( extra.has || [] ).includes( 'usergrid' );
+        let hasAssign = ( extra.has || [] ).includes( 'usergrid' ) && users;
 
         let orderedColumns = Object.values( columns );
         orderedColumns.sort( ( a, b ) => a.column_order - b.column_order );
@@ -119,7 +119,7 @@ export default class TicketsView extends React.Component {
                 { loading ? <LinearProgress /> :
                     <Grid container spacing={24}>
                         { orderedColumns.map( column => <Grid item xs={12} sm={4} md={2} key={column.column_id}>
-                            <TicketList column={column} />
+                            <TicketList viewID={viewInfo.view_id} column={column} />
                         </Grid> ) }
                         { hasAssign && <AssignUserGrid numUsedColumns={ orderedColumns.length } users={ users } /> }
                     </Grid>

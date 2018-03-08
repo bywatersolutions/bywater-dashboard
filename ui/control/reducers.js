@@ -38,12 +38,17 @@ export function views( state = {}, { type, payload } ) {
             // We optimistically remove the ticket from the column, for quick feedback.
             // If we need to, we'll just refresh the page on error.
             case 'IN_PROGRESS':
-                let column;
-                if (
-                    payload.type == 'TICKET_MOVE' &&
-                    ( column = lookupColumn( draft.columns, payload.request.sourceColumnID ) )
-                ) {
-                    column.tickets.splice( payload.request.sourceColumnIndex, 1 );
+                if ( payload.type == 'TICKET_MOVE' && payload.request.sourceID.length == 2 ) {
+                    let column;
+                    let [ sourceViewID, sourceColumnID ] = payload.request.sourceID;
+
+                    if (
+                        ( column = lookupColumn(
+                            draft[sourceViewID].columns, sourceColumnID,
+                        ) )
+                    ) {
+                        column.tickets.splice( payload.request.sourceColumnIndex, 1 );
+                    }
                 }
                 break;
         }
