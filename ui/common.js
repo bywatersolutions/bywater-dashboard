@@ -44,7 +44,10 @@ export const styles = theme => ( {
 
     iconAdornment: { paddingRight: theme.spacing.unit * 1, verticalAlign: 'bottom' },
 
-    page: { padding: theme.spacing.unit * 3 },
+    page: {
+        overflowY: 'auto',
+        padding: theme.spacing.unit * 3,
+    },
 
     textField: { minWidth: 200 },
 

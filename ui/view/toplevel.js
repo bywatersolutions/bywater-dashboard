@@ -97,7 +97,12 @@ export default class ToplevelContainer extends React.Component {
         return <MuiThemeProvider theme={theme}>
             <Reboot />
             <ConnectedRouter history={history}>
-                <div id="toplevel" style={{ height: "100vh" }}>
+                <div id="toplevel" style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100vh',
+                    overflow: 'hidden',
+                }}>
                     <ToplevelToolbar views={user.views} getSlug={this.getSlug} />
                     { user.username ? <Switch>
                         <Redirect exact from="/" to={'/' + this.getSlug( user.views[0].name )} />

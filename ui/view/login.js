@@ -14,8 +14,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import * as actions from '../control/actions';
-import { styles } from '../common';
+import { withOurStyles } from '../common';
 
+@withOurStyles
 class LoginPage extends React.Component {
     onLoginClick( e ) {
         if ( !this.usernameInput || !this.usernameInput.value ) {
@@ -28,15 +29,13 @@ class LoginPage extends React.Component {
     }
 
     render() {
-        const { loggingIn, loginError } = this.props;
+        const { classes, loggingIn, loginError } = this.props;
 
-        return <div style={{
-                boxSizing: "border-box",
+        return <div className={classes.page} style={{
                 display: "flex",
+                flex: "1 1 0px",
                 flexDirection: "column",
-                height: "100vh",
                 justifyContent: "space-around",
-                padding: 20
             }}>
             <Grid container justify="center" alignItems="center">
                 <Grid item xs={12} sm={8} lg={4}>
