@@ -23,7 +23,7 @@ import { connectWithStyles, theme } from '../common';
 import LoginPage from './login';
 import TicketsView from './tickets-view';
 
-import './supportal.css';
+import './material-icons.css';
 import 'typeface-roboto';
 import logoSrc from './images/bywater-logo.png';
 
