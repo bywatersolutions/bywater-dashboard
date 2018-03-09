@@ -98,7 +98,6 @@ export default class TicketsView extends React.Component {
     render() {
         const {
             classes,
-            dispatch,
             loading,
             users,
             view: { columns = {} } = {},
