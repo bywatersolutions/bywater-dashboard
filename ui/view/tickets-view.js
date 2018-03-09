@@ -21,6 +21,22 @@ import * as actions from '../control/actions';
 import TicketDragContext from './components/ticket-drag-context';
 import TicketList from './components/ticket-list';
 
+const COLUMN_WIDTHS = {
+    xs: 12,
+    sm: 4,
+    md: 3,
+    lg: 2,
+    xl: 2,
+};
+
+const USER_SIZES = {
+    xs: 4,
+    sm: 3,
+    md: 2,
+    lg: 1.5,
+    xl: 1,
+};
+
 @withWidth()
 class AssignUserGrid extends React.Component {
     render() {
@@ -29,16 +45,18 @@ class AssignUserGrid extends React.Component {
         let orderedUsers = Object.values( users );
         orderedUsers.sort( ( a, b ) => a.last_name.localeCompare( b.last_name ) );
 
-        if ( width == 'xs' ) return null;
-
-        const smUserListWidth = 12 - 4 * numUsedColumns;
-        const mdUserListWidth = 12 - 2 * numUsedColumns;
-        const gridCols = ( width == 'sm' ? smUserListWidth : mdUserListWidth ) / 2;
+        // We force the grid to be 12 columns wide if there's not enough room, so it wraps to the
+        // next line
+        const userListWidth = Math.max( 0, 12 - COLUMN_WIDTHS[ width ] * numUsedColumns ) || 12;
+        const gridCols = Math.floor( userListWidth / USER_SIZES[ width ] );
 
         return <Grid
                 item
-                sm={smUserListWidth}
-                md={mdUserListWidth}
+                xs={userListWidth}
+                sm={userListWidth}
+                md={userListWidth}
+                lg={userListWidth}
+                xl={userListWidth}
             >
             <GridList cols={ gridCols }>
                 { orderedUsers.map( user =>
@@ -114,7 +132,7 @@ export default class TicketsView extends React.Component {
             <div className={ classes.page }>
                 { loading ? <LinearProgress /> :
                     <Grid container spacing={24}>
-                        { orderedColumns.map( column => <Grid item xs={12} sm={4} md={2} key={column.column_id}>
+                        { orderedColumns.map( column => <Grid item {...COLUMN_WIDTHS} key={column.column_id}>
                             <TicketList viewID={viewInfo.view_id} column={column} />
                         </Grid> ) }
                         { hasAssign && <AssignUserGrid numUsedColumns={ orderedColumns.length } users={ users } /> }

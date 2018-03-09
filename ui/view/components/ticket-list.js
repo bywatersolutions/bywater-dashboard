@@ -131,7 +131,7 @@ export default class TicketList extends React.Component {
                 { ( provided, snapshot ) =>
                     <Card className={ snapshot.isDraggingOver ? classes.dragOver : null }>
                         <CardContent>
-                            <Typography type="headline">{name}</Typography>
+                            <Typography type="title">{name}</Typography>
                             <div ref={ provided.innerRef }>
                                 <List>
                                     { tickets.map( ( ticketID, index ) =>
