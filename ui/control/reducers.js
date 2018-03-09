@@ -17,7 +17,7 @@ export function user( state = userInitialState, { type, payload } ) {
                     'custom_fields',
                     'popup_config',
                     'queues',
-                    'rt_users',
+                    'users',
                     'views',
                     'statuses',
                 ] ) {
