@@ -1,5 +1,3 @@
-"use strict";
-
 import produce from 'immer';
 
 import { lookupColumn } from '../common';
@@ -21,8 +19,9 @@ export function user( state = userInitialState, { type, payload } ) {
                     'views',
                     'statuses',
                 ] ) {
-                    draft[key] = payload.result.user_info[key];
+                    draft[ key ] = payload.result.user_info[ key ];
                 }
+
                 break;
         }
     } );
@@ -32,7 +31,7 @@ export function views( state = {}, { type, payload } ) {
     return produce( state, draft => {
         switch ( type ) {
             case 'VIEW_FETCHED':
-                draft[payload.request.viewID] = { columns: payload.result.columns };
+                draft[ payload.request.viewID ] = { columns: payload.result.columns };
                 break;
 
             // We optimistically remove the ticket from the column, for quick feedback.
@@ -44,7 +43,7 @@ export function views( state = {}, { type, payload } ) {
 
                     if (
                         ( column = lookupColumn(
-                            draft[sourceViewID].columns, sourceColumnID,
+                            draft[ sourceViewID ].columns, sourceColumnID,
                         ) )
                     ) {
                         column.tickets.splice( payload.request.sourceColumnIndex, 1 );
@@ -62,8 +61,9 @@ export function tickets( state = {}, { type, payload } ) {
         switch ( type ) {
             case 'TICKETS_FETCHED':
                 for ( let ticketID in payload.result ) {
-                    draft[ticketID] = payload.result[ticketID];
+                    draft[ ticketID ] = payload.result[ ticketID ];
                 }
+
                 break;
 
             case 'HISTORY_FETCHED':
@@ -89,11 +89,11 @@ export function errors( state = {}, action ) {
     return produce( state, draft => {
         switch ( action.type ) {
             case 'ERROR':
-                draft[action.payload.type] = true;
+                draft[ action.payload.type ] = true;
                 break;
 
             case 'IN_PROGRESS':
-                delete draft[action.payload.type];
+                delete draft[ action.payload.type ];
                 break;
         }
     } );
@@ -103,17 +103,18 @@ export function inProgress( state = {}, action ) {
     return produce( state, draft => {
         switch ( action.type ) {
             case 'IN_PROGRESS':
-                draft[action.payload.type] = true;
+                draft[ action.payload.type ] = true;
                 break;
 
             case 'ERROR':
-                delete draft[action.payload.type];
+                delete draft[ action.payload.type ];
                 break;
 
             default:
                 if ( action.payload && action.payload.originalType ) {
-                    delete draft[action.payload.originalType];
+                    delete draft[ action.payload.originalType ];
                 }
+
         }
     } );
 }

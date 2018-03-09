@@ -1,16 +1,9 @@
-"use strict";
-
 // History view for a single ticket.
 
 import {
-    AppBar,
     Divider,
     Fade,
     Icon,
-    IconButton,
-    Tab,
-    Tabs,
-    Toolbar,
     Typography,
 } from 'material-ui';
 
@@ -19,14 +12,8 @@ import ExpansionPanel, {
     ExpansionPanelDetails,
 } from 'material-ui/ExpansionPanel';
 
-import List, {
-    ListItem,
-    ListItemText,
-    ListSubheader,
-} from 'material-ui/List';
-
 import {
-    LinearProgress
+    LinearProgress,
 } from 'material-ui/Progress';
 
 import moment from 'moment';
@@ -37,12 +24,12 @@ import { connectWithStyles } from '../../common';
 import * as actions from '../../control/actions';
 
 function _renderHistoryEntryContent( content ) {
-    return { __html: content.replace( /\n/g, "<br />" ) };
+    return { __html: content.replace( /\n/g, '<br />' ) };
 }
 
 const trimByRenderer = ( entry, icon ) => [
     icon || 'change_history',
-    entry.Description.replace( new RegExp( `by ${entry.Creator}$` ), ''),
+    entry.Description.replace( new RegExp( `by ${entry.Creator}$` ), '' ),
     '',
 ];
 
@@ -54,18 +41,18 @@ const historyEntryRenderers = {
     Comment: entry => [
         'announcement',
         'Private comment',
-        entry.Content
+        entry.Content,
     ],
     CommentEmailRecord: null,
     Correspond: entry => [
         'comment',
         'Public reply',
-        entry.Content
+        entry.Content,
     ],
     Create: entry => [
         'new_releases',
         'Ticket created',
-        entry.Content
+        entry.Content,
     ],
     CustomField: entry => trimByRenderer( entry, 'label' ),
     EmailRecord: null,
@@ -79,20 +66,20 @@ const historyEntryRenderers = {
         return [
             entry.Field == 'Subject' ? 'subject' : 'label',
             `${entry.Field} changed to "${entry.NewValue}"`,
-            `Old value: "${entry.OldValue}"`
+            `Old value: "${entry.OldValue}"`,
         ];
     },
     Status: entry => [
         [ 'answered', 'resolved' ].includes( entry.NewValue ) ? 'check_circle' : 'swap_vertical_circle',
         `Status changed to ${entry.NewValue}`,
-        `Old status: ${entry.OldValue}`
+        `Old status: ${entry.OldValue}`,
     ],
     SystemError: null,
 };
 
 @connectWithStyles(
     ( { inProgress }, { kind } ) => ( {
-        inProgress: kind == "new" ?
+        inProgress: kind == 'new' ?
             inProgress.GET_NEW_HISTORY_ENTRIES :
             inProgress.GET_OLD_HISTORY_ENTRIES,
     } )
@@ -101,10 +88,10 @@ class LoadMorePanel extends React.Component {
     onClick = () => {
         const { dispatch, kind, ids, ticketID } = this.props;
 
-        this.props.dispatch(
-            actions[ kind == "new" ? 'getNewHistoryEntries' : 'getOldHistoryEntries' ]( {
+        dispatch(
+            actions[ kind == 'new' ? 'getNewHistoryEntries' : 'getOldHistoryEntries' ]( {
                 ticket_id: ticketID,
-                history_ids: this.props.ids
+                history_ids: ids,
             } )
         );
     }
@@ -128,7 +115,9 @@ class TicketHistoryEntry extends React.PureComponent {
 
         if ( historyEntryRenderers[ entry.Type ] === null ) return null;
 
-        const result = historyEntryRenderers[ entry.Type ] ? historyEntryRenderers[ entry.Type ](entry) : trimByRenderer( entry );
+        const result = historyEntryRenderers[ entry.Type ] ?
+            historyEntryRenderers[ entry.Type ]( entry ) :
+            trimByRenderer( entry );
 
         if ( result == null ) return null;
 
@@ -144,24 +133,24 @@ class TicketHistoryEntry extends React.PureComponent {
                         { icon }
                     </Icon>
                     <Typography type="body1" style={{
-                            alignSelf: "center",
-                            marginRight: 4,
-                            flexShrink: 1,
-                        }}>
+                        alignSelf: 'center',
+                        marginRight: 4,
+                        flexShrink: 1,
+                    }}>
                         { summary }
                     </Typography>
                     <Typography type="body1" style={{
-                            alignSelf: "center",
-                            flexGrow: 1,
-                            textAlign: 'right',
-                        }}>
+                        alignSelf: 'center',
+                        flexGrow: 1,
+                        textAlign: 'right',
+                    }}>
                         { entry.Creator }
                     </Typography>
                     <Typography type="caption" style={{
-                            alignSelf: "center",
-                            flexShrink: 0,
-                            marginLeft: 8,
-                        }}
+                        alignSelf: 'center',
+                        flexShrink: 0,
+                        marginLeft: 8,
+                    }}
                         title={ created.toString() }>
                         { created.fromNow() }
                     </Typography>
@@ -177,7 +166,7 @@ class TicketHistoryEntry extends React.PureComponent {
 
 @connect(
     ( { tickets, user }, { ticketID } ) => ( {
-        history: tickets[ticketID] && tickets[ticketID].history,
+        history: tickets[ ticketID ] && tickets[ ticketID ].history,
         popup_config: user.popup_config,
     } )
 )
@@ -231,7 +220,7 @@ export default class TicketHistoryList extends React.Component {
                     paddingTop: 32,
                     paddingRight: 4,
                     paddingBottom: 4,
-                    overflowY: 'auto'
+                    overflowY: 'auto',
                 }}
             >
             { !history && <LinearProgress /> }

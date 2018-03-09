@@ -1,15 +1,10 @@
-"use strict";
-
 import React from 'react';
-import { connect } from 'react-redux';
 import { Route, Redirect, Switch, withRouter } from 'react-router';
 import { ConnectedRouter } from 'react-router-redux';
 
 import {
     AppBar,
-    Backdrop,
     Icon,
-    Portal,
     Reboot,
     Snackbar,
     Tab,
@@ -45,8 +40,8 @@ class ToplevelToolbar extends React.Component {
                     >
                     { views.map( view =>
                         <Tab
-                            key={ getSlug(view.name) }
-                            value={ '/' + getSlug(view.name) }
+                            key={ getSlug( view.name ) }
+                            value={ '/' + getSlug( view.name ) }
                             label={ view.name }
                             />
                     ) }
@@ -65,29 +60,29 @@ const handledErrors = [ 'LOGIN' ];
 @connectWithStyles( ( { user, errors } ) => ( { user, errors } ) )
 export default class ToplevelContainer extends React.Component {
     constructor( props ) {
-        super(props);
+        super( props );
 
         this.nameToSlug = {};
         this.slugToName = {};
     }
 
     getSlug = ( name ) => {
-        if ( !this.nameToSlug[name] ) {
-            let baseSlug = name.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/, '').toLowerCase();
+        if ( !this.nameToSlug[ name ] ) {
+            let baseSlug = name.replace( /[^a-z0-9]+/gi, '-' ).replace( /^-+|-+$/, '' ).toLowerCase();
             let slug = baseSlug;
 
             let i = 1;
 
-            while ( this.slugToName[slug] ) {
+            while ( this.slugToName[ slug ] ) {
                 slug = baseSlug + '-' + i;
                 i++;
             }
 
-            this.nameToSlug[name] = slug;
-            this.slugToName[slug] = name;
+            this.nameToSlug[ name ] = slug;
+            this.slugToName[ slug ] = name;
         }
 
-        return this.nameToSlug[name];
+        return this.nameToSlug[ name ];
     }
 
     render() {
@@ -105,7 +100,7 @@ export default class ToplevelContainer extends React.Component {
                 }}>
                     <ToplevelToolbar views={user.views} getSlug={this.getSlug} />
                     { user.username ? <Switch>
-                        <Redirect exact from="/" to={'/' + this.getSlug( user.views[0].name )} />
+                        <Redirect exact from="/" to={'/' + this.getSlug( user.views[ 0 ].name )} />
                         { user.views.map( view => {
                             let slug = this.getSlug( view.name );
                             return <Route
@@ -122,7 +117,7 @@ export default class ToplevelContainer extends React.Component {
                 anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
                 SnackbarContentProps={{ classes: { root: classes.errorSnackbarRoot } }}
                 open={ isUnhandledError }
-                message={ "An error has occurred, please reload the page to continue." }
+                message={ 'An error has occurred, please reload the page to continue.' }
             />
         </MuiThemeProvider>;
     }

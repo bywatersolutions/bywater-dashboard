@@ -1,10 +1,7 @@
-"use strict";
-
 // Dialog view for a single ticket.
 
 import {
     AppBar,
-    Divider,
     Icon,
     IconButton,
     Tab,
@@ -14,10 +11,7 @@ import {
 } from 'material-ui';
 
 import Dialog, {
-    DialogActions,
     DialogContent,
-    DialogContentText,
-    DialogTitle,
     withMobileDialog,
 } from 'material-ui/Dialog';
 
@@ -28,12 +22,12 @@ import Table, {
     TableRow,
 } from 'material-ui/Table';
 
-const MobileDialog = withMobileDialog( { breakpoint: "sm" } )( Dialog );
+const MobileDialog = withMobileDialog( { breakpoint: 'sm' } )( Dialog );
 
 import React from 'react';
 import SwipeableViews from 'react-swipeable-views';
 
-import { connectWithStyles, withOurStyles } from '../../common';
+import { connectWithStyles } from '../../common';
 import * as actions from '../../control/actions';
 
 import TicketHistoryList from './ticket-history';
@@ -41,7 +35,7 @@ import TicketHistoryList from './ticket-history';
 @connectWithStyles(
     ( { user, inProgress, tickets }, { ticketID } ) => ( {
         popup_config: user.popup_config,
-        ticket: tickets[ticketID],
+        ticket: tickets[ ticketID ],
     } )
 )
 export default class TicketDialog extends React.Component {
@@ -124,18 +118,22 @@ export default class TicketDialog extends React.Component {
                     disableLazyLoading={true}
                     index={this.state.tab}
                     onChangeIndex={ tab => this.setState( { tab } ) }
-                    style={{ height: "100%" }}
-                    containerStyle={{ height: "100%" }}
+                    style={{ height: '100%' }}
+                    containerStyle={{ height: '100%' }}
                 >
                     <Table>
                         <TableHead>
                             <TableRow>
-                                { popup_config.header_row.map( ( [ label, , sourceField ] ) => <TableCell key={sourceField}>{label}</TableCell> ) }
+                                { popup_config.header_row.map( ( [ label, , sourceField ] ) =>
+                                    <TableCell key={sourceField}>{label}</TableCell>
+                                ) }
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             <TableRow>
-                                { popup_config.header_row.map( ( [ , source, sourceField ] ) => <TableCell key={sourceField}>{ticket[sourceField]}</TableCell> ) }
+                                { popup_config.header_row.map( ( [ , , sourceField ] ) =>
+                                    <TableCell key={sourceField}>{ticket[ sourceField ]}</TableCell>
+                                ) }
                             </TableRow>
                         </TableBody>
                     </Table>

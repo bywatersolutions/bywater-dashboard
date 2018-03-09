@@ -1,8 +1,5 @@
-"use strict";
-
 import {
     Grid,
-    Typography,
 } from 'material-ui';
 
 import GridList, {
@@ -11,13 +8,12 @@ import GridList, {
 } from 'material-ui/GridList';
 
 import {
-    LinearProgress
+    LinearProgress,
 } from 'material-ui/Progress';
 
 import withWidth from 'material-ui/utils/withWidth';
 
 import React from 'react';
-import { connect } from 'redux';
 import { Droppable } from 'react-beautiful-dnd';
 
 import { connectWithStyles } from '../common';
@@ -45,20 +41,21 @@ class AssignUserGrid extends React.Component {
                 md={mdUserListWidth}
             >
             <GridList cols={ gridCols }>
-                { orderedUsers.map( user => 
+                { orderedUsers.map( user =>
                     <GridListTile key={user.rt_username}>
                         <img src={user.avatar_url} />
                         {
-                            // This is a bit nuts, but we can't do the draggable in two ways that would
-                            // make more sense:
+                            // This is a bit nuts, but we can't do the draggable in two ways that
+                            // would make more sense:
                             //
                             //   a) We can't put it on the GridListTile because it confuses the
-                            //      autosizing of GridList, and
-                            //   b) We can't wrap a div around the contents of the GridListTile, because
-                            //      then it won't autosize the <img>.
+                            //     autosizing of GridList, and
+                            //   b) We can't wrap a div around the
+                            //     contents of the GridListTile, because then it won't autosize the
+                            //     <img>.
                         }
                         <Droppable droppableId={ 'user:' + user.rt_username }>
-                            { ( provided, snapshot ) => 
+                            { ( provided, snapshot ) =>
                                 <React.Fragment>
                                     {
                                         // This is placed between the image and tilebar so the image
@@ -77,7 +74,7 @@ class AssignUserGrid extends React.Component {
                                             pointerEvents: 'none',
                                         }}
                                     />
-                                    <GridListTileBar title={ user.first_name + " " + user.last_name} />
+                                    <GridListTileBar title={ user.first_name + ' ' + user.last_name} />
                                 </React.Fragment>
                             }
                         </Droppable>

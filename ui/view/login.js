@@ -1,23 +1,23 @@
-"use strict";
-
 import {
     Button,
     Card,
     CardActions,
     CardContent,
-    CardHeader,
     FormGroup,
     Grid,
-    TextField
+    TextField,
 } from 'material-ui';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import * as actions from '../control/actions';
-import { withOurStyles } from '../common';
+import { connectWithStyles } from '../common';
 
-@withOurStyles
-class LoginPage extends React.Component {
+@connectWithStyles( ( {
+    user,
+    errors: { LOGIN: loginError },
+    inProgress: { LOGIN: loggingIn },
+} ) => ( { user, loginError, loggingIn } ) )
+export default class LoginPage extends React.Component {
     onLoginClick( e ) {
         if ( !this.usernameInput || !this.usernameInput.value ) {
             return;
@@ -32,15 +32,15 @@ class LoginPage extends React.Component {
         const { classes, loggingIn, loginError } = this.props;
 
         return <div className={classes.page} style={{
-                display: "flex",
-                flex: "1 1 0px",
-                flexDirection: "column",
-                justifyContent: "space-around",
-            }}>
+            display: 'flex',
+            flex: '1 1 0px',
+            flexDirection: 'column',
+            justifyContent: 'space-around',
+        }}>
             <Grid container justify="center" alignItems="center">
                 <Grid item xs={12} sm={8} lg={4}>
                     <Card>
-                        <form onSubmit={ e => this.onLoginClick(e) }>
+                        <form onSubmit={ e => this.onLoginClick( e ) }>
                             <CardContent>
                                 <FormGroup>
                                     <TextField
@@ -74,5 +74,3 @@ class LoginPage extends React.Component {
         </div>;
     }
 }
-
-export default connect( ( { user, errors: { LOGIN: loginError }, inProgress: { LOGIN: loggingIn } } ) => ( { user, loginError, loggingIn } ) )( LoginPage );

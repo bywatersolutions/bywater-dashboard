@@ -1,5 +1,3 @@
-"use strict";
-
 import React from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
@@ -31,17 +29,17 @@ export default class TicketDragContext extends React.Component {
             case 'user':
                 this.props.dispatch( actions.ticketMoveOwner( {
                     ticketID,
-                    rt_username: destinationID[0],
-                    ...sourceParams
+                    rt_username: destinationID[ 0 ],
+                    ...sourceParams,
                 } ) );
                 break;
 
             case 'column':
                 this.props.dispatch( actions.ticketMoveColumn( {
                     ticketID,
-                    destinationID, 
+                    destinationID,
                     destinationColumnIndex: result.destination.index,
-                    ...sourceParams
+                    ...sourceParams,
                 } ) );
                 break;
         }

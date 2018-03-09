@@ -1,27 +1,22 @@
-"use strict";
-
 import _ from 'lodash';
 
 import { lookupColumn } from '../common';
 
-function sleep( length ) {
-    return new Promise( resolve => setTimeout( resolve, length ) );
-}
-
-window._apiFetch = function _apiFetch( method, url, body ) {
+function _apiFetch( method, url, body ) {
     return fetch( url, {
         method,
         credentials: 'same-origin',
         body: body && JSON.stringify( body ),
     } );
 };
+window._apiFetch = _apiFetch;
 
 function _apiAction( {
     type,
     successfulType,
     method,
     path,
-    pre = ( body, getState ) => body,
+    pre = ( body, _getState ) => body,
     post = response => response.json(),
 } ) {
     return ( body ) => ( async ( dispatch, getState ) => {
@@ -30,14 +25,17 @@ function _apiAction( {
         if ( filteredBody === false ) return;
 
         let realPath = path;
-        if ( typeof path == "function" ) realPath = path( body, getState );
+        if ( typeof path == 'function' ) realPath = path( body, getState );
 
         dispatch( { type: 'IN_PROGRESS', payload: { request: body, type } } );
 
         let response = await _apiFetch( method, realPath, filteredBody );
 
         if ( response.ok ) {
-            dispatch( { type: successfulType, payload: { originalType: type, request: body, response, result: await post( response, dispatch ) } } );
+            dispatch( {
+                type: successfulType,
+                payload: { originalType: type, request: body, response, result: await post( response, dispatch ) },
+            } );
         } else {
             dispatch( { type: 'ERROR', payload: { request: body, type } } );
         }
@@ -72,8 +70,8 @@ export const getView = _apiAction( {
     type: 'GET_VIEW',
     successfulType: 'VIEW_FETCHED',
     method: 'GET',
-    path: ({ viewID }) => `/json/view/${viewID}`,
-    pre: body => null,
+    path: ( { viewID } ) => `/json/view/${viewID}`,
+    pre: _body => null,
 
     post: _postGetTickets,
 } );
@@ -91,7 +89,7 @@ export const ticketMoveOwner = _apiAction( {
     method: 'POST',
     path: '/json/ticket/update',
 
-    pre: ( body, getState ) => ( {
+    pre: body => ( {
         ticket_id: body.ticketID,
         Owner: body.rt_username,
     } ),
@@ -108,12 +106,12 @@ export const ticketMoveColumn = _apiAction( {
 
         let [ destinationViewID, destinationColumnID ] = body.destinationID;
 
-        let column = lookupColumn( views[destinationViewID], destinationColumnID );
+        let column = lookupColumn( views[ destinationViewID ], destinationColumnID );
         if ( !column || !column.drag_action ) return false;
 
         return {
             ticket_id: body.ticketID,
-            ...column.drag_action
+            ...column.drag_action,
         };
     },
 } );

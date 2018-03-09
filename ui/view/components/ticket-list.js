@@ -1,11 +1,8 @@
-"use strict";
-
 // Underlying components for viewing and editing tickets.
 
 import {
     Card,
     CardContent,
-    CardHeader,
     Typography,
 } from 'material-ui';
 
@@ -15,12 +12,12 @@ import List, {
 } from 'material-ui/List';
 
 import React from 'react';
+import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
-import { connect } from 'react-redux';
 
 import TicketDialog from './ticket-dialog';
-import { connectWithStyles, withOurStyles } from '../../common';
+import { withOurStyles } from '../../common';
 
 // Used in empty ticket lists (when we're not holding a dragged ticket over them).
 @withOurStyles
@@ -37,11 +34,10 @@ class TicketPlaceholder extends React.Component {
     }
 }
 
-@connectWithStyles( ( { tickets }, { ticketID } ) => ( { ticket: tickets[ticketID] } ) )
+@connect( ( { tickets }, { ticketID } ) => ( { ticket: tickets[ ticketID ] } ) )
 class TicketItem extends React.Component {
     render() {
         const {
-            classes,
             onClick,
             index,
             ticket,
@@ -72,15 +68,16 @@ class TicketItem extends React.Component {
                 return <React.Fragment>
                     <ListItem
                             button
-                            ref={ ( node ) => provided.innerRef( node && ReactDOM.findDOMNode(node) ) }
+                            // eslint-disable-next-line react/no-find-dom-node
+                            ref={ ( node ) => provided.innerRef( node && ReactDOM.findDOMNode( node ) ) }
                             { ...provided.draggableProps }
                             { ...provided.dragHandleProps }
                             onClick={interceptOnClick}
                             style={style}
                         >
                         <ListItemText
-                            primary={ ticket ? ticket.Subject : "Loading..." }
-                            secondary={ "#" + ticketID }
+                            primary={ ticket ? ticket.Subject : 'Loading...' }
+                            secondary={ '#' + ticketID }
                         />
                     </ListItem>
                     { provided.placeholder }
@@ -106,7 +103,7 @@ export default class TicketList extends React.Component {
         this.setState( { openTicketID: ticketID } );
     }
 
-    closeTicketDialog( ticketID ) {
+    closeTicketDialog( _ticketID ) {
         this.setState( { openTicketID: null } );
     }
 
@@ -131,7 +128,7 @@ export default class TicketList extends React.Component {
                 />
             ) }
             <Droppable droppableId={ `column:${viewID}:${column_id}` } isDropDisabled={!canDrop}>
-                { ( provided, snapshot ) => 
+                { ( provided, snapshot ) =>
                     <Card className={ snapshot.isDraggingOver ? classes.dragOver : null }>
                         <CardContent>
                             <Typography type="headline">{name}</Typography>

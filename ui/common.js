@@ -1,20 +1,19 @@
-"use strict";
-
 // Miscellaneous utilities and definitions.
 
 import { createMuiTheme, withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { blue, white } from 'material-ui/colors';
+import { blue } from 'material-ui/colors';
 
 // Customizations to MUI's built-in palette.
-export const theme = createMuiTheme({
+export const theme = createMuiTheme( {
     palette: {
         primary: blue,
     },
-});
+} );
 
 // CSS "classes" for our own widgets.
+// eslint-disable-next-line no-shadow
 export const styles = theme => ( {
     placeholder: { opacity: .3 },
 
@@ -32,7 +31,7 @@ export const styles = theme => ( {
         backgroundColor: theme.palette.error.main,
     },
 
-    fixedDialogPaper: { 
+    fixedDialogPaper: {
         height: '90vh',
         maxHeight: null,
         width: theme.breakpoints.values.md,

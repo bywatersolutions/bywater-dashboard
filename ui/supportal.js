@@ -1,5 +1,3 @@
-"use strict";
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
@@ -16,12 +14,12 @@ import ToplevelContainer from './view/toplevel';
 import * as reducers from './control/reducers';
 
 const history = createBrowserHistory();
-const routerMiddleware = ReactRouterRedux.routerMiddleware(history);
+const routerMiddleware = ReactRouterRedux.routerMiddleware( history );
 const store = createStore(
-    combineReducers({
+    combineReducers( {
         router: ReactRouterRedux.routerReducer,
         ...reducers,
-    }),
+    } ),
     composeWithDevTools( applyMiddleware( routerMiddleware, thunkMiddleware ) )
 );
 
@@ -29,5 +27,5 @@ ReactDOM.render(
     <Provider store={store}>
         <ToplevelContainer history={history} />
     </Provider>,
-    document.getElementById('react-root')
+    document.getElementById( 'react-root' )
 );
