@@ -15,21 +15,6 @@ sub get_all_users {
     return $users;
 }
 
-sub get_rt_users {
-    my ( $self ) = @_;
-
-    my $users = $self->get_all_users();
-    my $result = {};
-    foreach my $user_id ( keys %$users ) {
-        my $user = $users->{ $user_id };
-        $result->{ $user_id } = ( $user->{first_name} || "" ) . " " . ( $user->{last_name} || "" );
-    }
-
-    $result->{Nobody} = 'Nobody';
-
-    return $result;
-}
-
 sub get_views {
     my ( $self, $user_id ) = @_;
 
