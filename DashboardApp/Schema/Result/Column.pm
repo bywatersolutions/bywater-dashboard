@@ -93,6 +93,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "name",
   { data_type => "text", is_nullable => 1 },
+  "drop_action",
+  { data_type => "text", is_nullable => 1 },
   "column_sort",
   {
     data_type => "enum",

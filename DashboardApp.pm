@@ -67,15 +67,15 @@ sub startup {
     $auth->get("/json/view/*id*")->to("view#get");
     $auth->post("/json/view/*id*")->to("view#update");
 
-    $auth->post("/json/ticket/update")->to("main#update_ticket");
-    $auth->post("/json/ticket/details")->to("main#ticket_details");
-    $auth->post("/json/ticket/history")->to("main#ticket_history");
-    $auth->post("/json/ticket/history_entries")->to("main#ticket_history_entries");
-    $auth->post("/json/ticket/add_correspondence")->to("main#ticket_add_correspondence");
-    $auth->post("/json/ticket/search")->to("main#ticket_search");
+    $auth->post("/json/ticket/update")->to("ticket#update_ticket");
+    $auth->post("/json/ticket/details")->to("ticket#ticket_details");
+    $auth->post("/json/ticket/history")->to("ticket#ticket_history");
+    $auth->post("/json/ticket/history_entries")->to("ticket#ticket_history_entries");
+    $auth->post("/json/ticket/add_correspondence")->to("ticket#ticket_add_correspondence");
+    $auth->post("/json/ticket/search")->to("ticket#ticket_search");
 
-    $auth->post("/json/sugarcrm/get_contact")->to("main#sugarcrm_get_contact");
-    $auth->post("/json/bugzilla/get_bug")->to("main#bugzilla_get_bug");
+    $auth->post("/json/sugarcrm/get_contact")->to("ticket#sugarcrm_get_contact");
+    $auth->post("/json/bugzilla/get_bug")->to("ticket#bugzilla_get_bug");
 
     $auth->post("/json/reports/get")->to("reports#get");
     $auth->post("/json/reports/get_data")->to("reports#get_data");

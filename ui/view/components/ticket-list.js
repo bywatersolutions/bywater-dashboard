@@ -1,5 +1,7 @@
 // Underlying components for viewing and editing tickets.
 
+import _ from 'lodash';
+
 import {
     Card,
     CardContent,
@@ -110,10 +112,12 @@ export default class TicketList extends React.Component {
     render() {
         const {
             classes,
-            column: { column_id, tickets, name },
-            canDrop = false,
+            column: { column_id, tickets, name, drop_action },
             viewID,
         } = this.props;
+
+        const decodedDropAction = JSON.parse( drop_action );
+        const canDrop = !_.isEmpty( decodedDropAction );
 
         // We do a fair amount of work here to avoid keeping the dialogs inside the Droppable, to
         // avoid unnecessary rerenders.

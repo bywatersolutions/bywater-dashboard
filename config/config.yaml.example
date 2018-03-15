@@ -120,7 +120,9 @@ employee_default_views:
       -
         name: Todays TODO
         type: custom
-        rt_query: 'Owner = "__CurrentUser__" AND CF.{ToDo} = "1" AND (  Status = "new" OR Status = "open" )'
+        rt_query: 'Owner = "__CurrentUser__" AND CF.{ToDo} = "Yes" AND (  Status = "new" OR Status = "open" )'
+        drop_action:
+            'CF.{ToDo}': Yes
 
       -
         name: New tickets

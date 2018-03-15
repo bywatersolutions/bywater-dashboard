@@ -106,12 +106,15 @@ export const ticketMoveColumn = _apiAction( {
 
         let [ destinationViewID, destinationColumnID ] = body.destinationID;
 
-        let column = lookupColumn( views[ destinationViewID ], destinationColumnID );
-        if ( !column || !column.drag_action ) return false;
+        let column = lookupColumn( views[ destinationViewID ].columns, destinationColumnID );
+        if ( !column ) return false;
+
+        let dropAction = JSON.parse( column.drop_action );
+        if ( _.isEmpty( dropAction ) ) return false;
 
         return {
             ticket_id: body.ticketID,
-            ...column.drag_action,
+            ...dropAction,
         };
     },
 } );

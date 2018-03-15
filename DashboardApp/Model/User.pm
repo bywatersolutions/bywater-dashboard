@@ -25,24 +25,27 @@ sub get_views {
 	unless ( $self->app->schema->resultset('View')->count( { user_id => $user_id } ) ) {
 		my $config = DashboardApp::Model::Config::get_config();
 
-        foreach my $view ( @{ $config->{ $role . '_default_views' } } ) {
-        use Data::Dumper; warn Dumper( $view );
-            my $db_view = $self->app->schema->resultset('View')->create({
-                user_id => $user_id,
-                name => $view->{name},
-                extra => encode_json( { has => $view->{has} } ),
-            });
-
-            my $idx = 0;
-            foreach my $column ( @{ $view->{columns} } ) {
-                $db_view->add_to_columns({
-                    name         => $column->{name},
-                    type         => $column->{type},
-                    rt_query     => $column->{rt_query},
-                    column_order => $idx++,
+        $self->app->schema->txn_do( sub {
+            foreach my $view ( @{ $config->{ $role . '_default_views' } } ) {
+            use Data::Dumper; warn Dumper( $view );
+                my $db_view = $self->app->schema->resultset('View')->create({
+                    user_id => $user_id,
+                    name => $view->{name},
+                    extra => encode_json( { has => $view->{has} } ),
                 });
+
+                my $idx = 0;
+                foreach my $column ( @{ $view->{columns} } ) {
+                    $db_view->add_to_columns({
+                        name         => $column->{name},
+                        type         => $column->{type},
+                        rt_query     => $column->{rt_query},
+                        drop_action  => encode_json( $column->{drop_action} || {} ),
+                        column_order => $idx++,
+                    });
+                }
             }
-        }
+        } );
 	}
 
     return [ map +{
