@@ -9,9 +9,10 @@ export function user( state = userInitialState, { type, payload } ) {
         switch ( type ) {
             case 'LOGGED_IN':
                 for ( let key of [
-                    'username',
+                    'rt_username',
                     'first_name',
                     'last_name',
+                    'avatar_url',
                     'custom_fields',
                     'popup_config',
                     'queues',

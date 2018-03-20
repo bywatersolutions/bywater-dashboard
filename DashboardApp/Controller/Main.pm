@@ -12,10 +12,7 @@ sub _get_user_info {
     return undef unless ( $c->session && $c->session->{user_id} );
 
     return {
-        user_id => $c->session->{user_id},
-        username => $c->session->{rt_username},
-        first_name => $c->session->{first_name},
-        last_name => $c->session->{last_name},
+        %{ $c->session->{user_info} },
 
         custom_fields => $config->{rt}->{custom_fields} || [],
         popup_config => $config->{card_popup},
@@ -55,9 +52,7 @@ sub login {
     my $rt_cookie = JSON->new->encode( { COOKIES => $rt->_cookie->{COOKIES} } );
     $c->session({
         user_id => $user->user_id,
-        first_name => $user->first_name,
-        last_name => $user->last_name,
-        rt_username => $json->{login},
+        user_info => { $user->get_columns },
         rt_cookie => $rt_cookie,
     });
 

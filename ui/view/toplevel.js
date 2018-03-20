@@ -1,9 +1,12 @@
+import _ from 'lodash';
 import React from 'react';
 import { Route, Redirect, Switch, withRouter } from 'react-router';
 import { ConnectedRouter } from 'react-router-redux';
 
 import {
     AppBar,
+    Avatar,
+    Button,
     Icon,
     Reboot,
     Snackbar,
@@ -12,15 +15,58 @@ import {
     Toolbar,
     Typography,
 } from 'material-ui';
+import Menu, { MenuItem } from 'material-ui/Menu';
 import { MuiThemeProvider } from 'material-ui/styles';
 
-import { connectWithStyles, theme } from '../common';
+import { connectWithStyles, theme, withOurStyles } from '../common';
 import LoginPage from './login';
 import TicketsView from './tickets-view';
 
 import './material-icons.css';
 import 'typeface-roboto';
 import logoSrc from './images/bywater-logo.png';
+
+@withOurStyles
+class AccountButton extends React.Component {
+    constructor( props ) {
+        super( props );
+
+        this.state = { menuOpenElem: null };
+    }
+
+    onClick = e => {
+        this.setState( { menuOpenElem: e.target } );
+    }
+
+    onMenuClose = () => {
+        this.setState( { menuOpenElem: null } );
+    }
+
+    render() {
+        const { classes, user } = this.props;
+
+        if ( _.isEmpty( user ) ) return null;
+
+        return <Button color="inherit" onClick={this.onClick} ref={ el => this.buttonEl = el }>
+            { user.avatar_url ?
+                <Avatar component="span" className={classes.iconAdornment} src={user.avatar_url} /> :
+                <Avatar component="span" className={classes.iconAdornment}>
+                    {user.first_name[ 0 ] + user.last_name[ 0 ]}
+                </Avatar>
+            }
+            {user.first_name} {user.last_name}
+            <Menu
+                anchorEl={this.state.menuOpenElem}
+                anchorOrigin={ { horizontal: 'left', vertical: 'bottom' } }
+                getContentAnchorEl={null}
+                open={!!this.state.menuOpenElem}
+                onClose={this.onMenuClose}
+                >
+                <MenuItem onClick={ () => window.location = '/logout' }>Log Out</MenuItem>
+            </Menu>
+        </Button>;
+    }
+}
 
 @withRouter
 @connectWithStyles( ( { user } ) => ( { user } ) )
@@ -32,7 +78,7 @@ class ToplevelToolbar extends React.Component {
             <Toolbar>
                 <Typography type="title" className={classes.iconAdornment}><img src={logoSrc} /></Typography>
                 <Typography type="title" color="inherit">PALANTIR</Typography>
-                { user.username && <Tabs
+                { !_.isEmpty( user ) && <Tabs
                         className={classes.topTabs}
                         value={location.pathname == '/' ? false : location.pathname}
                         onChange={ ( event, value ) => history.push( value ) }
@@ -46,10 +92,7 @@ class ToplevelToolbar extends React.Component {
                             />
                     ) }
                 </Tabs> }
-                { user.username && <Typography type="subheading" color="inherit">
-                    <Icon className={classes.iconAdornment}>account_circle</Icon>
-                    {user.first_name} {user.last_name}
-                </Typography> }
+                <AccountButton user={user} />
             </Toolbar>
         </AppBar>;
     }
@@ -99,7 +142,7 @@ export default class ToplevelContainer extends React.Component {
                     overflow: 'hidden',
                 }}>
                     <ToplevelToolbar views={user.views} getSlug={this.getSlug} />
-                    { user.username ? <Switch>
+                    { !_.isEmpty( user ) ? <Switch>
                         <Redirect exact from="/" to={'/' + this.getSlug( user.views[ 0 ].name )} />
                         { user.views.map( view => {
                             let slug = this.getSlug( view.name );
