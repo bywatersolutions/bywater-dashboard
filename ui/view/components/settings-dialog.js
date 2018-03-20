@@ -30,45 +30,25 @@ import SwipeableViews from 'react-swipeable-views';
 import { connectWithStyles } from '../../common';
 import * as actions from '../../control/actions';
 
-import TicketHistoryList from './ticket-history';
-
 @connectWithStyles(
-    ( { user, inProgress, tickets }, { ticketID } ) => ( {
-        popup_config: user.popup_config,
-        ticket: tickets[ ticketID ],
+    ( { user, inProgress, views } ) => ( {
+        user,
+        views,
     } )
 )
-export default class TicketDialog extends React.Component {
+export default class SettingsDialog extends React.Component {
     state = {
         tab: 0,
     };
 
-    componentWillReceiveProps( { open, ticketID, ticket, dispatch } ) {
-        if (
-            // We are open with a ticket, and either...
-            open && ticketID &&
-            (
-                // We were not previously open..
-                !this.props.open ||
-                // ... or we did not previously have a ticket
-                ( !this.props.ticket && ticket )
-            ) && ( !ticket || !ticket.history )
-        ) {
-            dispatch( actions.getHistory( { ticket_id: ticketID } ) );
-        }
-    }
-
     render() {
         const {
             classes,
-            popup_config,
             open,
             onClose,
-            ticket,
-            ticketID,
+            user,
+            views,
         } = this.props;
-
-        if ( !ticket ) return null;
 
         return <MobileDialog
                 classes={{ paper: classes.fixedDialogPaper }}
@@ -92,15 +72,8 @@ export default class TicketDialog extends React.Component {
                             color="inherit"
                             style={{ flex: 1 }}
                         >
-                        Ticket #{ticketID} - {ticket.Subject}
+                        Settings
                     </Typography>
-                    <IconButton
-                            aria-label="Open in RT"
-                            color="primary"
-                            onClick={ () => window.open( ticket.link ) }
-                        >
-                        <Icon style={ { verticalAlign: 'bottom' } }>open_in_new</Icon>
-                    </IconButton>
                 </Toolbar>
                 <Tabs
                         value={this.state.tab}
@@ -109,8 +82,8 @@ export default class TicketDialog extends React.Component {
                         centered
                         fullWidth
                     >
-                    <Tab label="DETAILS" />
-                    <Tab label="HISTORY" />
+                    <Tab label="DASHBOARDS" />
+                    <Tab label="OTHER" />
                 </Tabs>
             </AppBar>
             <DialogContent>
@@ -121,23 +94,8 @@ export default class TicketDialog extends React.Component {
                     style={{ height: '100%' }}
                     containerStyle={{ height: '100%' }}
                 >
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                { popup_config.header_row.map( ( [ label, , sourceField ] ) =>
-                                    <TableCell key={sourceField}>{label}</TableCell>
-                                ) }
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            <TableRow>
-                                { popup_config.header_row.map( ( [ , , sourceField ] ) =>
-                                    <TableCell key={sourceField}>{ticket[ sourceField ]}</TableCell>
-                                ) }
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                    <TicketHistoryList ticketID={ticketID} />
+                    <Typography>DASHBOARDS</Typography>
+                    <Typography>OTHER</Typography>
                 </SwipeableViews>
             </DialogContent>
         </MobileDialog>;

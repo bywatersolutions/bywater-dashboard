@@ -23,6 +23,7 @@ import withWidth, { isWidthUp, isWidthDown } from 'material-ui/utils/withWidth';
 import { connectWithStyles, theme, withOurStyles } from '../common';
 import LoginPage from './login';
 import TicketsView from './tickets-view';
+import SettingsDialog from './components/settings-dialog';
 
 import './material-icons.css';
 import 'typeface-roboto';
@@ -34,7 +35,7 @@ class AccountButton extends React.Component {
     constructor( props ) {
         super( props );
 
-        this.state = { menuOpenElem: null };
+        this.state = { menuOpenElem: null, settingsOpen: false };
     }
 
     onClick = e => {
@@ -50,6 +51,7 @@ class AccountButton extends React.Component {
     }
 
     onSettings = () => {
+        this.setState( { settingsOpen: true } );
     }
 
     render() {
@@ -101,6 +103,10 @@ class AccountButton extends React.Component {
                     <span>Log Out</span>
                 </Button>
             </React.Fragment> }
+            <SettingsDialog
+                open={this.state.settingsOpen}
+                onClose={ () => this.setState( { settingsOpen: false } ) }
+                />
         </React.Fragment>;
     }
 }
