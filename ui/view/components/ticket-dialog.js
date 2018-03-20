@@ -99,7 +99,7 @@ export default class TicketDialog extends React.Component {
                             color="primary"
                             onClick={ () => window.open( ticket.link ) }
                         >
-                        <Icon style={ { verticalAlign: 'bottom' } }>exit_to_app</Icon>
+                        <Icon style={ { verticalAlign: 'bottom' } }>open_in_new</Icon>
                     </IconButton>
                 </Toolbar>
                 <Tabs

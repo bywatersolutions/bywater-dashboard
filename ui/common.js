@@ -41,7 +41,13 @@ export const styles = theme => ( {
 
     fullPage: { flexGrow: 1, height: '100vh' },
 
-    iconAdornment: { marginRight: theme.spacing.unit * 1, verticalAlign: 'bottom' },
+    iconAdornment: {
+        marginRight: theme.spacing.unit * 1,
+        verticalAlign: 'bottom',
+        '&:last-child': {
+            marginRight: 0,
+        },
+    },
 
     page: {
         overflowY: 'auto',

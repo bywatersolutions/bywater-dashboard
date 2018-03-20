@@ -7,6 +7,7 @@ import {
     AppBar,
     Avatar,
     Button,
+    Hidden,
     Icon,
     Reboot,
     Snackbar,
@@ -17,6 +18,7 @@ import {
 } from 'material-ui';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import { MuiThemeProvider } from 'material-ui/styles';
+import withWidth, { isWidthUp, isWidthDown } from 'material-ui/utils/withWidth';
 
 import { connectWithStyles, theme, withOurStyles } from '../common';
 import LoginPage from './login';
@@ -27,6 +29,7 @@ import 'typeface-roboto';
 import logoSrc from './images/bywater-logo.png';
 
 @withOurStyles
+@withWidth()
 class AccountButton extends React.Component {
     constructor( props ) {
         super( props );
@@ -35,36 +38,70 @@ class AccountButton extends React.Component {
     }
 
     onClick = e => {
-        this.setState( { menuOpenElem: e.target } );
+        this.setState( { menuOpenElem: this.state.menuOpenElem ? null : e.currentTarget } );
     }
 
     onMenuClose = () => {
         this.setState( { menuOpenElem: null } );
     }
 
+    onLogout = () => {
+        window.location = '/logout'
+    }
+
+    onSettings = () => {
+    }
+
     render() {
-        const { classes, user } = this.props;
+        const { classes, user, width } = this.props;
 
         if ( _.isEmpty( user ) ) return null;
 
-        return <Button color="inherit" onClick={this.onClick} ref={ el => this.buttonEl = el }>
-            { user.avatar_url ?
-                <Avatar component="span" className={classes.iconAdornment} src={user.avatar_url} /> :
-                <Avatar component="span" className={classes.iconAdornment}>
-                    {user.first_name[ 0 ] + user.last_name[ 0 ]}
-                </Avatar>
-            }
-            {user.first_name} {user.last_name}
-            <Menu
-                anchorEl={this.state.menuOpenElem}
-                anchorOrigin={ { horizontal: 'left', vertical: 'bottom' } }
-                getContentAnchorEl={null}
-                open={!!this.state.menuOpenElem}
-                onClose={this.onMenuClose}
+        // Is width Less than or Equal, or Greater than or Equal
+        const wLe = breakpoint => isWidthDown( breakpoint, width );
+        const wGe = breakpoint => isWidthUp( breakpoint, width );
+
+        return <React.Fragment>
+                <Button
+                    color="inherit"
+                    onClick={this.onClick}
+                    ref={ el => this.buttonEl = el }
+                    style={ wLe( 'sm' ) ? { minWidth: 40, padding: 0 } : null }
                 >
-                <MenuItem onClick={ () => window.location = '/logout' }>Log Out</MenuItem>
+                { user.avatar_url ?
+                    <Avatar component="span" className={classes.iconAdornment} src={user.avatar_url} /> :
+                    <Avatar component="span" className={classes.iconAdornment}>
+                        {user.first_name[ 0 ] + user.last_name[ 0 ]}
+                    </Avatar>
+                }
+                { wGe( 'md' ) && <span>{user.first_name} {user.last_name}</span> }
+                <Icon>expand_more</Icon>
+            </Button>
+            <Menu
+                    anchorEl={this.state.menuOpenElem}
+                    anchorOrigin={ { horizontal: 'right', vertical: 'bottom' } }
+                    transformOrigin={ { horizontal: 'right', vertical: 'top' } }
+                    // Necessary in order to provide above, overrides unneeded select-box
+                    // functionality in <Menu>
+                    getContentAnchorEl={null}
+                    open={!!this.state.menuOpenElem}
+                    onClose={this.onMenuClose}
+                >
+                { wLe( 'sm' ) && <MenuItem button={false}>{user.first_name} {user.last_name}</MenuItem> }
+                { wLe( 'md' ) && <MenuItem onClick={this.onSettings}>Settings</MenuItem> }
+                { wLe( 'md' ) && <MenuItem onClick={this.onLogout}>Log Out</MenuItem> }
             </Menu>
-        </Button>;
+            { wGe( 'lg' ) && <React.Fragment>
+                <Button onClick={this.onSettings} color="inherit">
+                    <Icon className={classes.iconAdornment}>settings</Icon>
+                    <span>Settings</span>
+                </Button>
+                <Button onClick={this.onLogout} color="inherit">
+                    <Icon className={classes.iconAdornment}>exit_to_app</Icon>
+                    <span>Log Out</span>
+                </Button>
+            </React.Fragment> }
+        </React.Fragment>;
     }
 }
 
@@ -76,13 +113,17 @@ class ToplevelToolbar extends React.Component {
 
         return <AppBar position="static">
             <Toolbar>
-                <Typography type="title" className={classes.iconAdornment}><img src={logoSrc} /></Typography>
-                <Typography type="title" color="inherit">PALANTIR</Typography>
+                <Typography type="title" color="inherit">
+                    <img src={logoSrc} className={classes.iconAdornment} />
+                    <Hidden smDown={ !_.isEmpty( user ) }><span>PALANTIR</span></Hidden>
+                </Typography>
                 { !_.isEmpty( user ) && <Tabs
                         className={classes.topTabs}
                         value={location.pathname == '/' ? false : location.pathname}
                         onChange={ ( event, value ) => history.push( value ) }
                         indicatorColor="white"
+                        scrollable
+                        scrollButtons="on"
                     >
                     { views.map( view =>
                         <Tab
