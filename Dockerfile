@@ -1,12 +1,12 @@
 FROM node:latest
 
+WORKDIR /opt/supportal
+
 COPY package.json yarn.lock ./
 RUN yarn install
 
 COPY cpanfile ./
 RUN apt-get install cpanm && cpanm --installdeps .
-
-WORKDIR /opt/supportal
 
 COPY . .
 

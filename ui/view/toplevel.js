@@ -25,7 +25,7 @@ import LoginPage from './login';
 import TicketsView from './tickets-view';
 import SettingsDialog from './components/settings-dialog';
 
-import './material-icons.css';
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import 'typeface-roboto';
 import logoSrc from './images/bywater-logo.png';
 
