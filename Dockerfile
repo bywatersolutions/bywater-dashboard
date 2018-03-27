@@ -3,7 +3,7 @@ FROM node:latest
 WORKDIR /opt/supportal
 
 RUN apt-get update && apt-get install -y \
-    cpanm \
+    cpanminus \
     && rm -rf /var/lib/apt/lists/*
 
 COPY package.json yarn.lock ./
