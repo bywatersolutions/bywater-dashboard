@@ -10,7 +10,7 @@ COPY package.json yarn.lock ./
 RUN yarn install && yarn cache clean
 
 COPY cpanfile ./
-RUN cpanm --installdeps .
+RUN cpanm --installdeps --notest .
 
 COPY . .
 
