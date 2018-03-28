@@ -30,7 +30,7 @@ sub rt {
     my ( $self ) = @_;
 
     unless ( $self->{rt} ) {
-        my $rt = RT::Client::REST->new( server => $config->{rt}->{host}, timeout => 15 );
+        my $rt = RT::Client::REST->new( server => $config->{rt}->{api_url} || $config->{rt}->{url}, timeout => 15 );
 
         if ( $config->{rt}->{ignore_ssl_errors} ) {
             IO::Socket::SSL::set_ctx_defaults( verify_mode => Net::SSLeay->VERIFY_NONE() );
@@ -121,7 +121,7 @@ sub get_tickets {
         $id =~ s,^ticket/,,g;
         $result->{$id} = $values;
 
-        $result->{$id}->{link} = $config->{rt}->{host} . "/Ticket/Display.html?id=" . $id;
+        $result->{$id}->{link} = $config->{rt}->{url} . "/Ticket/Display.html?id=" . $id;
 
         my @bug_ids = split( ",", $result->{$id}->{ $config->{rt}->{bugzilla_field_name} } || "" );
         $result->{$id}->{bugzilla_ids} = @bug_ids ? \@bug_ids : undef;
