@@ -18,4 +18,5 @@ RUN yarn build
 
 EXPOSE 3000
 
+RUN mkdir -p sessions
 CMD ["perl", "dashboard_app.pl", "daemon"]
