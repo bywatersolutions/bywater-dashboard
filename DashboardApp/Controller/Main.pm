@@ -44,7 +44,10 @@ sub login {
 
     my $user = $c->schema->resultset('User')->search({ rt_username => $json->{login} })->first;
 
-    return $c->render(json => { error => "Wrong login or password." }) unless ( $user );
+    unless ( $user ) {
+        $c->res->code( 400 );
+        return $c->render(json => { error => "Wrong login or password." });
+    }
 
     my $rt = DashboardApp::Model::Ticket->new->rt;
     $rt->login( username => $json->{login}, password => $json->{password} );
