@@ -17,6 +17,7 @@ import {
 } from 'material-ui/Progress';
 
 import moment from 'moment';
+import { extractFrom } from 'planer';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -41,13 +42,13 @@ const historyEntryRenderers = {
     Comment: entry => [
         'announcement',
         'Private comment',
-        entry.Content,
+        extractFrom( entry.Content, 'text/plain' ),
     ],
     CommentEmailRecord: null,
     Correspond: entry => [
         'comment',
         'Public reply',
-        entry.Content,
+        extractFrom( entry.Content, 'text/plain' ),
     ],
     Create: entry => [
         'new_releases',

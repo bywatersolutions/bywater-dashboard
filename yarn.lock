@@ -4359,6 +4359,10 @@ pkg-dir@^2.0.0:
   dependencies:
     find-up "^2.1.0"
 
+planer@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/planer/-/planer-1.1.1.tgz#8b0e935cd11b0ff10aaec8d91f0825e2d52c07f2"
+
 pluralize@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-1.2.1.tgz#d1a21483fd22bb41e58a12fa3421823140897c45"

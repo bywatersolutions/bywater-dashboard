@@ -142,7 +142,7 @@ export default class TicketDialog extends React.Component {
                     index={this.state.tab}
                     onChangeIndex={ tab => this.setState( { tab } ) }
                     style={{ height: '100%' }}
-                    containerStyle={{ flex: '1 0 0px' }}
+                    containerStyle={{ height: '100%' }}
                 >
                     <TicketHistoryList ticketID={ticketID} />
                     <div>
