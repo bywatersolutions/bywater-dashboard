@@ -109,8 +109,8 @@ export default class TicketDialog extends React.Component {
                         centered
                         fullWidth
                     >
-                    <Tab label="DETAILS" />
                     <Tab label="HISTORY" />
+                    <Tab label="DETAILS" />
                 </Tabs>
             </AppBar>
             <DialogContent>
@@ -121,6 +121,7 @@ export default class TicketDialog extends React.Component {
                     style={{ height: '100%' }}
                     containerStyle={{ height: '100%' }}
                 >
+                    <TicketHistoryList ticketID={ticketID} />
                     <Table>
                         <TableHead>
                             <TableRow>
@@ -137,7 +138,6 @@ export default class TicketDialog extends React.Component {
                             </TableRow>
                         </TableBody>
                     </Table>
-                    <TicketHistoryList ticketID={ticketID} />
                 </SwipeableViews>
             </DialogContent>
         </MobileDialog>;
