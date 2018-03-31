@@ -29,6 +29,7 @@ export default class TicketDragContext extends React.Component {
             case 'user':
                 this.props.dispatch( actions.ticketMoveOwner( {
                     ticketID,
+                    destinationID,
                     rt_username: destinationID[ 0 ],
                     ...sourceParams,
                 } ) );
