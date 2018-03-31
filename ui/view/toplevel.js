@@ -62,6 +62,12 @@ class AccountButton extends React.Component {
         // Is width Less than or Equal, or Greater than or Equal
         const wLe = breakpoint => isWidthDown( breakpoint, width );
         const wGe = breakpoint => isWidthUp( breakpoint, width );
+        const realNameParts = user.real_name.split(' ');
+        const initials = realNameParts[0][0] + (
+            realNameParts.length > 1 ?
+            realNameParts[ realNameParts.length - 1 ][0] :
+            ''
+        );
 
         return <React.Fragment>
                 <Button
@@ -73,10 +79,10 @@ class AccountButton extends React.Component {
                 { user.avatar_url ?
                     <Avatar component="span" className={classes.iconAdornment} src={user.avatar_url} /> :
                     <Avatar component="span" className={classes.iconAdornment}>
-                        {user.first_name[ 0 ] + user.last_name[ 0 ]}
+                        {initials}
                     </Avatar>
                 }
-                { wGe( 'md' ) && <span>{user.first_name} {user.last_name}</span> }
+                { wGe( 'md' ) && <span>{user.real_name}</span> }
                 <Icon>expand_more</Icon>
             </Button>
             <Menu
@@ -89,7 +95,7 @@ class AccountButton extends React.Component {
                     open={!!this.state.menuOpenElem}
                     onClose={this.onMenuClose}
                 >
-                { wLe( 'sm' ) && <MenuItem button={false}>{user.first_name} {user.last_name}</MenuItem> }
+                { wLe( 'sm' ) && <MenuItem button={false}>{user.real_name}</MenuItem> }
                 { wLe( 'md' ) && <MenuItem onClick={this.onSettings}>Settings</MenuItem> }
                 { wLe( 'md' ) && <MenuItem onClick={this.onLogout}>Log Out</MenuItem> }
             </Menu>

@@ -40,23 +40,20 @@ sub login {
     my $c = shift;
 
     my $json = $c->req->json;
-    my $roles;
 
-    my $user = $c->schema->resultset('User')->search({ rt_username => $json->{login} })->first;
+    my ( $user, $session_info ) = $c->model('User')->login(
+        $json->{login}, $json->{password}
+    );
 
     unless ( $user ) {
         $c->res->code( 400 );
         return $c->render(json => { error => "Wrong login or password." });
     }
 
-    my $rt = DashboardApp::Model::Ticket->new->rt;
-    $rt->login( username => $json->{login}, password => $json->{password} );
-
-    my $rt_cookie = JSON->new->encode( { COOKIES => $rt->_cookie->{COOKIES} } );
     $c->session({
         user_id => $user->user_id,
         user_info => { $user->get_columns },
-        rt_cookie => $rt_cookie,
+        %$session_info
     });
 
     # Default view for a user will be the first role defined

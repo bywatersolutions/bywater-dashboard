@@ -10,8 +10,7 @@ export function user( state = userInitialState, { type, payload } ) {
             case 'LOGGED_IN':
                 for ( let key of [
                     'rt_username',
-                    'first_name',
-                    'last_name',
+                    'real_name',
                     'avatar_url',
                     'custom_fields',
                     'popup_config',

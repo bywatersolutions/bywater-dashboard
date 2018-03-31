@@ -2,6 +2,49 @@ package DashboardApp::Model::User;
 
 use JSON qw/encode_json/;
 use Mojo::Base 'MojoX::Model';
+use RT::Client::REST::Forms;
+use Try::Tiny;
+
+sub login {
+    my ( $self, $username, $password ) = @_;
+
+    my $ticket_model = DashboardApp::Model::Ticket->new;
+    my $rt = $ticket_model->rt;
+    return unless try {
+        $rt->login( user => $username, pass => $password );
+
+        return 1;
+    } catch {
+        if ( !ref $_ && !$_->isa( 'RT::Client::REST::AuthenticationFailureException' ) ) {
+            die $_;
+        } else {
+            return 0;
+        }
+    };
+
+    my $user = $self->app->schema->resultset('User')->search({ rt_username => $username })->first;
+
+    unless ( $user ) {
+        my $result = form_parse( $rt->_submit( "/user/$username" )->decoded_content );
+        my ( $comments, $objects, $values, $errors ) = @{ $result->[0] };
+
+        die $errors if $errors;
+
+        # TODO hardcoded to employees, this distinction will go away and instead inform role
+        # selection
+        return unless $values->{Organization} eq 'ByWater';
+
+        $user = $self->app->schema->resultset( 'User' )->create({
+            rt_username => $username,
+            real_name => $values->{RealName},
+            role => 'employee',
+        });
+    }
+
+    my $rt_cookie = JSON->new->encode( { COOKIES => $rt->_cookie->{COOKIES} } );
+
+    return $user, { rt_cookie => $rt_cookie };
+}
 
 sub get_all_users {
     my ( $self ) = @_;

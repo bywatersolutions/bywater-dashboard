@@ -43,7 +43,7 @@ class AssignUserGrid extends React.Component {
         const { numUsedColumns, users, width } = this.props;
 
         let orderedUsers = Object.values( users );
-        orderedUsers.sort( ( a, b ) => a.last_name.localeCompare( b.last_name ) );
+        orderedUsers.sort( ( a, b ) => a.real_name.localeCompare( b.real_name ) );
 
         // We force the grid to be 12 columns wide if there's not enough room, so it wraps to the
         // next line
@@ -92,7 +92,7 @@ class AssignUserGrid extends React.Component {
                                             pointerEvents: 'none',
                                         }}
                                     />
-                                    <GridListTileBar title={ user.first_name + ' ' + user.last_name} />
+                                    <GridListTileBar title={ user.real_name } />
                                 </React.Fragment>
                             }
                         </Droppable>

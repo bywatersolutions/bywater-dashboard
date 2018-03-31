@@ -44,15 +44,10 @@ __PACKAGE__->table("users");
   is_nullable: 0
   size: 255
 
-=head2 first_name
+=head2 real_name
 
-  data_type: 'text'
-  is_nullable: 1
-
-=head2 last_name
-
-  data_type: 'text'
-  is_nullable: 1
+  data_type: 'varchar'
+  is_nullable: 0
 
 =head2 avatar_url
 
@@ -66,12 +61,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "rt_username",
   { data_type => "varchar", is_nullable => 0, size => 255 },
-  "first_name",
-  { data_type => "text", is_nullable => 1 },
-  "last_name",
-  { data_type => "text", is_nullable => 1 },
-  "avatar_url",
-  { data_type => "text", is_nullable => 1 },
+  "real_name",
+  { data_type => "varchar", is_nullable => 0 },
   "avatar_url",
   { data_type => "text", is_nullable => 1 },
   "role",
