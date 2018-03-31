@@ -61,11 +61,16 @@ card_popup:
     initial_new: 10
     load_chunk: 10
   header_row:
-    - [ "Requestor", "ticket", "Requestor" ]
+    - [ "Requestor", "ticket", "Requestors" ]
     - [ "Owner", "ticket", "Owner" ]
     - [ "Status", "ticket", "Status" ]
     - [ "Queue", "ticket", "Queue" ]
-  history_column:
+  detail_page:
+    - [ "Created", "ticket", "Created" ]
+    - [ "Last Updated", "ticket", "LastUpdated" ]
+    - [ "Time Worked", "ticket", "TimeWorked" ]
+    - [ "CC", "ticket", "Cc" ]
+    - [ "AdminCC", "ticket", "AdminCc" ]
     - [ "Name", "contact", "full_name" ]
     - [ "Library", "contact", "account_name" ]
     - [ "Phone number", "contact", "phone_work" ]

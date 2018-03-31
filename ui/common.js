@@ -34,6 +34,7 @@ export const styles = theme => ( {
     fixedDialogPaper: {
         height: '90vh',
         maxHeight: null,
+        overflow: 'hidden',
         width: theme.breakpoints.values.md,
     },
 

@@ -2,8 +2,11 @@
 
 import {
     AppBar,
+    Grid,
+    Hidden,
     Icon,
     IconButton,
+    Paper,
     Tab,
     Tabs,
     Toolbar,
@@ -56,6 +59,26 @@ export default class TicketDialog extends React.Component {
         ) {
             dispatch( actions.getHistory( { ticket_id: ticketID } ) );
         }
+    }
+
+    renderTicketTable( template ) {
+        const { ticket } = this.props;
+        return <Table>
+            <TableHead>
+                <TableRow>
+                    { template.map( ( [ label, , sourceField ] ) =>
+                        <TableCell key={sourceField}>{label}</TableCell>
+                    ) }
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                <TableRow>
+                    { template.map( ( [ , , sourceField ] ) =>
+                        <TableCell key={sourceField}>{ticket[ sourceField ]}</TableCell>
+                    ) }
+                </TableRow>
+            </TableBody>
+        </Table>;
     }
 
     render() {
@@ -113,33 +136,61 @@ export default class TicketDialog extends React.Component {
                     <Tab label="DETAILS" />
                 </Tabs>
             </AppBar>
-            <DialogContent>
+            <DialogContent style={{ display: 'flex', flexDirection: 'column' }}>
                 <SwipeableViews
                     disableLazyLoading={true}
                     index={this.state.tab}
                     onChangeIndex={ tab => this.setState( { tab } ) }
                     style={{ height: '100%' }}
-                    containerStyle={{ height: '100%' }}
+                    containerStyle={{ flex: '1 0 0px' }}
                 >
                     <TicketHistoryList ticketID={ticketID} />
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                { popup_config.header_row.map( ( [ label, , sourceField ] ) =>
-                                    <TableCell key={sourceField}>{label}</TableCell>
-                                ) }
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            <TableRow>
-                                { popup_config.header_row.map( ( [ , , sourceField ] ) =>
-                                    <TableCell key={sourceField}>{ticket[ sourceField ]}</TableCell>
-                                ) }
-                            </TableRow>
-                        </TableBody>
-                    </Table>
+                    <div>
+                        <Hidden smUp>
+                            { this.renderTicketTable( popup_config.header_row.filter(
+                                ( [ , source ] ) => source == 'ticket'
+                            ) ) }
+                        </Hidden>
+                        { this.renderTicketTable( popup_config.detail_page.filter(
+                            ( [ , source ] ) => source == 'ticket'
+                        ) ) }
+                    </div>
                 </SwipeableViews>
             </DialogContent>
+            <Hidden xsDown>
+                <Paper elevation={1} component="footer">
+                    <Grid
+                            container
+                            justify="center"
+                            style={{ padding: 16 }}
+                            spacing={24}
+                        >
+                        { popup_config.header_row.filter( ( [ , source ] ) => source == 'ticket' )
+                            .map( ( [ label, , sourceField ] ) =>
+                                <Grid
+                                    item
+                                    md={3}
+                                    sm={6}
+                                    key={sourceField}
+                                    >
+                                    <Typography
+                                        align="center"
+                                        type="body2"
+                                        color="inherit"
+                                        >
+                                        {label + ': '}
+                                    </Typography>
+                                    <Typography
+                                        align="center"
+                                        color="inherit"
+                                        >
+                                        {ticket[ sourceField ]}
+                                    </Typography>
+                                </Grid>
+                        ) }
+                    </Grid>
+                </Paper>
+            </Hidden>
         </MobileDialog>;
     }
 }
