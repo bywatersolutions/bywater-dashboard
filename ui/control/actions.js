@@ -2,11 +2,11 @@ import _ from 'lodash';
 
 import { lookupColumn } from '../common';
 
-function _apiFetch( method, url, body ) {
+function _apiFetch( method, url, request ) {
     return fetch( url, {
         method,
         credentials: 'same-origin',
-        body: body && JSON.stringify( body ),
+        body: request && JSON.stringify( request ),
     } );
 };
 window._apiFetch = _apiFetch;
@@ -16,28 +16,33 @@ function _apiAction( {
     successfulType,
     method,
     path,
-    pre = ( body, _getState ) => body,
-    post = response => response.json(),
+    pre = ( request, _getState ) => request,
+    post = ( { response } ) => response.json(),
 } ) {
-    return ( body ) => ( async ( dispatch, getState ) => {
-        let filteredBody = pre( body, getState );
+    return ( request ) => ( async ( dispatch, getState ) => {
+        let filteredRequest = pre( request, getState );
 
-        if ( filteredBody === false ) return;
+        if ( filteredRequest === false ) return;
 
         let realPath = path;
-        if ( typeof path == 'function' ) realPath = path( body, getState );
+        if ( typeof path == 'function' ) realPath = path( request, getState );
 
-        dispatch( { type: 'IN_PROGRESS', payload: { request: body, type } } );
+        dispatch( { type: 'IN_PROGRESS', payload: { request, type } } );
 
-        let response = await _apiFetch( method, realPath, filteredBody );
+        let response = await _apiFetch( method, realPath, filteredRequest );
 
         if ( response.ok ) {
             dispatch( {
                 type: successfulType,
-                payload: { originalType: type, request: body, response, result: await post( response, dispatch ) },
+                payload: {
+                    originalType: type,
+                    request,
+                    response,
+                    result: await post( { request, response, dispatch } ),
+                },
             } );
         } else {
-            dispatch( { type: 'ERROR', payload: { request: body, type } } );
+            dispatch( { type: 'ERROR', payload: { request, type } } );
         }
     } );
 }
@@ -56,7 +61,7 @@ export const getTickets = _apiAction( {
     path: '/json/ticket/details',
 } );
 
-async function _postGetTickets( response, dispatch ) {
+async function _postGetTickets( { response, dispatch } ) {
     let result = await response.json();
 
     let ticketIDs = _.flatMap( result.columns, column => column.tickets );
@@ -71,7 +76,7 @@ export const getView = _apiAction( {
     successfulType: 'VIEW_FETCHED',
     method: 'GET',
     path: ( { viewID } ) => `/json/view/${viewID}`,
-    pre: _body => null,
+    pre: _request => null,
 
     post: _postGetTickets,
 } );
@@ -83,16 +88,23 @@ export const getHistory = _apiAction( {
     path: '/json/ticket/history',
 } );
 
+function _postMoveTicket( { request, response, dispatch } ) {
+    dispatch( getHistory( { ticket_id: request.ticketID } ) );
+
+    return response.json();
+}
+
 export const ticketMoveOwner = _apiAction( {
     type: 'TICKET_MOVE',
     successfulType: 'TICKET_UPDATED',
     method: 'POST',
     path: '/json/ticket/update',
 
-    pre: body => ( {
-        ticket_id: body.ticketID,
-        Owner: body.rt_username,
+    pre: request => ( {
+        ticket_id: request.ticketID,
+        Owner: request.rt_username,
     } ),
+    post: _postMoveTicket,
 } );
 
 export const ticketMoveColumn = _apiAction( {
@@ -101,10 +113,10 @@ export const ticketMoveColumn = _apiAction( {
     method: 'POST',
     path: '/json/ticket/update',
 
-    pre: ( body, getState ) => {
+    pre: ( request, getState ) => {
         let { views } = getState();
 
-        let [ destinationViewID, destinationColumnID ] = body.destinationID;
+        let [ destinationViewID, destinationColumnID ] = request.destinationID;
 
         let column = lookupColumn( views[ destinationViewID ].columns, destinationColumnID );
         if ( !column ) return false;
@@ -113,10 +125,11 @@ export const ticketMoveColumn = _apiAction( {
         if ( _.isEmpty( dropAction ) ) return false;
 
         return {
-            ticket_id: body.ticketID,
+            ticket_id: request.ticketID,
             ...dropAction,
         };
     },
+    post: _postMoveTicket,
 } );
 
 export const getOldHistoryEntries = _apiAction( {

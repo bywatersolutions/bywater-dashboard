@@ -175,8 +175,9 @@ class TicketHistoryEntry extends React.PureComponent {
 }
 
 @connect(
-    ( { tickets, user }, { ticketID } ) => ( {
+    ( { inProgress, tickets, user }, { ticketID } ) => ( {
         history: tickets[ ticketID ] && tickets[ ticketID ].history,
+        inProgress: inProgress.GET_HISTORY,
         popup_config: user.popup_config,
     } )
 )
@@ -221,7 +222,7 @@ export default class TicketHistoryList extends React.Component {
     }
 
     render() {
-        const { history } = this.props;
+        const { history, inProgress } = this.props;
 
         return <div
                 style={{
@@ -233,8 +234,7 @@ export default class TicketHistoryList extends React.Component {
                     overflowY: 'auto',
                 }}
             >
-            { !history && <LinearProgress /> }
-            { history && this.renderPartialHistory( history ) }
+            { inProgress ? <LinearProgress /> : this.renderPartialHistory( history ) }
         </div>;
     }
 }
