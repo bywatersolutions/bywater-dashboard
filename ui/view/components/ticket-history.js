@@ -152,15 +152,24 @@ class TicketHistoryEntry extends React.PureComponent {
                         flexShrink: 0,
                         marginLeft: 8,
                     }}
-                        title={ created.toString() }>
+                        title={ created.format( 'LLLL' ) }>
                         { created.fromNow() }
                     </Typography>
                 </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
+                <ExpansionPanelDetails style={{ display: 'block' }}>
+                    { contents &&
+                        <Typography
+                            component="div"
+                            style={{ paddingBottom: 8 }}
+                            dangerouslySetInnerHTML={ _renderHistoryEntryContent( contents ) }
+                        />
+                    }
                     <Divider />
-                    <Typography dangerouslySetInnerHTML={ _renderHistoryEntryContent( contents ) } />
+                    <Typography type="caption" component="p" style={{ paddingTop: 8 }}>
+                        { created.format( 'LLLL' ) }
+                    </Typography>
                 </ExpansionPanelDetails>
-        </ExpansionPanel>
+            </ExpansionPanel>
         </Fade>;
     }
 }
@@ -218,9 +227,9 @@ export default class TicketHistoryList extends React.Component {
                 style={{
                     height: '100%',
                     paddingLeft: 4,
-                    paddingTop: 32,
+                    paddingTop: 16,
                     paddingRight: 4,
-                    paddingBottom: 4,
+                    paddingBottom: 16,
                     overflowY: 'auto',
                 }}
             >

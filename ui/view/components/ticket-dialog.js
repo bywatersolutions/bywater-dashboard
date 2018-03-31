@@ -136,7 +136,13 @@ export default class TicketDialog extends React.Component {
                     <Tab label="DETAILS" />
                 </Tabs>
             </AppBar>
-            <DialogContent style={{ display: 'flex', flexDirection: 'column' }}>
+            <DialogContent style={{
+                display: 'flex',
+                flexDirection: 'column',
+                paddingLeft: 16,
+                paddingBottom: 0,
+                paddingRight: 16,
+            }}>
                 <SwipeableViews
                     disableLazyLoading={true}
                     index={this.state.tab}
@@ -158,7 +164,7 @@ export default class TicketDialog extends React.Component {
                 </SwipeableViews>
             </DialogContent>
             <Hidden xsDown>
-                <Paper elevation={1} component="footer">
+                <Paper elevation={8} component="footer" style={{ zIndex: 1100 }}>
                     <Grid
                             container
                             justify="center"
