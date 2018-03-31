@@ -7,11 +7,11 @@ RUN apt-get update && apt-get install -y \
     libdbd-mysql-perl \
     && rm -rf /var/lib/apt/lists/*
 
-COPY package.json yarn.lock ./
-RUN yarn install && yarn cache clean
-
 COPY cpanfile ./
 RUN cpanm --installdeps --notest .
+
+COPY package.json yarn.lock ./
+RUN yarn install && yarn cache clean
 
 COPY . .
 
