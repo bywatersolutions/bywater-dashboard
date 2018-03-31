@@ -130,11 +130,18 @@ export default class TicketsView extends React.Component {
         let orderedColumns = Object.values( columns );
         orderedColumns.sort( ( a, b ) => a.column_order - b.column_order );
 
+        let columnWidths = { ...COLUMN_WIDTHS };
+        // If there's no user grid, stretch the columns to full width
+        if ( !this.hasAssignUsers() ) {
+            columnWidths.lg = true;
+            columnWidths.xl = true;
+        }
+
         return <TicketDragContext>
             <div className={ classes.page }>
                 { loading ? <LinearProgress /> :
                     <Grid container spacing={24}>
-                        { orderedColumns.map( column => <Grid item {...COLUMN_WIDTHS} key={column.column_id}>
+                        { orderedColumns.map( column => <Grid item {...columnWidths} key={column.column_id}>
                             <TicketList viewID={viewInfo.view_id} column={column} />
                         </Grid> ) }
                         {
