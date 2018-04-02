@@ -25,15 +25,25 @@ import Table, {
 const MobileDialog = withMobileDialog( { breakpoint: 'sm' } )( Dialog );
 
 import React from 'react';
+import { connect } from 'react-redux';
 import SwipeableViews from 'react-swipeable-views';
 
 import { connectWithStyles } from '../../common';
 import * as actions from '../../control/actions';
 
+@connect( ( { user: { views = {} } }, { viewID } ) => ( { view: views[ viewID ] } ) )
+class ViewSettings extends React.PureComponent {
+    render() {
+        const { view, viewName } = this.props;
+
+        return <div>{ viewName }</div>
+    }
+}
+
 @connectWithStyles(
-    ( { user, inProgress, views } ) => ( {
+    ( { user, inProgress } ) => ( {
+        inProgress: inProgress.SAVE_SETTINGS,
         user,
-        views,
     } )
 )
 export default class SettingsDialog extends React.Component {
@@ -46,8 +56,7 @@ export default class SettingsDialog extends React.Component {
             classes,
             open,
             onClose,
-            user,
-            views,
+            user: { views = {} },
         } = this.props;
 
         return <MobileDialog
@@ -94,7 +103,15 @@ export default class SettingsDialog extends React.Component {
                     style={{ height: '100%' }}
                     containerStyle={{ height: '100%' }}
                 >
-                    <Typography>DASHBOARDS</Typography>
+                    <div>
+                        { Object.values( views ).map( ( { view_id, name } ) =>
+                            <ViewSettings
+                                key={view_id}
+                                view_id={ view_id }
+                                viewName={name}
+                            />
+                        ) }
+                    </div>
                     <Typography>OTHER</Typography>
                 </SwipeableViews>
             </DialogContent>
