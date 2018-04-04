@@ -1,41 +1,69 @@
 // Dialog view for a single ticket.
 
 import {
-    AppBar,
+    Divider,
     Grid,
     Hidden,
     Icon,
     IconButton,
-    Paper,
-    Tab,
-    Tabs,
-    Toolbar,
     Typography,
 } from 'material-ui';
 
-import Dialog, {
-    DialogContent,
-    withMobileDialog,
-} from 'material-ui/Dialog';
-
-import Table, {
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-} from 'material-ui/Table';
-
-const MobileDialog = withMobileDialog( { breakpoint: 'sm' } )( Dialog );
-
 import React from 'react';
-import SwipeableViews from 'react-swipeable-views';
+import { connect } from 'react-redux';
 
-import { connectWithStyles } from '../../common';
 import * as actions from '../../control/actions';
 
+import TabbedDialog, { TabbedDialogContent, TabbedDialogFooter } from './tabbed-dialog';
 import TicketHistoryList from './ticket-history';
 
-@connectWithStyles(
+@connect(
+    ( { tickets }, { ticketID } ) => ( {
+        ticket: tickets[ ticketID ],
+    } )
+)
+class TicketInfoGrid extends React.Component {
+    render() {
+        const {
+            fields,
+            justify = 'center',
+            ticket,
+        } = this.props;
+
+        return <div style={{ padding: 24 }}>
+            <Grid
+                container
+                justify={justify}
+                spacing={24}
+            >
+                { fields.map( ( [ label, , sourceField ] ) =>
+                    <Grid
+                        item
+                        md={3}
+                        sm={6}
+                        key={sourceField}
+                        >
+                        <Typography
+                            align="center"
+                            type="body2"
+                            color="inherit"
+                            >
+                            {label + ': '}
+                        </Typography>
+                        <Typography
+                            align="center"
+                            color="inherit"
+                            >
+                            {ticket[ sourceField ]}
+                        </Typography>
+                    </Grid>
+                ) }
+            </Grid>
+        </div>;
+    }
+}
+
+@connect(
     ( { user, inProgress, tickets }, { ticketID } ) => ( {
         popup_config: user.popup_config,
         ticket: tickets[ ticketID ],
@@ -61,29 +89,8 @@ export default class TicketDialog extends React.Component {
         }
     }
 
-    renderTicketTable( template ) {
-        const { ticket } = this.props;
-        return <Table>
-            <TableHead>
-                <TableRow>
-                    { template.map( ( [ label, , sourceField ] ) =>
-                        <TableCell key={sourceField}>{label}</TableCell>
-                    ) }
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                <TableRow>
-                    { template.map( ( [ , , sourceField ] ) =>
-                        <TableCell key={sourceField}>{ticket[ sourceField ]}</TableCell>
-                    ) }
-                </TableRow>
-            </TableBody>
-        </Table>;
-    }
-
     render() {
         const {
-            classes,
             popup_config,
             open,
             onClose,
@@ -93,110 +100,47 @@ export default class TicketDialog extends React.Component {
 
         if ( !ticket ) return null;
 
-        return <MobileDialog
-                classes={{ paper: classes.fixedDialogPaper }}
-                maxWidth={false}
+        return <TabbedDialog
                 open={open}
                 onClose={onClose}
-                aria-labelledby="ticket-dialog-title"
-            >
-            <AppBar color="default" position="static">
-                <Toolbar disableGutters={true}>
+                title={`Ticket #${ticketID} - ${ticket.Subject}`}
+                extraButtons={[
                     <IconButton
-                            aria-label="Close"
-                            color="secondary"
-                            onClick={onClose}
-                        >
-                        <Icon style={ { verticalAlign: 'bottom' } }>close</Icon>
-                    </IconButton>
-                    <Typography
-                            id="ticket-dialog-title"
-                            type="title"
-                            color="inherit"
-                            style={{ flex: 1 }}
-                        >
-                        Ticket #{ticketID} - {ticket.Subject}
-                    </Typography>
-                    <IconButton
+                            key="close"
                             aria-label="Open in RT"
                             color="primary"
                             onClick={ () => window.open( ticket.link ) }
                         >
                         <Icon style={ { verticalAlign: 'bottom' } }>open_in_new</Icon>
-                    </IconButton>
-                </Toolbar>
-                <Tabs
-                        value={this.state.tab}
-                        indicatorColor="black"
-                        onChange={ ( event, tab ) => this.setState( { tab } ) }
-                        centered
-                        fullWidth
-                    >
-                    <Tab label="HISTORY" />
-                    <Tab label="DETAILS" />
-                </Tabs>
-            </AppBar>
-            <DialogContent style={{
-                display: 'flex',
-                flexDirection: 'column',
-                paddingLeft: 16,
-                paddingBottom: 0,
-                paddingRight: 16,
-            }}>
-                <SwipeableViews
-                    disableLazyLoading={true}
-                    index={this.state.tab}
-                    onChangeIndex={ tab => this.setState( { tab } ) }
-                    style={{ height: '100%' }}
-                    containerStyle={{ height: '100%' }}
-                >
-                    <TicketHistoryList ticketID={ticketID} />
-                    <div>
-                        <Hidden smUp>
-                            { this.renderTicketTable( popup_config.header_row.filter(
-                                ( [ , source ] ) => source == 'ticket'
-                            ) ) }
-                        </Hidden>
-                        { this.renderTicketTable( popup_config.detail_page.filter(
-                            ( [ , source ] ) => source == 'ticket'
-                        ) ) }
-                    </div>
-                </SwipeableViews>
-            </DialogContent>
+                    </IconButton>,
+                ]}
+                tabNames={[ 'HISTORY', 'DETAILS' ]}
+        >
+            <TabbedDialogContent>
+                <TicketHistoryList ticketID={ticketID} />
+                <div>
+                    <Hidden smUp>
+                        <TicketInfoGrid
+                            fields={ popup_config.header_row.filter( ( [ , source ] ) => source == 'ticket' ) }
+                            ticketID={ ticketID }
+                        />
+                        <Divider />
+                    </Hidden>
+                    <TicketInfoGrid
+                        fields={ popup_config.detail_page.filter( ( [ , source ] ) => source == 'ticket' ) }
+                        justify="start"
+                        ticketID={ ticketID }
+                    />
+                </div>
+            </TabbedDialogContent>
             <Hidden xsDown>
-                <Paper elevation={8} component="footer" style={{ zIndex: 1100 }}>
-                    <Grid
-                            container
-                            justify="center"
-                            style={{ padding: 16 }}
-                            spacing={24}
-                        >
-                        { popup_config.header_row.filter( ( [ , source ] ) => source == 'ticket' )
-                            .map( ( [ label, , sourceField ] ) =>
-                                <Grid
-                                    item
-                                    md={3}
-                                    sm={6}
-                                    key={sourceField}
-                                    >
-                                    <Typography
-                                        align="center"
-                                        type="body2"
-                                        color="inherit"
-                                        >
-                                        {label + ': '}
-                                    </Typography>
-                                    <Typography
-                                        align="center"
-                                        color="inherit"
-                                        >
-                                        {ticket[ sourceField ]}
-                                    </Typography>
-                                </Grid>
-                        ) }
-                    </Grid>
-                </Paper>
+                <TabbedDialogFooter>
+                    <TicketInfoGrid
+                        fields={ popup_config.header_row.filter( ( [ , source ] ) => source == 'ticket' ) }
+                        ticketID={ ticketID }
+                    />
+                </TabbedDialogFooter>
             </Hidden>
-        </MobileDialog>;
+        </TabbedDialog>;
     }
 }
