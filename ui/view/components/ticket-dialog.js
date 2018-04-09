@@ -128,7 +128,7 @@ export default class TicketDialog extends React.Component {
                     </Hidden>
                     <TicketInfoGrid
                         fields={ popup_config.detail_page.filter( ( [ , source ] ) => source == 'ticket' ) }
-                        justify="start"
+                        justify="flex-start"
                         ticketID={ ticketID }
                     />
                 </div>
