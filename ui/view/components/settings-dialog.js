@@ -77,7 +77,7 @@ export default class SettingsDialog extends React.Component {
                     </IconButton>
                     <Typography
                             id="ticket-dialog-title"
-                            type="title"
+                            variant="title"
                             color="inherit"
                             style={{ flex: 1 }}
                         >

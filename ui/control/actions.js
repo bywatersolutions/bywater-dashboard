@@ -88,8 +88,8 @@ export const getHistory = _apiAction( {
     path: '/json/ticket/history',
 } );
 
-function _postMoveTicket( { request, response, dispatch } ) {
-    dispatch( getHistory( { ticket_id: request.ticketID } ) );
+function _postRefreshTicket( { request, response, dispatch } ) {
+    dispatch( getHistory( { ticket_id: request.ticketID || request.ticket_id } ) );
 
     return response.json();
 }
@@ -104,7 +104,7 @@ export const ticketMoveOwner = _apiAction( {
         ticket_id: request.ticketID,
         Owner: request.rt_username,
     } ),
-    post: _postMoveTicket,
+    post: _postRefreshTicket,
 } );
 
 export const ticketMoveColumn = _apiAction( {
@@ -129,7 +129,7 @@ export const ticketMoveColumn = _apiAction( {
             ...dropAction,
         };
     },
-    post: _postMoveTicket,
+    post: _postRefreshTicket,
 } );
 
 export const getOldHistoryEntries = _apiAction( {
@@ -144,4 +144,12 @@ export const getNewHistoryEntries = _apiAction( {
     successfulType: 'NEW_HISTORY_ENTRIES_FETCHED',
     method: 'POST',
     path: '/json/ticket/history_entries',
+} );
+
+export const addTicketReply = _apiAction( {
+    type: 'ADD_TICKET_REPLY',
+    successfulType: 'TICKET_REPLY_ADDED',
+    method: 'POST',
+    path: '/json/ticket/add_correspondence',
+    post: _postRefreshTicket,
 } );

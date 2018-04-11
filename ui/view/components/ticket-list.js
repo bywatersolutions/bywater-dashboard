@@ -70,7 +70,6 @@ class TicketItem extends React.Component {
                 return <React.Fragment>
                     <ListItem
                             button
-                            // eslint-disable-next-line react/no-find-dom-node
                             ref={ ( node ) => provided.innerRef( node && ReactDOM.findDOMNode( node ) ) }
                             { ...provided.draggableProps }
                             { ...provided.dragHandleProps }
@@ -135,7 +134,7 @@ export default class TicketList extends React.Component {
                 { ( provided, snapshot ) =>
                     <Card className={ snapshot.isDraggingOver ? classes.dragOver : null }>
                         <CardContent>
-                            <Typography type="title">{name}</Typography>
+                            <Typography variant="title">{name}</Typography>
                             <div ref={ provided.innerRef }>
                                 <List>
                                     { tickets.map( ( ticketID, index ) =>

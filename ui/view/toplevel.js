@@ -9,7 +9,7 @@ import {
     Button,
     Hidden,
     Icon,
-    Reboot,
+    CssBaseline,
     Snackbar,
     Tab,
     Tabs,
@@ -62,10 +62,10 @@ class AccountButton extends React.Component {
         // Is width Less than or Equal, or Greater than or Equal
         const wLe = breakpoint => isWidthDown( breakpoint, width );
         const wGe = breakpoint => isWidthUp( breakpoint, width );
-        const realNameParts = user.real_name.split(' ');
-        const initials = realNameParts[0][0] + (
+        const realNameParts = user.real_name.split( ' ' );
+        const initials = realNameParts[ 0 ][ 0 ] + (
             realNameParts.length > 1 ?
-            realNameParts[ realNameParts.length - 1 ][0] :
+            realNameParts[ realNameParts.length - 1 ][ 0 ] :
             ''
         );
 
@@ -125,7 +125,7 @@ class ToplevelToolbar extends React.Component {
 
         return <AppBar position="static">
             <Toolbar>
-                <Typography type="title" color="inherit">
+                <Typography variant="title" color="inherit">
                     <img src={logoSrc} className={classes.iconAdornment} />
                     <Hidden smDown={ !_.isEmpty( user ) }><span>PALANTIR</span></Hidden>
                 </Typography>
@@ -186,7 +186,7 @@ export default class ToplevelContainer extends React.Component {
         const isUnhandledError = Object.keys( errors ).some( error => !handledErrors.includes( error ) );
 
         return <MuiThemeProvider theme={theme}>
-            <Reboot />
+            <CssBaseline />
             <ConnectedRouter history={history}>
                 <div id="toplevel" style={{
                     display: 'flex',

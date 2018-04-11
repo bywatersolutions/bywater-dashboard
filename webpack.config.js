@@ -1,5 +1,6 @@
 const path = require( 'path' );
 const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
+const BeepPlugin = require( 'webpack-beep-plugin' );
 
 module.exports = {
     entry: [
@@ -56,5 +57,6 @@ module.exports = {
         new CopyWebpackPlugin( [
 			{ from: 'templates/main/', to: '' },
         ] ),
+        new BeepPlugin(),
     ],
 };

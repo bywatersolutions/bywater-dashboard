@@ -89,7 +89,7 @@ export default class TabbedDialog extends React.Component {
                     </IconButton>
                     <Typography
                             id="dialog-title"
-                            type="title"
+                            variant="title"
                             color="inherit"
                             style={{ flex: 1 }}
                         >

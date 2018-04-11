@@ -98,6 +98,7 @@
             "code": 120,
             "comments": 100
         }],
-        "react/prop-types": "off"
+        "react/prop-types": "off",
+        "react/no-find-dom-node": "off"
     }
 }

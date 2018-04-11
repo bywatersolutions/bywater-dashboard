@@ -66,7 +66,7 @@ export default class LoginPage extends React.Component {
                             <CardActions>
                                 { loggingIn ?
                                     <Button disabled>Logging In...</Button> :
-                                    <Button raised color="primary" type="submit">Log In</Button>
+                                    <Button variant="raised" color="primary" type="submit">Log In</Button>
                                 }
                             </CardActions>
                         </form>

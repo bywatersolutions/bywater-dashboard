@@ -45,7 +45,7 @@ class TicketInfoGrid extends React.Component {
                         >
                         <Typography
                             align="center"
-                            type="body2"
+                            variant="body2"
                             color="inherit"
                             >
                             {label + ': '}
