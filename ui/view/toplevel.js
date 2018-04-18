@@ -7,6 +7,7 @@ import {
     AppBar,
     Avatar,
     Button,
+    Fade,
     Hidden,
     Icon,
     CssBaseline,
@@ -203,7 +204,7 @@ export default class ToplevelContainer extends React.Component {
                                 key={slug}
                                 exact
                                 path={ '/' + slug }
-                                render={() => <TicketsView viewInfo={view} />}
+                                render={() => <Fade in={true}><TicketsView view={view} /></Fade>}
                             />;
                         } ) }
                     </Switch> : <LoginPage /> }

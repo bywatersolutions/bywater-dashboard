@@ -64,22 +64,12 @@ export const getTickets = _apiAction( {
 async function _postGetTickets( { response, dispatch } ) {
     let result = await response.json();
 
-    let ticketIDs = _.flatMap( result.columns, column => column.tickets );
+    let ticketIDs = _.flatMap( Object.values( result ), column => column.tickets );
 
     dispatch( getTickets( { ids: ticketIDs } ) );
 
     return result;
 }
-
-export const getView = _apiAction( {
-    type: 'GET_VIEW',
-    successfulType: 'VIEW_FETCHED',
-    method: 'GET',
-    path: ( { viewID } ) => `/json/view/${viewID}`,
-    pre: _request => null,
-
-    post: _postGetTickets,
-} );
 
 export const getHistory = _apiAction( {
     type: 'GET_HISTORY',
@@ -152,4 +142,14 @@ export const addTicketReply = _apiAction( {
     method: 'POST',
     path: '/json/ticket/add_correspondence',
     post: _postRefreshTicket,
+} );
+
+export const getColumnResults = _apiAction( {
+    type: 'GET_COLUMN_RESULTS',
+    successfulType: 'COLUMN_RESULTS_FETCHED',
+    method: 'GET',
+    path: ( { columnIDs } ) => `/json/column/${columnIDs.join( ',' )}/results`,
+    pre: _request => null,
+
+    post: _postGetTickets,
 } );

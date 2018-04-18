@@ -8,7 +8,7 @@ use DashboardApp::Model::Config;
 sub get {
     my $c = shift;
 
-    my ( $view_id, $columns ) = $c->model('View')->get( $c->session->{user_id}, $c->tickets_model, $c->param('id') );
+    my ( $view_id, $columns ) = $c->model('View')->get( $c->session->{user_id}, $c->param('id'), $c->tickets_model );
 
     $c->render( json => {
         view_id => $view_id,
@@ -53,6 +53,19 @@ sub update {
     }
 
     $c->render( json => $c->req->json );
+}
+
+sub get_column_results {
+    my $c = shift;
+
+    my $result = {};
+    my $tickets_model = $c->tickets_model;
+    
+    foreach my $column_id ( split /,/, $c->param( 'ids' ) ) {
+        $result->{ $column_id } = $c->model('View')->fetch_column_results( $column_id, $tickets_model );
+    }
+
+    $c->render( json => $result );
 }
 
 1;

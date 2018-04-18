@@ -5,6 +5,7 @@ import _ from 'lodash';
 import {
     Card,
     CardContent,
+    CardHeader,
     Typography,
 } from 'material-ui';
 
@@ -13,13 +14,15 @@ import List, {
     ListItemText,
 } from 'material-ui/List';
 
+import { CircularProgress } from 'material-ui/Progress';
+
 import React from 'react';
 import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 import TicketDialog from './ticket-dialog';
-import { withOurStyles } from '../../common';
+import { connectWithStyles, withOurStyles } from '../../common';
 
 // Used in empty ticket lists (when we're not holding a dragged ticket over them).
 @withOurStyles
@@ -88,7 +91,11 @@ class TicketItem extends React.Component {
     }
 }
 
-@withOurStyles
+@connectWithStyles( ( { columnResults, inProgress }, { column } ) => ( {
+    columnResults: columnResults[ column.column_id ],
+    loading: inProgress.GET_COLUMN_RESULTS &&
+        inProgress.GET_COLUMN_RESULTS.columnIDs.includes( column.column_id ),
+} ) )
 export default class TicketList extends React.Component {
     constructor( props ) {
         super( props );
@@ -111,15 +118,19 @@ export default class TicketList extends React.Component {
     render() {
         const {
             classes,
-            column: { column_id, tickets, name, drop_action },
+            column: { column_id, name, drop_action },
+            columnResults: { tickets = [] } = {},
+            loading,
             viewID,
         } = this.props;
 
         const decodedDropAction = JSON.parse( drop_action );
-        const canDrop = !_.isEmpty( decodedDropAction );
+        const canDrop = !_.isEmpty( decodedDropAction ) && !loading;
 
         // We do a fair amount of work here to avoid keeping the dialogs inside the Droppable, to
         // avoid unnecessary rerenders.
+
+        let placeholder = loading ? null : <TicketPlaceholder />;
 
         return <React.Fragment>
             { tickets.map( ticketID =>
@@ -132,9 +143,35 @@ export default class TicketList extends React.Component {
             ) }
             <Droppable droppableId={ `column:${viewID}:${column_id}` } isDropDisabled={!canDrop}>
                 { ( provided, snapshot ) =>
-                    <Card className={ snapshot.isDraggingOver ? classes.dragOver : null }>
-                        <CardContent>
-                            <Typography variant="title">{name}</Typography>
+                    <Card
+                            className={ snapshot.isDraggingOver ? classes.dragOver : null }
+                            style={{ position: 'relative' }}
+                        >
+                        { loading && <div
+                            style={{
+                                backgroundColor: 'rgba( 255, 255, 255, .7 )',
+
+                                position: 'absolute',
+                                left: 0,
+                                top: 0,
+                                width: '100%',
+                                height: '100%',
+                                zIndex: 9999,
+
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <CircularProgress />
+                        </div> }
+                        <CardHeader
+                            title={name}
+                            style={{ paddingBottom: 0 }}
+                        />
+                        <CardContent
+                            style={{ paddingTop: 0 }}
+                        >
                             <div ref={ provided.innerRef }>
                                 <List>
                                     { tickets.map( ( ticketID, index ) =>
@@ -146,7 +183,7 @@ export default class TicketList extends React.Component {
                                             onClick={ () => this.openTicketDialog( ticketID ) }
                                         />
                                     ) }
-                                    { provided.placeholder || ( !tickets.length ? <TicketPlaceholder /> : null ) }
+                                    { provided.placeholder || ( !tickets.length ? placeholder : null ) }
                                 </List>
                             </div>
                         </CardContent>

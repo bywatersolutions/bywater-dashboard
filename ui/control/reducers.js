@@ -1,7 +1,5 @@
 import produce from 'immer';
 
-import { lookupColumn } from '../common';
-
 let userInitialState = window.EXISTING_USER_INFO || {};
 
 export function user( state = userInitialState, { type, payload } ) {
@@ -27,22 +25,22 @@ export function user( state = userInitialState, { type, payload } ) {
     } );
 }
 
-export function views( state = {}, { type, payload } ) {
+export function columnResults( state = {}, { type, payload } ) {
     return produce( state, draft => {
         switch ( type ) {
-            case 'VIEW_FETCHED':
-                draft[ payload.request.viewID ] = { columns: payload.result.columns };
+            case 'COLUMN_RESULTS_FETCHED':
+                for ( let columnID in payload.result ) {
+                    draft[ columnID ] = payload.result[ columnID ];
+                }
                 break;
 
             // We optimistically add the ticket to the column, for quick feedback.
             // If we need to, we'll just refresh the page on error.
             case 'IN_PROGRESS':
                 if ( payload.type == 'TICKET_MOVE' && payload.request.destinationID.length == 2 ) {
-                    let [ destinationViewID, destinationColumnID ] = payload.request.destinationID;
+                    let [ , destinationColumnID ] = payload.request.destinationID;
 
-                    let column = lookupColumn(
-                        draft[ destinationViewID ].columns, destinationColumnID,
-                    );
+                    let column = draft[ destinationColumnID ];
                     if ( !column ) return;
 
                     let prevIndex = column.tickets.indexOf( payload.request.ticketID );
@@ -106,7 +104,7 @@ export function inProgress( state = {}, action ) {
     return produce( state, draft => {
         switch ( action.type ) {
             case 'IN_PROGRESS':
-                draft[ action.payload.type ] = true;
+                draft[ action.payload.type ] = action.payload.request;
                 break;
 
             case 'ERROR':

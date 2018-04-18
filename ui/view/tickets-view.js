@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import {
     Grid,
 } from 'material-ui';
@@ -6,10 +8,6 @@ import GridList, {
     GridListTile,
     GridListTileBar,
 } from 'material-ui/GridList';
-
-import {
-    LinearProgress,
-} from 'material-ui/Progress';
 
 import withWidth from 'material-ui/utils/withWidth';
 
@@ -103,31 +101,29 @@ class AssignUserGrid extends React.Component {
     }
 }
 
-@connectWithStyles( ( { inProgress, views, user }, { viewInfo } ) => ( {
-    view: views[ viewInfo.view_id ],
-    loading: !!inProgress.GET_VIEW,
+@connectWithStyles( ( { user } ) => ( {
     users: user && user.users,
 } ) )
 export default class TicketsView extends React.Component {
     componentWillMount() {
-        this.props.dispatch( actions.getView( { viewID: this.props.viewInfo.view_id } ) );
+        this.props.dispatch( actions.getColumnResults( {
+            columnIDs: this.props.view.columns.map( ( { column_id } ) => column_id ),
+        } ) );
     }
 
     hasAssignUsers() {
-        let extra = JSON.parse( this.props.viewInfo.extra );
+        let extra = JSON.parse( this.props.view.extra );
         return ( extra.has || [] ).includes( 'usergrid' );
     }
 
     render() {
         const {
             classes,
-            loading,
             users,
-            view: { columns = {} } = {},
-            viewInfo,
+            view,
         } = this.props;
 
-        let orderedColumns = Object.values( columns );
+        let orderedColumns = Object.values( view.columns );
         orderedColumns.sort( ( a, b ) => a.column_order - b.column_order );
 
         let columnWidths = { ...COLUMN_WIDTHS };
@@ -139,18 +135,16 @@ export default class TicketsView extends React.Component {
 
         return <TicketDragContext>
             <div className={ classes.page }>
-                { loading ? <LinearProgress /> :
-                    <Grid container spacing={24}>
-                        { orderedColumns.map( column => <Grid item {...columnWidths} key={column.column_id}>
-                            <TicketList viewID={viewInfo.view_id} column={column} />
-                        </Grid> ) }
-                        {
-                            this.hasAssignUsers() &&
-                            users &&
-                            <AssignUserGrid numUsedColumns={ orderedColumns.length } users={ users } />
-                        }
-                    </Grid>
-                }
+                <Grid container spacing={24}>
+                    { orderedColumns.map( column => <Grid item {...columnWidths} key={column.column_id}>
+                        <TicketList viewID={view.view_id} column={column} />
+                    </Grid> ) }
+                    {
+                        this.hasAssignUsers() &&
+                        users &&
+                        <AssignUserGrid numUsedColumns={ orderedColumns.length } users={ users } />
+                    }
+                </Grid>
             </div>
         </TicketDragContext>;
     }

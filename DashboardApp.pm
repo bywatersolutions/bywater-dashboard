@@ -67,6 +67,8 @@ sub startup {
     $auth->get("/json/view/*id*")->to("view#get");
     $auth->post("/json/view/*id*")->to("view#update");
 
+    $auth->get("/json/column/*ids*/results")->to("view#get_column_results");
+
     $auth->post("/json/ticket/update")->to("ticket#update_ticket");
     $auth->post("/json/ticket/details")->to("ticket#ticket_details");
     $auth->post("/json/ticket/history")->to("ticket#ticket_history");
