@@ -14,7 +14,10 @@ import { connect } from 'react-redux';
 
 import * as actions from '../../control/actions';
 
-import TabbedDialog, { TabbedDialogContent, TabbedDialogFooter } from './tabbed-dialog';
+import TabbedDialog, {
+    TabbedDialogContent,
+    TabbedDialogFooter,
+} from './tabbed-dialog';
 import TicketHistoryList from './ticket-history';
 
 @connect(

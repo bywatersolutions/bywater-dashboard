@@ -62,7 +62,7 @@ export default class TabbedDialog extends React.Component {
     render() {
         const {
             classes,
-            extraButtons,
+            extraButtons = [],
             onClose,
             open,
             tabNames,
