@@ -62,6 +62,8 @@ export const styles = theme => ( {
     },
 
     textField: { minWidth: 200 },
+    textFieldTitle: theme.typography.title,
+    textFieldBody1: theme.typography.body1,
 
     topTabs: { color: 'white', flex: 1, marginLeft: theme.spacing.unit * 3 },
 } );
