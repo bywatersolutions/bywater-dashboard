@@ -36,6 +36,7 @@ sub rt {
             IO::Socket::SSL::set_ctx_defaults( verify_mode => Net::SSLeay->VERIFY_NONE() );
             $rt->_ua->ssl_opts( verify_hostname => 0 );
         }
+        $rt->_ua->env_proxy;
 
         $rt->_cookie( bless( decode_json( $self->{rt_cookie} ), 'HTTP::Cookies' ) ) if ( $self->{rt_cookie} );
         $self->{rt} = $rt;

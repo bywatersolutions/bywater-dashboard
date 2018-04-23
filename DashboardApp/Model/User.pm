@@ -15,7 +15,7 @@ sub login {
 
         return 1;
     } catch {
-        if ( !ref $_ && !$_->isa( 'RT::Client::REST::AuthenticationFailureException' ) ) {
+        if ( !ref $_ || !$_->isa( 'RT::Client::REST::AuthenticationFailureException' ) ) {
             die $_;
         } else {
             return 0;

@@ -32,6 +32,7 @@ sub _api {
 			IO::Socket::SSL::set_ctx_defaults( verify_mode => Net::SSLeay->VERIFY_NONE() );
 			$api->globalua()->ssl_opts( verify_hostname => 0 );
 		}
+        $api->globalua()->env_proxy;
 	}
 
 	return $api;
