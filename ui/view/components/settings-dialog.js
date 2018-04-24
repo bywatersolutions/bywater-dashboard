@@ -1,5 +1,7 @@
 // Dialog view for a single ticket.
 
+import _ from 'lodash';
+
 import produce from 'immer';
 
 import {
@@ -39,8 +41,19 @@ class ViewSettings extends React.Component {
         this.state = this.getStateFromProps( props );
     }
 
+    reSortColumns( columns ) {
+        columns.sort( ( a, b ) => a.column_order - b.column_order );
+
+        let i = 1;
+        for ( let column of columns ) column.column_order = i++;
+    }
+
     getStateFromProps( { view } ) {
-        return { view: JSON.parse( JSON.stringify( view ) ) };
+        let ownView = JSON.parse( JSON.stringify( view ) );
+
+        this.reSortColumns( ownView.columns );
+
+        return { view: ownView };
     }
 
     componentWillReceiveProps( newProps ) {
@@ -52,6 +65,9 @@ class ViewSettings extends React.Component {
     onViewUpdate( updater ) {
         this.setState( state => {
             let newView = produce( state.view, draft => {
+                // We don't just pass `updater` to `produce` because Immer gets grumpy when the
+                // updater returns a value (which will happen with something like `draft =>
+                // draft.name = "potato"`).
                 updater( draft )
             } );
 
@@ -90,6 +106,7 @@ class ViewSettings extends React.Component {
             i,
             key,
             variant,
+            afterChangeUpdater = _draft => {},
             ...rest
         } ) =>
             <Control
@@ -100,7 +117,11 @@ class ViewSettings extends React.Component {
                     // before the updater is called
                     const newValue = e.target.value;
 
-                    this.onViewUpdate( draft => draft.columns[ i ][ key ] = newValue );
+                    this.onViewUpdate( draft => {
+                        let oldValue = draft.columns[ i ][ key ];
+                        draft.columns[ i ][ key ] = newValue;
+                        afterChangeUpdater( draft, { newValue, oldValue } );
+                    } );
                 } }
                 {...rest}
             />;
@@ -121,9 +142,25 @@ class ViewSettings extends React.Component {
                             >
                             { columnPropControl( {
                                 i,
+                                key: 'column_order',
+                                label: 'Order',
+                                style: { width: 30, marginRight: 10 },
+                                inputProps: {
+                                    min: 1,
+                                    max: view.columns.length,
+                                },
+                                type: 'number',
+                                afterChangeUpdater: ( draft, { oldValue, newValue } ) => {
+                                    draft.columns[ newValue - 1 ].column_order = oldValue;
+                                    this.reSortColumns( draft.columns );
+                                },
+                            } ) }
+                            { columnPropControl( {
+                                i,
                                 variant: 'Body1',
                                 key: 'name',
                                 label: 'Column Title',
+                                onClick: e => e.stopPropagation(),
                             } ) }
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails style={{ display: 'block' }}>
@@ -132,7 +169,8 @@ class ViewSettings extends React.Component {
                                 key: 'rt_query',
                                 label: 'RT Query',
                                 fullWidth: true,
-                                multiLine: true,
+                                multiline: true,
+                                InputProps: { style: { fontFamily: 'monospace' } },
                             } ) }
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
@@ -155,6 +193,16 @@ export default class SettingsDialog extends React.PureComponent {
         this.pendingViewUpdates[ view.view_id ] = view;
     };
 
+    componentWillReceiveProps( { open } ) {
+        if ( ( open && !this.props.open ) ) {
+            this.pendingViewUpdates = {};
+        }
+    }
+
+    onClickSave = () => this.props.dispatch(
+        actions.saveViews( { views: Object.values( this.pendingViewUpdates ) } )
+    );
+
     render() {
         const {
             open,
@@ -165,7 +213,10 @@ export default class SettingsDialog extends React.PureComponent {
         return <TabbedDialog
                 open={open}
                 onClose={ () => {
-                    if ( _.isEmpty( this.pendingViewUpdates ) || confirm( 'You have unsaved changes. Really close?' ) ) {
+                    if (
+                        _.isEmpty( this.pendingViewUpdates ) ||
+                        confirm( 'You have unsaved changes. Really close?' )
+                    ) {
                         onClose();
                     }
                 } }

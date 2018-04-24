@@ -65,7 +65,7 @@ sub startup {
     } );
 
     $auth->get("/json/view/*id*")->to("view#get");
-    $auth->post("/json/view/*id*")->to("view#update");
+    $auth->post("/json/view/")->to("view#update");
 
     $auth->get("/json/column/*ids*/results")->to("view#get_column_results");
 

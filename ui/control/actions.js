@@ -153,3 +153,10 @@ export const getColumnResults = _apiAction( {
 
     post: _postGetTickets,
 } );
+
+export const saveViews = _apiAction( {
+    type: 'SAVE_VIEWS',
+    successfulType: 'VIEWS_SAVED',
+    method: 'POST',
+    path: '/json/view/',
+} );
