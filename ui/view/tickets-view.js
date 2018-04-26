@@ -106,13 +106,15 @@ class AssignUserGrid extends React.Component {
 } ) )
 export default class TicketsView extends React.Component {
     componentWillMount() {
+        if ( this.props.view.columns.length == 0 ) return;
+
         this.props.dispatch( actions.getColumnResults( {
             columnIDs: this.props.view.columns.map( ( { column_id } ) => column_id ),
         } ) );
     }
 
     hasAssignUsers() {
-        let extra = JSON.parse( this.props.view.extra );
+        let extra = JSON.parse( this.props.view.extra ) || {};
         return ( extra.has || [] ).includes( 'usergrid' );
     }
 

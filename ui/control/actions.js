@@ -109,11 +109,14 @@ export const ticketMoveColumn = _apiAction( {
     path: '/json/ticket/update',
 
     pre: ( request, getState ) => {
-        let { views } = getState();
+        let { user: { views = [] } } = getState();
 
         let [ destinationViewID, destinationColumnID ] = request.destinationID;
 
-        let column = lookupColumn( views[ destinationViewID ].columns, destinationColumnID );
+        let view = views.find( ( { view_id } ) => view_id == destinationViewID );
+        if ( !view ) return false;
+
+        let column = lookupColumn( view.columns, destinationColumnID );
         if ( !column ) return false;
 
         let dropAction = JSON.parse( column.drop_action );

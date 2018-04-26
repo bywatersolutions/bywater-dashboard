@@ -7,6 +7,7 @@ import produce from 'immer';
 import {
     Button,
     Card,
+    CardActions,
     CardContent,
     FormControl,
     Icon,
@@ -126,7 +127,11 @@ class ViewSettings extends React.Component {
 
     addColumn() {
         this.modifyView( draft => {
-            draft.columns.push( {} );
+            draft.columns.push( {
+                name: '',
+                rt_query: '',
+                drop_action: '',
+            } );
         } );
     }
 
@@ -262,7 +267,7 @@ class ViewSettings extends React.Component {
                         onClick={ e => {
                             e.stopPropagation();
 
-                            this.deleteColumn( i );
+                            this.addColumn();
                         } }
                     >
                     New Column
