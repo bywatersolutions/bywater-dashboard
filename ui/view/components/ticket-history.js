@@ -26,8 +26,9 @@ import { extractFrom } from 'planer';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
+import scrollIntoViewIfNeeded from 'scroll-into-view-if-needed';
 
-import { connectWithStyles, scrollIntoViewIfNeeded } from '../../common';
+import { connectWithStyles } from '../../common';
 import * as actions from '../../control/actions';
 
 function _renderHistoryEntryContent( content ) {
@@ -220,7 +221,7 @@ class TicketHistoryEntry extends React.PureComponent {
                     ref={ e => this.panel = e }
                     CollapseProps={ {
                         onEntered: () => {
-                            scrollIntoViewIfNeeded( ReactDOM.findDOMNode( this.panel ) )
+                            scrollIntoViewIfNeeded( ReactDOM.findDOMNode( this.panel ), { duration: 300 } )
                         },
                     } }
                 >
