@@ -36,6 +36,7 @@
         "no-eval": "warn",
         "no-fallthrough": "error",
         "no-implied-eval": "warn",
+        "no-labels": ["error",{"allowLoop": true}],
         "no-multi-spaces": "error",
         "no-octal-escape": "error",
         "no-octal": "error",

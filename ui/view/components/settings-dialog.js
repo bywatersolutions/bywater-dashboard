@@ -5,6 +5,7 @@ import _ from 'lodash';
 import produce from 'immer';
 
 import {
+    Button,
     Card,
     CardContent,
     FormControl,
@@ -15,8 +16,9 @@ import {
 } from 'material-ui';
 
 import ExpansionPanel, {
-    ExpansionPanelSummary,
+    ExpansionPanelActions,
     ExpansionPanelDetails,
+    ExpansionPanelSummary,
 } from 'material-ui/ExpansionPanel';
 
 import React from 'react';
@@ -31,6 +33,8 @@ import * as actions from '../../control/actions';
 import TabbedDialog, {
     TabbedDialogContent,
 } from './tabbed-dialog';
+
+let _NEXT_TEMPORARY_VIEW_ID = -1;
 
 @connectWithStyles(
     ( { user: { views = [] } }, { viewID } ) => ( {
@@ -50,8 +54,18 @@ class ViewSettings extends React.Component {
         for ( let column of columns ) delete column.column_order;
     }
 
-    getStateFromProps( { view } ) {
-        let ownView = JSON.parse( JSON.stringify( view ) );
+    getStateFromProps( { view, viewID } ) {
+        let ownView;
+
+        if ( view == null ) {
+            ownView = {
+                view_id: viewID,
+                name: '',
+                columns: [],
+            };
+        } else {
+            ownView = JSON.parse( JSON.stringify( view ) );
+        }
 
         this.reSortColumns( ownView.columns );
 
@@ -67,13 +81,13 @@ class ViewSettings extends React.Component {
         }
     }
 
-    onViewUpdate( updater ) {
+    modifyView( updater ) {
         this.setState( state => {
             let newView = produce( state.view, draft => {
                 // We don't just pass `updater` to `produce` because Immer gets grumpy when the
                 // updater returns a value (which will happen with something like `draft =>
                 // draft.name = "potato"`).
-                updater( draft )
+                updater( draft );
             } );
 
             this.props.onViewUpdate( newView );
@@ -96,17 +110,29 @@ class ViewSettings extends React.Component {
                 // before the updater is called
                 const newValue = e.target.value;
 
-                this.onViewUpdate( draft => draft[ key ] = newValue );
+                this.modifyView( draft => draft[ key ] = newValue );
             } }
             {...rest}
         />;
     }
 
     swapColumns( i, j ) {
-        this.onViewUpdate( draft => {
+        this.modifyView( draft => {
             let temp = draft.columns[ i ];
             draft.columns[ i ] = draft.columns[ j ];
             draft.columns[ j ] = temp;
+        } );
+    }
+
+    addColumn() {
+        this.modifyView( draft => {
+            draft.columns.push( {} );
+        } );
+    }
+
+    deleteColumn( i ) {
+        this.modifyView( draft => {
+            draft.columns.splice( i, 1 );
         } );
     }
 
@@ -126,7 +152,7 @@ class ViewSettings extends React.Component {
                 // before the updater is called
                 const newValue = e.target.value;
 
-                this.onViewUpdate( draft => {
+                this.modifyView( draft => {
                     let oldValue = draft.columns[ i ][ key ];
                     draft.columns[ i ][ key ] = newValue;
                     afterChangeUpdater( draft, { newValue, oldValue } );
@@ -203,10 +229,45 @@ class ViewSettings extends React.Component {
                                 multiline: true,
                                 InputProps: { style: { fontFamily: 'monospace' } },
                             } ) }
+                            { this.renderColumnPropControl( {
+                                i,
+                                key: 'drop_action',
+                                label: 'Drop Action',
+                                fullWidth: true,
+                                multiline: true,
+                                style: { marginTop: 8 },
+                                InputProps: { style: { fontFamily: 'monospace' } },
+                            } ) }
                         </ExpansionPanelDetails>
+                        <ExpansionPanelActions>
+                            <Button
+                                    size="small"
+                                    color="secondary"
+                                    onClick={ e => {
+                                        e.stopPropagation();
+
+                                        this.deleteColumn( i );
+                                    } }
+                                >
+                                Delete
+                            </Button>
+                        </ExpansionPanelActions>
                     </ExpansionPanel>
                 ) }
             </CardContent>
+            <CardActions>
+                <Button
+                        size="small"
+                        color="primary"
+                        onClick={ e => {
+                            e.stopPropagation();
+
+                            this.deleteColumn( i );
+                        } }
+                    >
+                    New Column
+                </Button>
+            </CardActions>
         </Card>;
     }
 }
@@ -218,24 +279,47 @@ class ViewSettings extends React.Component {
     } )
 )
 export default class SettingsDialog extends React.PureComponent {
+    constructor( props ) {
+        super( props );
+
+        this.state = { viewIDs: props.viewIDs };
+    }
+
     pendingViewUpdates = {};
 
     addPendingViewUpdate = ( view ) => {
         this.pendingViewUpdates[ view.view_id ] = view;
     };
 
-    componentWillReceiveProps( { open } ) {
+    componentWillReceiveProps( { open, viewIDs } ) {
         if ( ( open && !this.props.open ) ) {
             this.pendingViewUpdates = {};
+        }
+
+        // Don't judge me.
+        if ( viewIDs.join( ',' ) != this.props.viewIDs.join( ',' ) ) {
+            this.setState( { viewIDs } );
         }
     }
 
     onClickSave = () => {
         this.props.dispatch(
-            actions.saveViews( { views: Object.values( this.pendingViewUpdates ) } )
+            actions.saveViews( {
+                views: Object.values( this.pendingViewUpdates ).map( view => Object.assign(
+                    {},
+                    view,
+                    { view_id: view.view_id < 0 ? null : view.view_id }
+                ) ),
+            } )
         ).then( () => {
             this.pendingViewUpdates = {};
         } );
+    }
+
+    onClickNewView = () => {
+        this.setState( ( { viewIDs } ) => ( {
+            viewIDs: viewIDs.concat( _NEXT_TEMPORARY_VIEW_ID-- ),
+        } ) );
     }
 
     render() {
@@ -243,8 +327,9 @@ export default class SettingsDialog extends React.PureComponent {
             loading,
             open,
             onClose,
-            viewIDs,
         } = this.props;
+
+        const { viewIDs } = this.state;
 
         return <TabbedDialog
                 open={open}
@@ -290,6 +375,15 @@ export default class SettingsDialog extends React.PureComponent {
                             onViewUpdate={this.addPendingViewUpdate}
                         />
                     ) }
+                    <ExpansionPanelActions>
+                        <Button
+                            size="small"
+                            color="primary"
+                            onClick={this.onClickNewView}
+                        >
+                            New View
+                        </Button>
+                    </ExpansionPanelActions>
                 </div>
                 <Typography>OTHER</Typography>
             </TabbedDialogContent>
