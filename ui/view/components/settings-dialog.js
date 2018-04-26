@@ -22,7 +22,10 @@ import ExpansionPanel, {
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { connectWithStyles } from '../../common';
+import {
+    connectWithStyles,
+    LoadingOverlay,
+} from '../../common';
 import * as actions from '../../control/actions';
 
 import TabbedDialog, {
@@ -44,8 +47,7 @@ class ViewSettings extends React.Component {
     reSortColumns( columns ) {
         columns.sort( ( a, b ) => a.column_order - b.column_order );
 
-        let i = 1;
-        for ( let column of columns ) column.column_order = i++;
+        for ( let column of columns ) delete column.column_order;
     }
 
     getStateFromProps( { view } ) {
@@ -57,7 +59,10 @@ class ViewSettings extends React.Component {
     }
 
     componentWillReceiveProps( newProps ) {
-        if ( ( newProps.dialogOpen && !this.props.dialogOpen ) ) {
+        if (
+                ( newProps.dialogOpen && !this.props.dialogOpen ) ||
+                ( newProps.view != this.props.view )
+            ) {
             this.setState( this.getStateFromProps( newProps ) );
         }
     }
@@ -77,59 +82,67 @@ class ViewSettings extends React.Component {
         } );
     }
 
+    renderViewPropControl( {
+        control: Control = TextField,
+        key,
+        variant,
+        ...rest
+    } ) {
+        return <Control
+            className={ variant && this.props.classes[ 'textField' + variant ] }
+            value={ this.state.view[ key ] }
+            onChange={ e => {
+                // We have to pull this out because the React synthetic event may be recycled
+                // before the updater is called
+                const newValue = e.target.value;
+
+                this.onViewUpdate( draft => draft[ key ] = newValue );
+            } }
+            {...rest}
+        />;
+    }
+
+    swapColumns( i, j ) {
+        this.onViewUpdate( draft => {
+            let temp = draft.columns[ i ];
+            draft.columns[ i ] = draft.columns[ j ];
+            draft.columns[ j ] = temp;
+        } );
+    }
+
+    renderColumnPropControl( {
+        control: Control = TextField,
+        i,
+        key,
+        variant,
+        afterChangeUpdater = _draft => {},
+        ...rest
+    } ) {
+        return <Control
+            className={ variant && this.props.classes[ 'textField' + variant ] }
+            value={ this.state.view.columns[ i ][ key ] }
+            onChange={ e => {
+                // We have to pull this out because the React synthetic event may be recycled
+                // before the updater is called
+                const newValue = e.target.value;
+
+                this.onViewUpdate( draft => {
+                    let oldValue = draft.columns[ i ][ key ];
+                    draft.columns[ i ][ key ] = newValue;
+                    afterChangeUpdater( draft, { newValue, oldValue } );
+                } );
+            } }
+            {...rest}
+        />;
+    }
+
     render() {
-        const { classes } = this.props;
-
         const { view } = this.state;
-
-        const viewPropControl = ( {
-            control: Control = TextField,
-            key,
-            variant,
-            ...rest
-        } ) =>
-            <Control
-                className={ variant && classes[ 'textField' + variant ] }
-                value={ view[ key ] }
-                onChange={ e => {
-                    // We have to pull this out because the React synthetic event may be recycled
-                    // before the updater is called
-                    const newValue = e.target.value;
-
-                    this.onViewUpdate( draft => draft[ key ] = newValue );
-                } }
-                {...rest}
-            />;
-
-        const columnPropControl = ( {
-            control: Control = TextField,
-            i,
-            key,
-            variant,
-            afterChangeUpdater = _draft => {},
-            ...rest
-        } ) =>
-            <Control
-                className={ variant && classes[ 'textField' + variant ] }
-                value={ view.columns[ i ][ key ] }
-                onChange={ e => {
-                    // We have to pull this out because the React synthetic event may be recycled
-                    // before the updater is called
-                    const newValue = e.target.value;
-
-                    this.onViewUpdate( draft => {
-                        let oldValue = draft.columns[ i ][ key ];
-                        draft.columns[ i ][ key ] = newValue;
-                        afterChangeUpdater( draft, { newValue, oldValue } );
-                    } );
-                } }
-                {...rest}
-            />;
 
         return <Card style={{ marginTop: 16 }} elevation={2}>
             <CardContent>
                 <FormControl style={{ marginBottom: 16 }}>
-                    { viewPropControl( {
+                    { this.renderViewPropControl( {
                         variant: 'Title',
                         key: 'name',
                         label: 'Title',
@@ -140,22 +153,40 @@ class ViewSettings extends React.Component {
                         <ExpansionPanelSummary
                                 expandIcon={ <Icon>expand_more</Icon> }
                             >
-                            { columnPropControl( {
-                                i,
-                                key: 'column_order',
-                                label: 'Order',
-                                style: { width: 30, marginRight: 10 },
-                                inputProps: {
-                                    min: 1,
-                                    max: view.columns.length,
-                                },
-                                type: 'number',
-                                afterChangeUpdater: ( draft, { oldValue, newValue } ) => {
-                                    draft.columns[ newValue - 1 ].column_order = oldValue;
-                                    this.reSortColumns( draft.columns );
-                                },
-                            } ) }
-                            { columnPropControl( {
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                marginLeft: -8,
+                                marginRight: 8,
+                            }}>
+                                <IconButton
+                                    style={{
+                                        width: 24,
+                                        height: 24,
+                                        visibility: i > 0 ? 'visible' : 'hidden',
+                                    }}
+                                    onClick={ e => {
+                                        e.stopPropagation();
+                                        this.swapColumns( i, i - 1 );
+                                    } }
+                                >
+                                    <Icon>expand_less</Icon>
+                                </IconButton>
+                                <IconButton
+                                    style={{
+                                        width: 24,
+                                        height: 24,
+                                        visibility: i < view.columns.length - 1 ? 'visible' : 'hidden',
+                                    }}
+                                    onClick={ e => {
+                                        e.stopPropagation();
+                                        this.swapColumns( i, i + 1 );
+                                    } }
+                                    >
+                                    <Icon>expand_more</Icon>
+                                </IconButton>
+                            </div>
+                            { this.renderColumnPropControl( {
                                 i,
                                 variant: 'Body1',
                                 key: 'name',
@@ -164,7 +195,7 @@ class ViewSettings extends React.Component {
                             } ) }
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails style={{ display: 'block' }}>
-                            { columnPropControl( {
+                            { this.renderColumnPropControl( {
                                 i,
                                 key: 'rt_query',
                                 label: 'RT Query',
@@ -182,7 +213,7 @@ class ViewSettings extends React.Component {
 
 @connect(
     ( { user: { views = [] }, inProgress } ) => ( {
-        inProgress: inProgress.SAVE_SETTINGS,
+        loading: inProgress.SAVE_VIEWS,
         viewIDs: views.map( view => view.view_id ),
     } )
 )
@@ -199,12 +230,17 @@ export default class SettingsDialog extends React.PureComponent {
         }
     }
 
-    onClickSave = () => this.props.dispatch(
-        actions.saveViews( { views: Object.values( this.pendingViewUpdates ) } )
-    );
+    onClickSave = () => {
+        this.props.dispatch(
+            actions.saveViews( { views: Object.values( this.pendingViewUpdates ) } )
+        ).then( () => {
+            this.pendingViewUpdates = {};
+        } );
+    }
 
     render() {
         const {
+            loading,
             open,
             onClose,
             viewIDs,
@@ -233,6 +269,7 @@ export default class SettingsDialog extends React.PureComponent {
                 ]}
                 tabNames={[ 'VIEWS', 'GENERAL' ]}
         >
+            { loading && <LoadingOverlay /> }
             <TabbedDialogContent>
                 <div
                     style={{

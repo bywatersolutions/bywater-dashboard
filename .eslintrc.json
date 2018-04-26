@@ -32,7 +32,6 @@
         "no-unexpected-multiline": "error",
         "curly": ["error","multi-line"],
         "dot-notation": "error",
-        "no-alert": "warn",
         "no-else-return": "warn",
         "no-eval": "warn",
         "no-fallthrough": "error",

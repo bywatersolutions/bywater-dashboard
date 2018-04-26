@@ -6,7 +6,6 @@ import {
     Card,
     CardContent,
     CardHeader,
-    Typography,
 } from 'material-ui';
 
 import List, {
@@ -14,15 +13,17 @@ import List, {
     ListItemText,
 } from 'material-ui/List';
 
-import { CircularProgress } from 'material-ui/Progress';
-
 import React from 'react';
 import { connect } from 'react-redux';
 import ReactDOM from 'react-dom';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 import TicketDialog from './ticket-dialog';
-import { connectWithStyles, withOurStyles } from '../../common';
+import {
+    connectWithStyles,
+    LoadingOverlay,
+    withOurStyles,
+} from '../../common';
 
 // Used in empty ticket lists (when we're not holding a dragged ticket over them).
 @withOurStyles
@@ -147,24 +148,7 @@ export default class TicketList extends React.Component {
                             className={ snapshot.isDraggingOver ? classes.dragOver : null }
                             style={{ position: 'relative' }}
                         >
-                        { loading && <div
-                            style={{
-                                backgroundColor: 'rgba( 255, 255, 255, .7 )',
-
-                                position: 'absolute',
-                                left: 0,
-                                top: 0,
-                                width: '100%',
-                                height: '100%',
-                                zIndex: 9999,
-
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <CircularProgress />
-                        </div> }
+                        { loading && <LoadingOverlay /> }
                         <CardHeader
                             title={name}
                             style={{ paddingBottom: 0 }}

@@ -21,6 +21,19 @@ export function user( state = userInitialState, { type, payload } ) {
                 }
 
                 break;
+
+            case 'VIEWS_SAVED':
+                for ( let view of payload.result.views ) {
+                    let i = draft.views.findIndex( oldView => oldView.view_id == view.view_id );
+
+                    if ( i == -1 ) {
+                        draft.views.push( view );
+                    } else {
+                        draft.views[ i ] = view;
+                    }
+                }
+
+                break;
         }
     } );
 }

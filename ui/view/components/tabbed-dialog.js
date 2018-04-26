@@ -108,7 +108,7 @@ export default class TabbedDialog extends React.Component {
                 </Tabs>
             </AppBar>
             {React.Children.map( this.props.children, child =>
-                child.type == TabbedDialogContent ?
+                child && child.type == TabbedDialogContent ?
                 React.cloneElement( child, {
                     onChangeIndex: newTab => this.setState( { tab: newTab } ),
                     tab,

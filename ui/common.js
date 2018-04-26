@@ -1,6 +1,8 @@
 // Miscellaneous utilities and definitions.
 
+import { CircularProgress } from 'material-ui';
 import { createMuiTheme, withStyles } from 'material-ui/styles';
+import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { blue } from 'material-ui/colors';
@@ -123,4 +125,25 @@ export function scrollIntoViewIfNeeded( element, centerIfNeeded ) {
             behavior: 'smooth',
         } );
     }
+}
+
+export function LoadingOverlay() {
+    return <div
+        style={{
+            backgroundColor: 'rgba( 255, 255, 255, .7 )',
+
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            width: '100%',
+            height: '100%',
+            zIndex: 9999,
+
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        }}
+    >
+        <CircularProgress />
+    </div>;
 }
