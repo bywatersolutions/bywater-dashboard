@@ -139,7 +139,7 @@ class ViewSettings extends React.Component {
     render() {
         const { view } = this.state;
 
-        return <Card style={{ marginTop: 16 }} elevation={2}>
+        return <Card style={{ marginTop: 8, marginBottom: 8 }} elevation={2}>
             <CardContent>
                 <FormControl style={{ marginBottom: 16 }}>
                     { this.renderViewPropControl( {
@@ -170,7 +170,7 @@ class ViewSettings extends React.Component {
                                         this.swapColumns( i, i - 1 );
                                     } }
                                 >
-                                    <Icon>expand_less</Icon>
+                                    <Icon>arrow_upward</Icon>
                                 </IconButton>
                                 <IconButton
                                     style={{
@@ -182,8 +182,8 @@ class ViewSettings extends React.Component {
                                         e.stopPropagation();
                                         this.swapColumns( i, i + 1 );
                                     } }
-                                    >
-                                    <Icon>expand_more</Icon>
+                                >
+                                    <Icon>arrow_downward</Icon>
                                 </IconButton>
                             </div>
                             { this.renderColumnPropControl( {
