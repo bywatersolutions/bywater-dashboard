@@ -10,6 +10,7 @@ function _apiFetch( method, url, request ) {
     } );
 };
 window._apiFetch = _apiFetch;
+window._apiDelay = 0;
 
 function _apiAction( {
     type,
@@ -28,6 +29,10 @@ function _apiAction( {
         if ( typeof path == 'function' ) realPath = path( request, getState );
 
         dispatch( { type: 'IN_PROGRESS', payload: { request, type } } );
+
+        if ( window._apiDelay ) {
+            await new Promise( resolve => setTimeout( resolve, window._apiDelay ) );
+        }
 
         let response = await _apiFetch( method, realPath, filteredRequest );
 

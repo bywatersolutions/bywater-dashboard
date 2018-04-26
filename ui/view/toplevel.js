@@ -207,6 +207,18 @@ export default class ToplevelContainer extends React.Component {
                                 render={() => <Fade in={true}><TicketsView view={view} /></Fade>}
                             />;
                         } ) }
+                        {
+                            // This takes care of the user being at a now-nonexistent view after
+                            // changing its name.
+                            //
+                            // It relies on three things:
+                            //   1) `this.slugToName` will have an entry for every view we've seen.
+                            //   2) A <Switch> will only render the first matching route.
+                            //   3) We already have a redirect from "/" to the user's first view.
+                        }
+                        { Object.keys( this.slugToName ).map( slug =>
+                            <Redirect key={`__falback-${slug}`} exact from={'/' + slug} to="/" />
+                        ) }
                     </Switch> : <LoginPage /> }
                 </div>
             </ConnectedRouter>

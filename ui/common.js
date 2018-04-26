@@ -137,7 +137,7 @@ export function LoadingOverlay() {
             top: 0,
             width: '100%',
             height: '100%',
-            zIndex: 9999,
+            zIndex: 1250,
 
             display: 'flex',
             alignItems: 'center',
