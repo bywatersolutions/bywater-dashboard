@@ -263,10 +263,17 @@ class ViewSettings extends React.Component {
             <CardActions>
                 <Button
                         size="small"
+                        color="secondary"
+                        onClick={ () => {
+                            this.props.onDeleteView();
+                        } }
+                    >
+                    Delete View
+                </Button>
+                <Button
+                        size="small"
                         color="primary"
-                        onClick={ e => {
-                            e.stopPropagation();
-
+                        onClick={ () => {
                             this.addColumn();
                         } }
                     >
@@ -327,6 +334,14 @@ export default class SettingsDialog extends React.PureComponent {
         } ) );
     }
 
+    deleteView( i ) {
+        this.pendingViewUpdates[ this.state.viewIDs[ i ] ] = null;
+
+        this.setState( ( { viewIDs } ) => ( {
+            viewIDs: viewIDs.slice( 0, i ).concat( viewIDs.slice( i + 1 ) ),
+        } ) );
+    }
+
     render() {
         const {
             loading,
@@ -372,11 +387,12 @@ export default class SettingsDialog extends React.PureComponent {
                         overflowY: 'auto',
                     }}
                 >
-                    { viewIDs.map( viewID =>
+                    { viewIDs.map( ( viewID, i ) =>
                         <ViewSettings
                             dialogOpen={open}
                             key={viewID}
                             viewID={viewID}
+                            onDeleteView={() => this.deleteView( i )}
                             onViewUpdate={this.addPendingViewUpdate}
                         />
                     ) }

@@ -64,10 +64,10 @@ sub startup {
         return 1;
     } );
 
-    $auth->get("/json/view/*id*")->to("view#get");
+    $auth->get("/json/view/:id")->to("view#get");
     $auth->post("/json/view/")->to("view#update");
 
-    $auth->get("/json/column/*ids*/results")->to("view#get_column_results");
+    $auth->get("/json/column/:ids/results")->to("view#get_column_results");
 
     $auth->post("/json/ticket/update")->to("ticket#update_ticket");
     $auth->post("/json/ticket/details")->to("ticket#ticket_details");
@@ -95,14 +95,14 @@ sub startup {
     }
 
     # Catch any incorrect API routes
-    $r->any( '/json/*fallback*', { fallback => '' }, sub {
+    $r->any( '/json/*fallback', { fallback => '' }, sub {
         my $c = shift;
 
         $c->render( status => 404, json => { error => "/json/${ \$c->param('fallback') } not found" } );
     } );
 
     # Let the frontend handle any other routing.
-    $r->any( '/*fallback*', { fallback => '' } )->to( 'main#index' );
+    $r->any( '/*fallback', { fallback => '' } )->to( 'main#index' );
 }
 
 1;
